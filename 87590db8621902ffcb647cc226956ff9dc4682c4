@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed991550_cc030dcd",
+        "filename": "wmfmariadbpy/osc_host.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2018-03-16T12:41:41Z",
+      "side": 1,
+      "message": "OnlineSchemaChanger - perfect it is 100% understood what this class does.",
+      "range": {
+        "startLine": 22,
+        "startChar": 6,
+        "endLine": 22,
+        "endChar": 26
+      },
+      "revId": "87590db8621902ffcb647cc226956ff9dc4682c4",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fdac2641_f4a0baf1",
+        "filename": "wmfmariadbpy/osc_host.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2018-03-16T12:41:41Z",
+      "side": 1,
+      "message": "conn - ok, connection is understood",
+      "range": {
+        "startLine": 42,
+        "startChar": 8,
+        "endLine": 42,
+        "endChar": 12
+      },
+      "revId": "87590db8621902ffcb647cc226956ff9dc4682c4",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c14c26c_5ea537b7",
+        "filename": "wmfmariadbpy/osc_host.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2018-03-16T12:41:41Z",
+      "side": 1,
+      "message": "ddlrep -- ok, I assume DDL (data definition language) replication, and the comment clarifies that.",
+      "range": {
+        "startLine": 57,
+        "startChar": 8,
+        "endLine": 57,
+        "endChar": 14
+      },
+      "revId": "87590db8621902ffcb647cc226956ff9dc4682c4",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae83dca_56ff694b",
+        "filename": "wmfmariadbpy/osc_host.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2018-03-16T12:41:41Z",
+      "side": 1,
+      "message": "ptdrargs ? Comment: Get the pt dr args. What?",
+      "range": {
+        "startLine": 105,
+        "startChar": 8,
+        "endLine": 105,
+        "endChar": 16
+      },
+      "revId": "87590db8621902ffcb647cc226956ff9dc4682c4",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
