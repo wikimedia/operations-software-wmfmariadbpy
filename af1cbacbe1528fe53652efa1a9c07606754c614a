@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b90078d9_1ba74700",
+        "filename": "wmfmariadbpy/osc_host.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2018-04-09T13:02:31Z",
+      "side": 1,
+      "message": "Let\u0027s avoid from, and convert all usages with the explicit package name to avoid collisions. exit and which are too generic, and will likely be implemented on some scripts.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 11
+      },
+      "revId": "af1cbacbe1528fe53652efa1a9c07606754c614a",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
