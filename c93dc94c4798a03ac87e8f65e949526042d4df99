@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c341ede8_70d4bb10",
+        "filename": "wmfmariadbpy/switchover.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2018-07-24T13:53:21Z",
+      "side": 1,
+      "message": "We still have old masters running on /tmp so I guess for those we\u0027d need to skip the stop/start?",
+      "revId": "c93dc94c4798a03ac87e8f65e949526042d4df99",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
