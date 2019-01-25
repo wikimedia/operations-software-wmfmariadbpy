@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a9e4cd0_1a86bd22",
+        "filename": "wmfmariadbpy/transfer.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-01-25T06:23:59Z",
+      "side": 1,
+      "message": "thanks for adding this!",
+      "range": {
+        "startLine": 139,
+        "startChar": 8,
+        "endLine": 139,
+        "endChar": 20
+      },
+      "revId": "8813f6ca9d8c742f1a2b8a55f7d2b04b47ae1e8b",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c648b68_5735eb9a",
+        "filename": "wmfmariadbpy/transfer.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-01-25T06:23:59Z",
+      "side": 1,
+      "message": "why is target-dir /tmp by default?",
+      "revId": "8813f6ca9d8c742f1a2b8a55f7d2b04b47ae1e8b",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
