@@ -39,6 +39,24 @@
       "revId": "8813f6ca9d8c742f1a2b8a55f7d2b04b47ae1e8b",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "400a1d6f_a9e6b606",
+        "filename": "wmfmariadbpy/transfer.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2019-01-25T07:35:55Z",
+      "side": 1,
+      "message": "That would be the target if it wasn\u0027t streamed, but it is not used, but I need a directory that I am sure it will exist on the local host. Probably there is no issue if I drop the whole thing, but maybe then it uses the current dir, and that is undefined.",
+      "parentUuid": "4c648b68_5735eb9a",
+      "revId": "8813f6ca9d8c742f1a2b8a55f7d2b04b47ae1e8b",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
     }
   ]
 }
