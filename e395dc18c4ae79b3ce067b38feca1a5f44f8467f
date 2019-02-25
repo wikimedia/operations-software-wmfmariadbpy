@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb774635_9c6d2c63",
+        "filename": "wmfmariadbpy/dump_section.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-02-25T07:19:24Z",
+      "side": 1,
+      "message": "What happens if you run the --only-postprocess when the backups is still running? (running for real, not a case where metadata has failed)",
+      "range": {
+        "startLine": 190,
+        "startChar": 68,
+        "endLine": 190,
+        "endChar": 91
+      },
+      "revId": "e395dc18c4ae79b3ce067b38feca1a5f44f8467f",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
