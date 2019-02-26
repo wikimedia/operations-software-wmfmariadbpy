@@ -22,6 +22,30 @@
       "revId": "2f8dc5c8291b71d4736cd4b859ce9762e6110eb5",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c0cbc62f_2f9a160c",
+        "filename": "wmfmariadbpy/dump_section.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2019-02-26T10:05:29Z",
+      "side": 1,
+      "message": "See comment on previous revision and https://phabricator.wikimedia.org/diffusion/OSMD/browse/master/wmfmariadbpy/recover_section.py;c50632eabd3d9f0b0c98df26467dc7674873a3ae$75?as\u003dsource\u0026blame\u003doff",
+      "parentUuid": "e385784a_0ea7c559",
+      "range": {
+        "startLine": 679,
+        "startChar": 62,
+        "endLine": 679,
+        "endChar": 69
+      },
+      "revId": "2f8dc5c8291b71d4736cd4b859ce9762e6110eb5",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
     }
   ]
 }
