@@ -139,6 +139,30 @@
       "revId": "a9de41fadfce1307c6abcf2cc1f50cf4c90a2437",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7194a2fe_9daa5610",
+        "filename": "wmfmariadbpy/backup_mariadb.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2019-03-06T18:57:34Z",
+      "side": 1,
+      "message": "I changed it while refactoring to do the same- now there is\n\n* archive: consolidates per database (only implemented for dumps, it is at the moment a noop for xtrabackup, as it requires special implementation for each backup type)\n* rotate: moves things to latest and archive\n* compress: generates a final .tar.gz with everthing\n\nAll default to false.\n\nI changed restore_dump.py to automatically detect if you got a tar.gz and decompress it (it may need extra tuning to avoid decompressing everything if we only want to reimport a single database).\n\nLet\u0027s talk about the changes and I have to document all of that.",
+      "parentUuid": "4c8a0802_796dc8e0",
+      "range": {
+        "startLine": 151,
+        "startChar": 8,
+        "endLine": 151,
+        "endChar": 21
+      },
+      "revId": "a9de41fadfce1307c6abcf2cc1f50cf4c90a2437",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
     }
   ]
 }
