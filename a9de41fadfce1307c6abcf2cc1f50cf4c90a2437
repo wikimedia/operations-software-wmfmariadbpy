@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19c006a9_09d51ff2",
+        "filename": "wmfmariadbpy/BackupStatistics.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-03-06T16:40:48Z",
+      "side": 1,
+      "message": "what is this for?",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 37
+      },
+      "revId": "a9de41fadfce1307c6abcf2cc1f50cf4c90a2437",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "49dd73d4_c65bfc46",
+        "filename": "wmfmariadbpy/BackupStatistics.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-03-06T16:40:48Z",
+      "side": 1,
+      "message": "avoid",
+      "range": {
+        "startLine": 177,
+        "startChar": 40,
+        "endLine": 177,
+        "endChar": 41
+      },
+      "revId": "a9de41fadfce1307c6abcf2cc1f50cf4c90a2437",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2eb1f312_35100323",
+        "filename": "wmfmariadbpy/WMFBackup.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-03-06T16:40:48Z",
+      "side": 1,
+      "message": "why not putting these two with the others on top of the file?",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 37
+      },
+      "revId": "a9de41fadfce1307c6abcf2cc1f50cf4c90a2437",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c8a0802_796dc8e0",
+        "filename": "wmfmariadbpy/backup_mariadb.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-03-06T16:40:48Z",
+      "side": 1,
+      "message": "I remember we had a chat about what happens if archive is True and you only want to do postprocessing, did you final test if it works fine or if it does something crazy?",
+      "range": {
+        "startLine": 151,
+        "startChar": 8,
+        "endLine": 151,
+        "endChar": 21
+      },
+      "revId": "a9de41fadfce1307c6abcf2cc1f50cf4c90a2437",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
