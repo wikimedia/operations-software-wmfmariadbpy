@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7233558c_457d0ceb",
+        "filename": "wmfmariadbpy/BackupStatistics.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2019-03-06T18:32:18Z",
+      "side": 1,
+      "message": "This just removes \u0027:3306\u0027 to make it canonical socket addresses, so dbstore1001.eqiad.wmnet instead of dbstore1001.eqiad.wmnet:3306, so we only have one (shorter) format that is easier to read (like in tendril).",
+      "parentUuid": "19c006a9_09d51ff2",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 37
+      },
+      "revId": "a9de41fadfce1307c6abcf2cc1f50cf4c90a2437",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "49dd73d4_c65bfc46",
         "filename": "wmfmariadbpy/BackupStatistics.py",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2019-03-06T16:40:48Z",
       "side": 1,
       "message": "avoid",
+      "range": {
+        "startLine": 177,
+        "startChar": 40,
+        "endLine": 177,
+        "endChar": 41
+      },
+      "revId": "a9de41fadfce1307c6abcf2cc1f50cf4c90a2437",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6346d77_909b1a6f",
+        "filename": "wmfmariadbpy/BackupStatistics.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2019-03-06T18:32:18Z",
+      "side": 1,
+      "message": "Thanks, will fix.",
+      "parentUuid": "49dd73d4_c65bfc46",
       "range": {
         "startLine": 177,
         "startChar": 40,
