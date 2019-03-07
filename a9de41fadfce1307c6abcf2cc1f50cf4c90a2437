@@ -119,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "853624ec_719dad1f",
+        "filename": "wmfmariadbpy/WMFBackup.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2019-03-07T09:39:42Z",
+      "side": 1,
+      "message": "LOL I added them here preciselly to make them configurable in the future (and technically now) as you requested :-P",
+      "parentUuid": "2eb1f312_35100323",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 37
+      },
+      "revId": "a9de41fadfce1307c6abcf2cc1f50cf4c90a2437",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4c8a0802_796dc8e0",
         "filename": "wmfmariadbpy/backup_mariadb.py",
         "patchSetId": 9
