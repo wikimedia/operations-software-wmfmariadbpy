@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f19c76e_a42d94b4",
+        "filename": "wmfmariadbpy/transfer.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-04-11T05:57:52Z",
+      "side": 1,
+      "message": "thanks for all the extra comments here and below :-)",
+      "range": {
+        "startLine": 385,
+        "startChar": 8,
+        "endLine": 386,
+        "endChar": 25
+      },
+      "revId": "87b74f0f086e604c8eb1b5f42afa11347642a9ba",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "596d402f_08150199",
+        "filename": "wmfmariadbpy/transfer.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-04-11T05:57:52Z",
+      "side": 1,
+      "message": "Do we want to include the --connect-timeout here and below just in case?",
+      "revId": "87b74f0f086e604c8eb1b5f42afa11347642a9ba",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
