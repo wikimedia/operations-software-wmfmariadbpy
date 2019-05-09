@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "13cb2b72_acb870c1",
+        "filename": "wmfmariadbpy/transfer.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-05-09T10:40:07Z",
+      "side": 1,
+      "message": "change also this",
+      "range": {
+        "startLine": 434,
+        "startChar": 8,
+        "endLine": 434,
+        "endChar": 18
+      },
+      "revId": "b8a10e738cd4b640acb6bd974ca9c428cd4102e2",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85422a90_871967bc",
+        "filename": "wmfmariadbpy/transfer.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-05-09T10:40:07Z",
+      "side": 1,
+      "message": "change also this?",
+      "range": {
+        "startLine": 444,
+        "startChar": 8,
+        "endLine": 444,
+        "endChar": 19
+      },
+      "revId": "b8a10e738cd4b640acb6bd974ca9c428cd4102e2",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
