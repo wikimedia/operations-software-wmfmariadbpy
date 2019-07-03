@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2714efba_c8b89890",
+        "filename": "wmfmariadbpy/switchover.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-07-03T06:17:23Z",
+      "side": 1,
+      "message": "FQDN?",
+      "revId": "11a3aa20dd74106b7e8341585e1594492b4b79e7",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32f88827_2ebf5bd1",
+        "filename": "wmfmariadbpy/switchover.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-07-03T06:17:23Z",
+      "side": 1,
+      "message": "Maybe return also something like $master is the new master of $section just to be double sure.",
+      "revId": "11a3aa20dd74106b7e8341585e1594492b4b79e7",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1518e762_1db26cee",
+        "filename": "wmfmariadbpy/switchover.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-07-03T06:17:23Z",
+      "side": 1,
+      "message": "Same as above, if it is not too hard.",
+      "revId": "11a3aa20dd74106b7e8341585e1594492b4b79e7",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "20187ce8_f41f867f",
+        "filename": "wmfmariadbpy/switchover.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-07-03T06:17:23Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be: Enabling?",
+      "range": {
+        "startLine": 351,
+        "startChar": 11,
+        "endLine": 351,
+        "endChar": 20
+      },
+      "revId": "11a3aa20dd74106b7e8341585e1594492b4b79e7",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
