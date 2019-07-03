@@ -45,6 +45,30 @@
       "revId": "879f3da97fbfb310fc78df5565a8f4557965410a",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "100dea29_c00814e4",
+        "filename": "wmfmariadbpy/move_replica.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2019-07-03T13:29:49Z",
+      "side": 1,
+      "message": "Yes, it only re enables it if it was already enabled- it tries to safe, and then reimplement the previous state, but only if it was enabled it before.",
+      "parentUuid": "8778d6a0_756a897f",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 108
+      },
+      "revId": "879f3da97fbfb310fc78df5565a8f4557965410a",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
     }
   ]
 }
