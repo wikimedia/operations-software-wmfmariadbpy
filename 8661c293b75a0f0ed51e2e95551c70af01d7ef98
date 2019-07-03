@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3d41c2ee_7ce0e58c",
+        "filename": "wmfmariadbpy/WMFReplication.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-07-03T13:42:04Z",
+      "side": 1,
+      "message": "starts?",
+      "range": {
+        "startLine": 191,
+        "startChar": 8,
+        "endLine": 191,
+        "endChar": 14
+      },
+      "revId": "8661c293b75a0f0ed51e2e95551c70af01d7ef98",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc8b026b_fbe9d817",
+        "filename": "wmfmariadbpy/WMFReplication.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-07-03T13:42:04Z",
+      "side": 1,
+      "message": "would be nice to print the position and the logfile they are stopped at, just in case",
+      "range": {
+        "startLine": 449,
+        "startChar": 16,
+        "endLine": 449,
+        "endChar": 34
+      },
+      "revId": "8661c293b75a0f0ed51e2e95551c70af01d7ef98",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
