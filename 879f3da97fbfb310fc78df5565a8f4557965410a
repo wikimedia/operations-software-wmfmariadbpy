@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74f44dda_6f01fb81",
+        "filename": "wmfmariadbpy/WMFReplication.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-07-03T13:24:34Z",
+      "side": 1,
+      "message": "not sure why this is marked as red here",
+      "range": {
+        "startLine": 413,
+        "startChar": 11,
+        "endLine": 413,
+        "endChar": 22
+      },
+      "revId": "879f3da97fbfb310fc78df5565a8f4557965410a",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8778d6a0_756a897f",
+        "filename": "wmfmariadbpy/move_replica.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-07-03T13:24:34Z",
+      "side": 1,
+      "message": "Sorry for the ignorance, but I want to make sure I am understanding this correctly: this will set up the GTID mode that it has BEFORE stopping it right?\nIf it was Slave_pos (the default we use) it will set that one, if for any reason it had Current_pos it will set that one?",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 108
+      },
+      "revId": "879f3da97fbfb310fc78df5565a8f4557965410a",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
