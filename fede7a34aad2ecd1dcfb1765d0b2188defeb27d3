@@ -94,6 +94,30 @@
       "revId": "fede7a34aad2ecd1dcfb1765d0b2188defeb27d3",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28e13747_f5279f9b",
+        "filename": "wmfmariadbpy/switchover.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-09-10T08:06:46Z",
+      "side": 1,
+      "message": "Ah yep! That makes sense!. Thanks for clarifying!",
+      "parentUuid": "71336ec9_8615a7bc",
+      "range": {
+        "startLine": 70,
+        "startChar": 6,
+        "endLine": 70,
+        "endChar": 51
+      },
+      "revId": "fede7a34aad2ecd1dcfb1765d0b2188defeb27d3",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
     }
   ]
 }
