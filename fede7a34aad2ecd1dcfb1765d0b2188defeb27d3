@@ -70,6 +70,30 @@
       "revId": "fede7a34aad2ecd1dcfb1765d0b2188defeb27d3",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71336ec9_8615a7bc",
+        "filename": "wmfmariadbpy/switchover.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2019-09-10T07:21:47Z",
+      "side": 1,
+      "message": "weight 0 on the main load AND not part of any specific, I think they are called \"grouploadbysection\"?",
+      "parentUuid": "a7ae2627_bfb00fa5",
+      "range": {
+        "startLine": 70,
+        "startChar": 6,
+        "endLine": 70,
+        "endChar": 51
+      },
+      "revId": "fede7a34aad2ecd1dcfb1765d0b2188defeb27d3",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
     }
   ]
 }
