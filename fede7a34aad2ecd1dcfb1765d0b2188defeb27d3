@@ -22,6 +22,30 @@
       "revId": "fede7a34aad2ecd1dcfb1765d0b2188defeb27d3",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79a90d69_05af13e8",
+        "filename": "wmfmariadbpy/switchover.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2019-09-10T07:04:04Z",
+      "side": 1,
+      "message": "Yes, we can do that. Also maybe with no section load?",
+      "parentUuid": "95d7a7b1_79d999fe",
+      "range": {
+        "startLine": 70,
+        "startChar": 6,
+        "endLine": 70,
+        "endChar": 51
+      },
+      "revId": "fede7a34aad2ecd1dcfb1765d0b2188defeb27d3",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
     }
   ]
 }
