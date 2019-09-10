@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95d7a7b1_79d999fe",
+        "filename": "wmfmariadbpy/switchover.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 3731
+      },
+      "writtenOn": "2019-09-10T06:08:51Z",
+      "side": 1,
+      "message": "One of the things we do is to check that the future master is pooled but with weight 0 (it is a pre-step of the failover). \nIs it worth checking that here?\nThe risk is that if we forget that, we can end up with a master with weight 300 and pooled into API.\nAgain, not a blocker as it is part of our pre failover steps, but just mentioning it here.",
+      "range": {
+        "startLine": 70,
+        "startChar": 6,
+        "endLine": 70,
+        "endChar": 51
+      },
+      "revId": "fede7a34aad2ecd1dcfb1765d0b2188defeb27d3",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
