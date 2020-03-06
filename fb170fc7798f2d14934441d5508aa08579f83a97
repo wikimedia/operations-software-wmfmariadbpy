@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cead85d4_29e0befd",
+        "filename": "wmfbackups/analyze_dump.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-03-06T06:54:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "5e9d5897_1c977890",
+      "range": {
+        "startLine": 23,
+        "startChar": 73,
+        "endLine": 23,
+        "endChar": 74
+      },
+      "revId": "fb170fc7798f2d14934441d5508aa08579f83a97",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a56403b_7984623e",
         "filename": "wmfbackups/analyze_dump.py",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2020-03-06T06:38:17Z",
       "side": 1,
       "message": "What are your thoughts on how to handle tables without PK or tables with combined PKs?",
+      "range": {
+        "startLine": 48,
+        "startChar": 10,
+        "endLine": 48,
+        "endChar": 87
+      },
+      "revId": "fb170fc7798f2d14934441d5508aa08579f83a97",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2847ca9c_2ee28503",
+        "filename": "wmfbackups/analyze_dump.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-03-06T06:54:18Z",
+      "side": 1,
+      "message": "For ES scope, do nothing. Maybe at a later time, with schema analysis, this could be converted into a \"get the Xth and Yth column\" but we are not yet there.",
+      "parentUuid": "5a56403b_7984623e",
       "range": {
         "startLine": 48,
         "startChar": 10,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "45ce3a6a_e76e48ae",
+        "filename": "wmfbackups/analyze_dump.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-03-06T06:54:18Z",
+      "side": 1,
+      "message": "Not sure how to represent that for the file format ATM (0s or even null, or any string would be missleading). This may make more sense for a more complete format inside the db. For incremental scope, as you said :-), the idea is that a \"full\" backup will be done for new tables, so no need to store row metadata (the table structure will still be there, and be automatically inserted).",
+      "parentUuid": "7163a5ec_8ff624eb",
+      "range": {
+        "startLine": 55,
+        "startChar": 10,
+        "endLine": 55,
+        "endChar": 34
+      },
+      "revId": "fb170fc7798f2d14934441d5508aa08579f83a97",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dee20c96_36212917",
         "filename": "wmfbackups/analyze_dump.py",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2020-03-06T06:38:17Z",
       "side": 1,
       "message": "missing )?",
+      "range": {
+        "startLine": 84,
+        "startChar": 79,
+        "endLine": 84,
+        "endChar": 80
+      },
+      "revId": "fb170fc7798f2d14934441d5508aa08579f83a97",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c5297ae_11b6ad85",
+        "filename": "wmfbackups/analyze_dump.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-03-06T06:54:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "dee20c96_36212917",
       "range": {
         "startLine": 84,
         "startChar": 79,
