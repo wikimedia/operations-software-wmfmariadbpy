@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e228ee4e_6bf887dd",
+        "filename": "wmfmariadbpy/CuminExecution.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 3215
+      },
+      "writtenOn": "2020-03-25T11:46:09Z",
+      "side": 1,
+      "message": "If the goal of the patch is to catch a query that doesn\u0027t match any host you can just check:\n\n  if not hosts:\n      # bail out with an informative message to the user\n\nThat\u0027s because a query that doesn\u0027t match any host will return an empty NodeSet for which len(hosts) \u003d\u003d 0 and bool(hosts) \u003d\u003d False.",
+      "revId": "9b5f7035562c32d8df420097ef62e0ddbcd3c0c9",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "180dd9b7_d67975ea",
+        "filename": "wmfmariadbpy/CuminExecution.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 3215
+      },
+      "writtenOn": "2020-03-25T11:46:09Z",
+      "side": 1,
+      "message": "WorkerError here would be raised only if the transport is misconfigured, shouldn\u0027t happen in normal conditions.",
+      "revId": "9b5f7035562c32d8df420097ef62e0ddbcd3c0c9",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1acd781e_69574f1b",
+        "filename": "wmfmariadbpy/test/unit/test_CuminExecution.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 3215
+      },
+      "writtenOn": "2020-03-25T11:46:09Z",
+      "side": 1,
+      "message": "This test clearly depends on which implementation you\u0027ll use, if going for the check of an empty hosts list, it\u0027s totally doable with a very simple Cumin configuration, as for example the one used for Spicerack tests (another software of ours that uses Cumin as a library).\nSee for example:\nhttps://gerrit.wikimedia.org/r/plugins/gitiles/operations/software/spicerack/+/master/spicerack/tests/fixtures/remote/config.yaml\n\nUsing that config doesn\u0027t require any backend for performing queries. Of course in that case if you want to test some execution clearly you\u0027ll have to mock some things, and might be a bit more tedious. But for the query checks should be trivial. To test an empty matching hosts list you can use as query \u0027host1 and not host1\u0027 for example.",
+      "revId": "9b5f7035562c32d8df420097ef62e0ddbcd3c0c9",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
