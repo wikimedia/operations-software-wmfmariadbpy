@@ -22,6 +22,30 @@
       "revId": "f509fdeb8b39c5a0c68a72199c1faa5bbdc86cd1",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6330feda_829a783f",
+        "filename": "wmfmariadbpy/CuminExecution.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-03-26T17:20:14Z",
+      "side": 0,
+      "message": "+1",
+      "parentUuid": "760240bf_e1a03af8",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 5
+      },
+      "revId": "f509fdeb8b39c5a0c68a72199c1faa5bbdc86cd1",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
     }
   ]
 }
