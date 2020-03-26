@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "760240bf_e1a03af8",
+        "filename": "wmfmariadbpy/CuminExecution.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 920
+      },
+      "writtenOn": "2020-03-26T17:13:31Z",
+      "side": 0,
+      "message": "This empty line should stay, look at https://github.com/timothycrosley/isort",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 5
+      },
+      "revId": "f509fdeb8b39c5a0c68a72199c1faa5bbdc86cd1",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
