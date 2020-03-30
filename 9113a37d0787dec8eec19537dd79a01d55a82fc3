@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39244610_6d9fc78f",
+        "filename": "wmfmariadbpy/test/unit/test_transfer.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-03-30T08:31:54Z",
+      "side": 1,
+      "message": "extra space",
+      "range": {
+        "startLine": 145,
+        "startChar": 48,
+        "endLine": 146,
+        "endChar": 4
+      },
+      "revId": "9113a37d0787dec8eec19537dd79a01d55a82fc3",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f81d23b_2fc25dff",
+        "filename": "wmfmariadbpy/test/unit/test_transfer.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-03-30T08:31:54Z",
+      "side": 1,
+      "message": "extra space",
+      "range": {
+        "startLine": 152,
+        "startChar": 125,
+        "endLine": 153,
+        "endChar": 16
+      },
+      "revId": "9113a37d0787dec8eec19537dd79a01d55a82fc3",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e72d7264_407da586",
+        "filename": "wmfmariadbpy/test/unit/test_transfer.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-03-30T08:31:54Z",
+      "side": 1,
+      "message": "extra space",
+      "range": {
+        "startLine": 186,
+        "startChar": 146,
+        "endLine": 186,
+        "endChar": 147
+      },
+      "revId": "9113a37d0787dec8eec19537dd79a01d55a82fc3",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
