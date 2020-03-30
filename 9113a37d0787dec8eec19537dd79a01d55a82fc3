@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "4bdfae3b_65125cfc",
+        "filename": "wmfmariadbpy/test/unit/test_transfer.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-03-30T11:25:34Z",
+      "side": 1,
+      "message": "It is not empty, it has exactly 4 spaces.\n\nThe previous line has 11.\n\nThe extra line should be kept, the spaces can lead to errors. :-)",
+      "parentUuid": "d6c74e36_0cffd650",
+      "range": {
+        "startLine": 145,
+        "startChar": 48,
+        "endLine": 146,
+        "endChar": 4
+      },
+      "revId": "9113a37d0787dec8eec19537dd79a01d55a82fc3",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6f81d23b_2fc25dff",
         "filename": "wmfmariadbpy/test/unit/test_transfer.py",
         "patchSetId": 11
