@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4affc05e_60ece844",
+        "filename": "transferpy/Firewall.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-05-15T13:55:32Z",
+      "side": 1,
+      "message": "Remember my comment on ticket- we should start doing block comments:\n\"\"\"\nMethod description\nargument1 - this is my first argument\n\"\"\"\n\nfor new methods, even if we don\u0027t yet document existing ones ;-D",
+      "range": {
+        "startLine": 40,
+        "startChar": 47,
+        "endLine": 41,
+        "endChar": 9
+      },
+      "revId": "049ac377e8677a32b4b610d58041805009d1ebea",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
