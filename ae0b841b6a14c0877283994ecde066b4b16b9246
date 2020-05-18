@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4ef7294_08d75f2b",
+        "filename": "transferpy/Firewall.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-05-18T17:56:14Z",
+      "side": 1,
+      "message": "This is ok for now, and we can improve it later, no worries.",
+      "range": {
+        "startLine": 25,
+        "startChar": 8,
+        "endLine": 25,
+        "endChar": 83
+      },
+      "revId": "ae0b841b6a14c0877283994ecde066b4b16b9246",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "555a55c7_398e3e32",
+        "filename": "transferpy/test/integration/test_transfer.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-05-18T17:56:14Z",
+      "side": 1,
+      "message": "As I said, the integration test doesn\u0027t have to work except on a proper setup. However, hardcoding this specific ip here seems like a bad idea. Maybe consider using localhost (or 127.0.0.1) and encourage the tester to change it?\n\nIdeally, it should be much more clear- eg. a global variable or, better, a separate file with an ip to configure for testing?",
+      "range": {
+        "startLine": 44,
+        "startChar": 21,
+        "endLine": 44,
+        "endChar": 35
+      },
+      "revId": "ae0b841b6a14c0877283994ecde066b4b16b9246",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
