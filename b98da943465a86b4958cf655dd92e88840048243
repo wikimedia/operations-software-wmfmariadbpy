@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "06b8d0f7_7d5cde90",
+        "filename": "transferpy/transfer.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-05-19T13:04:34Z",
+      "side": 1,
+      "message": "Is this fine?",
+      "revId": "b98da943465a86b4958cf655dd92e88840048243",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
