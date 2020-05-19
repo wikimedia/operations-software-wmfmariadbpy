@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "6457aa48_54e53673",
+        "filename": "transferpy/Transferer.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-05-19T13:53:45Z",
+      "side": 1,
+      "message": "And that means passing a dictionary here.\n\nYou can do \n\n remote_execution_options \u003d { \u0027verbose\u0027: self.options[\u0027verbose\u0027]}\n\nbefore and pass that variable.\n\nThat will allow to keep the api in in the future we add more options.",
+      "range": {
+        "startLine": 24,
+        "startChar": 47,
+        "endLine": 24,
+        "endChar": 70
+      },
+      "revId": "b98da943465a86b4958cf655dd92e88840048243",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01d35503_f70f98f2",
+        "filename": "transferpy/transfer.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-05-19T13:53:45Z",
+      "side": 1,
+      "message": "While this is correct, it is just simpler to do \n\n parser.add_argument(\u0027--verbose\u0027, action\u003d\u0027store_true\u0027)\n\n(only one line needed)\n\nIn the others, set_defaults is needed because of the --no-options.",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 38
+      },
+      "revId": "b98da943465a86b4958cf655dd92e88840048243",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "06b8d0f7_7d5cde90",
         "filename": "transferpy/transfer.py",
         "patchSetId": 4
@@ -13,6 +59,24 @@
       "writtenOn": "2020-05-19T13:04:34Z",
       "side": 1,
       "message": "Is this fine?",
+      "revId": "b98da943465a86b4958cf655dd92e88840048243",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "536a35a8_ce7e5d86",
+        "filename": "transferpy/transfer.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-05-19T13:53:45Z",
+      "side": 1,
+      "message": "no need for a dictionary inside another dictionary. Just \n\n \u0027verbose\u0027: options.verbose\n\nWould be enough to store true or false inside the other_options[\u0027verbose\u0027] variable.",
+      "parentUuid": "06b8d0f7_7d5cde90",
       "revId": "b98da943465a86b4958cf655dd92e88840048243",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": true
