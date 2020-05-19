@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "419025a0_7d7ae2a5",
+        "filename": "transferpy/Firewall.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-05-19T05:59:36Z",
+      "side": 1,
+      "message": "nitpick- let\u0027s try converting those lines into integers. If something other than an integers is returned by the comment above, despite returning success, we don\u0027t want to handle it (we can keep the valueError, or generate our own exception).\n\nThis will avoid the later str()\n\nWhile an unlikely error, let\u0027s assume the worse, specially with that not very elegant one-liner I suggested.",
+      "range": {
+        "startLine": 57,
+        "startChar": 21,
+        "endLine": 57,
+        "endChar": 46
+      },
+      "revId": "c442af1f69d4b67bfb101b59a13798ae09b60472",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
