@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46ec3ea9_9c0bf70e",
+        "filename": "transferpy/transfer.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-05-20T16:37:28Z",
+      "side": 1,
+      "message": "not anymore, right now it is the 4400.",
+      "range": {
+        "startLine": 36,
+        "startChar": 95,
+        "endLine": 36,
+        "endChar": 99
+      },
+      "revId": "09b1a3a16bb5361f99b92995595a04a148a09a4a",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7baee81f_b5b8bcd4",
+        "filename": "transferpy/transfer.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-05-20T16:37:28Z",
+      "side": 1,
+      "message": "If you rebase, lets add --verbose explanation too.",
+      "revId": "09b1a3a16bb5361f99b92995595a04a148a09a4a",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
