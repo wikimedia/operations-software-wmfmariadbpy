@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85ffd6c2_bc54780d",
+        "filename": "transferpy/transfer.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-05-25T14:13:24Z",
+      "side": 1,
+      "message": "Different ticket, but this was not my proudest code :-(.\n\nI think in general argument parsing makes this difficult to use. We will have to think ways to improve the interface even more.",
+      "range": {
+        "startLine": 103,
+        "startChar": 4,
+        "endLine": 109,
+        "endChar": 52
+      },
+      "revId": "7a7aaa237f15708c4a0ede27e84cbf501049f671",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    }
+  ]
+}
