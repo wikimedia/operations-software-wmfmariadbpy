@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb53217c_9b64d3cd",
+        "filename": "transferpy/Transferer.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-05-26T01:36:31Z",
+      "side": 1,
+      "message": "Placing this here seems logically incorrect to me, What do you think? If you think the same, we will have to send firewall_handler as an argument to copy_to function and call from there. Please let me know your thoughts.",
+      "revId": "1f9b483dd57257010e77b780c31db7276ee04e2e",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
