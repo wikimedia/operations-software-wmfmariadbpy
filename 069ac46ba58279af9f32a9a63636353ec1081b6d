@@ -33,6 +33,29 @@
       "revId": "069ac46ba58279af9f32a9a63636353ec1081b6d",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c105550_59a59d3b",
+        "filename": "tox.ini",
+        "patchSetId": 5
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-05-27T18:36:25Z",
+      "side": 1,
+      "message": "This command works locally! But when I try with `tox -e py37-sphinx`, tox says successful, but no doc would generate!",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 56
+      },
+      "revId": "069ac46ba58279af9f32a9a63636353ec1081b6d",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
     }
   ]
 }
