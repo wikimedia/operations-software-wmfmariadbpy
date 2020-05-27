@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da59860f_85435d69",
+        "filename": "doc-requirements.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-05-27T18:32:32Z",
+      "side": 1,
+      "message": ".",
+      "revId": "069ac46ba58279af9f32a9a63636353ec1081b6d",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9d84038_e8e00da7",
+        "filename": "tox.ini",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-05-27T18:32:32Z",
+      "side": 1,
+      "message": ".",
+      "revId": "069ac46ba58279af9f32a9a63636353ec1081b6d",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
