@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ce64eb8_e0c72259",
+        "filename": "debian/control",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-05-27T10:17:51Z",
+      "side": 1,
+      "message": "Here we need to give Cumin as a dependency. But it is not possible because it is not available with apt install yet!",
+      "range": {
+        "startLine": 5,
+        "startChar": 133,
+        "endLine": 5,
+        "endChar": 0
+      },
+      "revId": "a72da36b8ed9f5d7b2e758e0ddccd91a5e5cd50a",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
