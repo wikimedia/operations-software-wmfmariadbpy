@@ -22,6 +22,30 @@
       "revId": "a72da36b8ed9f5d7b2e758e0ddccd91a5e5cd50a",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9c1aa48_bd38d594",
+        "filename": "debian/control",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-05-27T13:43:27Z",
+      "side": 1,
+      "message": "You just can add it and assume it will be available. I will poke Riccardo to see when it will be, and it will be on wmf repos anyway.",
+      "parentUuid": "1ce64eb8_e0c72259",
+      "range": {
+        "startLine": 5,
+        "startChar": 133,
+        "endLine": 5,
+        "endChar": 0
+      },
+      "revId": "a72da36b8ed9f5d7b2e758e0ddccd91a5e5cd50a",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
     }
   ]
 }
