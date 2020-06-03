@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "ed979984_dbb2791f",
+        "filename": "transferpy/Transferer.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-06-03T12:13:27Z",
+      "side": 1,
+      "message": "time.sleep(3)",
+      "range": {
+        "startLine": 265,
+        "startChar": 8,
+        "endLine": 265,
+        "endChar": 21
+      },
+      "revId": "1f9b483dd57257010e77b780c31db7276ee04e2e",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cb53217c_9b64d3cd",
         "filename": "transferpy/Transferer.py",
         "patchSetId": 1
