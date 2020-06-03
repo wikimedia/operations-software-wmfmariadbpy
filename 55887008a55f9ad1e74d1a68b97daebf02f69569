@@ -22,6 +22,30 @@
       "revId": "55887008a55f9ad1e74d1a68b97daebf02f69569",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91492f2a_f364c68d",
+        "filename": "transferpy/doc/wishes.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-06-03T12:17:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b257040a_325a84eb",
+      "range": {
+        "startLine": 18,
+        "startChar": 11,
+        "endLine": 18,
+        "endChar": 12
+      },
+      "revId": "55887008a55f9ad1e74d1a68b97daebf02f69569",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
     }
   ]
 }
