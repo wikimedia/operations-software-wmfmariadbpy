@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b257040a_325a84eb",
+        "filename": "transferpy/doc/wishes.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-06-03T11:07:41Z",
+      "side": 1,
+      "message": "let\u0027s fix this flagrant typo (there are others but this is too obvious). This was 100% my fault and was in the original wiki page.",
+      "range": {
+        "startLine": 18,
+        "startChar": 11,
+        "endLine": 18,
+        "endChar": 12
+      },
+      "revId": "55887008a55f9ad1e74d1a68b97daebf02f69569",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
