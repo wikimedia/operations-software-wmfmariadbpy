@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "b6700319_64700aac",
+        "filename": "tox.ini",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-06-03T13:33:10Z",
+      "side": 1,
+      "message": "It is not an actual requirement.",
+      "parentUuid": "35106131_56a499c4",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 22
+      },
+      "revId": "55887008a55f9ad1e74d1a68b97daebf02f69569",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a526b16d_55853cce",
         "filename": "tox.ini",
         "patchSetId": 7
@@ -82,6 +106,30 @@
       "writtenOn": "2020-06-03T12:25:20Z",
       "side": 1,
       "message": "That is the equivalent of running: pip install [docs] , which would install the dependencies listed in the \u0027docs\u0027 extra from setup.py.  However it is currently named \u0027sphinx\u0027.\n\nSo I guess we can come up with:\n\n [testenv:sphinx]\n description \u003d invoke sphinx-build to build the HTML docs\n envdir\u003d{toxworkdir}/{envname}\n deps \u003d -rrequirements.txt\n extras \u003d docs\n commands \u003d sphinx-build \"transferpy/doc\" \"transferpy/doc/.build\" --color {posargs}\n\nIt is usually a good thing to have warnings to be turned to errors with -W:\n\n  -W                turn warnings into errors",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 13
+      },
+      "revId": "55887008a55f9ad1e74d1a68b97daebf02f69569",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "177147a8_1ac6eb14",
+        "filename": "tox.ini",
+        "patchSetId": 7
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-06-03T13:33:10Z",
+      "side": 1,
+      "message": "Thank you for the information.",
+      "parentUuid": "a526b16d_55853cce",
       "range": {
         "startLine": 38,
         "startChar": 0,
