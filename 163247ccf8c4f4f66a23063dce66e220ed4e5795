@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "78d02286_200c3110",
+        "filename": "requirements.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-06-03T13:03:14Z",
+      "side": 1,
+      "message": "Thank you for the patch. But we are not using this paramiko now in this repository. So I think we may need to use the following command in tox.ini so that sphinx will not consider the ParamikoExecution.py file\n\ncommands \u003d sphinx-apidoc -o transferpy/doc/transferpy transferpy transferpy/RemoteExecution/ParamikoExecution.py\n           sphinx-build \"transferpy/doc\" \"transferpy/doc/.build\" --color{posargs}\n\nLet me wait for jcrespo\u0027s comment.",
+      "revId": "163247ccf8c4f4f66a23063dce66e220ed4e5795",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
