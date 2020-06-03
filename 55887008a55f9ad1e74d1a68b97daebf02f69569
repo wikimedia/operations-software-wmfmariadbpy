@@ -2,6 +2,98 @@
   "comments": [
     {
       "key": {
+        "uuid": "a50aa870_e9f30bb7",
+        "filename": "setup.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 24
+      },
+      "writtenOn": "2020-06-03T12:25:20Z",
+      "side": 1,
+      "message": "Should probably be renamed to \u0027docs\u0027 instead since tox.ini has:\n\n [testenv:py37-sphinx]\n extras \u003d docs",
+      "range": {
+        "startLine": 24,
+        "startChar": 8,
+        "endLine": 24,
+        "endChar": 17
+      },
+      "revId": "55887008a55f9ad1e74d1a68b97daebf02f69569",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "353c7730_09cf7ff9",
+        "filename": "tox.ini",
+        "patchSetId": 7
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 24
+      },
+      "writtenOn": "2020-06-03T12:25:20Z",
+      "side": 1,
+      "message": "The requirements are listed in setup.py in an extra section:\n\n    extras_require\u003d{\n        \u0027sphinx\u0027: [\n            \u0027sphinx_rtd_theme\u003e\u003d0.4.3\u0027,\n            \u0027sphinx-argparse\u003e\u003d0.2.2\u0027,\n            \u0027Sphinx\u003e\u003d1.8.4\u0027,\n        ]\n    },\n\nTo avoid introducing a new file (doc-requirements.txt) and duplication the list of dependencies, you can instead refer to the extra section by using \u0027.[sphinx]\u0027\n\n deps \u003d -rrequirements.txt\n        -rtest-requirements.txt\n        .[sphinx]\n\nBut see below..\n\n\nThat would also add the doc requirements and all their dependencies to the shared testenv which might have side effects.  It is probably better to come up with a separate environment.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 29
+      },
+      "revId": "55887008a55f9ad1e74d1a68b97daebf02f69569",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35106131_56a499c4",
+        "filename": "tox.ini",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 24
+      },
+      "writtenOn": "2020-06-03T12:25:20Z",
+      "side": 1,
+      "message": "All the testenvs have a shared directory due to:\n\n [testenv]\n envdir \u003d {toxworkdir}/venv\n\nBut they might have been created with a different python3 version.   Is 3.7 an actual requirement or would any python3 work?",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 22
+      },
+      "revId": "55887008a55f9ad1e74d1a68b97daebf02f69569",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a526b16d_55853cce",
+        "filename": "tox.ini",
+        "patchSetId": 7
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 24
+      },
+      "writtenOn": "2020-06-03T12:25:20Z",
+      "side": 1,
+      "message": "That is the equivalent of running: pip install [docs] , which would install the dependencies listed in the \u0027docs\u0027 extra from setup.py.  However it is currently named \u0027sphinx\u0027.\n\nSo I guess we can come up with:\n\n [testenv:sphinx]\n description \u003d invoke sphinx-build to build the HTML docs\n envdir\u003d{toxworkdir}/{envname}\n deps \u003d -rrequirements.txt\n extras \u003d docs\n commands \u003d sphinx-build \"transferpy/doc\" \"transferpy/doc/.build\" --color {posargs}\n\nIt is usually a good thing to have warnings to be turned to errors with -W:\n\n  -W                turn warnings into errors",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 13
+      },
+      "revId": "55887008a55f9ad1e74d1a68b97daebf02f69569",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b257040a_325a84eb",
         "filename": "transferpy/doc/wishes.rst",
         "patchSetId": 7
