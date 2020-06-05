@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1db42f3e_2134c62e",
+        "filename": "setup.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-06-05T08:41:27Z",
+      "side": 1,
+      "message": "I think cumin is not needed, will check the others.",
+      "range": {
+        "startLine": 15,
+        "startChar": 9,
+        "endLine": 15,
+        "endChar": 14
+      },
+      "revId": "7ca26a3d4543714e6b26ea396b8a83d0441ecf21",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
