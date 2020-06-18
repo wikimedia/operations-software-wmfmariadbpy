@@ -22,6 +22,30 @@
       "revId": "7ca26a3d4543714e6b26ea396b8a83d0441ecf21",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc80c3ac_7507c504",
+        "filename": "setup.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-06-18T11:22:56Z",
+      "side": 1,
+      "message": "It is actually needed by switchover.py, maybe others.",
+      "parentUuid": "1db42f3e_2134c62e",
+      "range": {
+        "startLine": 15,
+        "startChar": 9,
+        "endLine": 15,
+        "endChar": 14
+      },
+      "revId": "7ca26a3d4543714e6b26ea396b8a83d0441ecf21",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
     }
   ]
 }
