@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da2d5c59_cf8aae4b",
+        "filename": "debian/control",
+        "patchSetId": 10
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-07-30T09:36:40Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 10,
+        "startChar": 9,
+        "endLine": 10,
+        "endChar": 29
+      },
+      "revId": "6fb0cdc7830fa7186cde14f979266fae57eae62d",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "afd41457_daee380b",
+        "filename": "debian/control",
+        "patchSetId": 10
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-07-30T09:36:40Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 19,
+        "startChar": 46,
+        "endLine": 19,
+        "endChar": 64
+      },
+      "revId": "6fb0cdc7830fa7186cde14f979266fae57eae62d",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
