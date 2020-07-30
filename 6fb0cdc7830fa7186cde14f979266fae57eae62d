@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "be00af01_cf40bd80",
+        "filename": "debian/control",
+        "patchSetId": 10
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2020-07-30T09:39:38Z",
+      "side": 1,
+      "message": "Good catch, thanks. Fixed.",
+      "parentUuid": "da2d5c59_cf8aae4b",
+      "range": {
+        "startLine": 10,
+        "startChar": 9,
+        "endLine": 10,
+        "endChar": 29
+      },
+      "revId": "6fb0cdc7830fa7186cde14f979266fae57eae62d",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "afd41457_daee380b",
         "filename": "debian/control",
         "patchSetId": 10
@@ -45,6 +69,30 @@
       "revId": "6fb0cdc7830fa7186cde14f979266fae57eae62d",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70b7b851_c244af3b",
+        "filename": "debian/control",
+        "patchSetId": 10
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2020-07-30T09:39:38Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "afd41457_daee380b",
+      "range": {
+        "startLine": 19,
+        "startChar": 46,
+        "endLine": 19,
+        "endChar": 64
+      },
+      "revId": "6fb0cdc7830fa7186cde14f979266fae57eae62d",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
     }
   ]
 }
