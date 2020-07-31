@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "e2cc8001_3eb6b624",
+        "filename": "debian/changelog",
+        "patchSetId": 15
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1491
+      },
+      "writtenOn": "2020-07-31T11:42:18Z",
+      "side": 1,
+      "message": "You probably want something like buster-wikimedia instead of UNRELEASED here",
+      "revId": "9aa0a35b56efad7e8a7f47c11688aad97e031837",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8d991986_780296c8",
         "filename": "debian/control",
         "patchSetId": 15
