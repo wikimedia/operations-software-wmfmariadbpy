@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "09eeb348_0383f194",
+        "filename": "debian/changelog",
+        "patchSetId": 15
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2020-07-31T12:10:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e2cc8001_3eb6b624",
+      "revId": "9aa0a35b56efad7e8a7f47c11688aad97e031837",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d991986_780296c8",
         "filename": "debian/control",
         "patchSetId": 15
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "2b04bf13_15c0c788",
+        "filename": "debian/control",
+        "patchSetId": 15
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2020-07-31T12:10:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d991986_780296c8",
+      "revId": "9aa0a35b56efad7e8a7f47c11688aad97e031837",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f06dd64_e3349ab2",
         "filename": "debian/wmfmariadbpy.install",
         "patchSetId": 15
@@ -50,6 +86,24 @@
       "revId": "9aa0a35b56efad7e8a7f47c11688aad97e031837",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c45812e_3531c628",
+        "filename": "debian/wmfmariadbpy.install",
+        "patchSetId": 15
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2020-07-31T12:10:56Z",
+      "side": 1,
+      "message": "Aye. The issue is that the scripts and libraries all live in the same source dir. I\u0027ll look at refactoring that soon hopefully.",
+      "parentUuid": "7f06dd64_e3349ab2",
+      "revId": "9aa0a35b56efad7e8a7f47c11688aad97e031837",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
     }
   ]
 }
