@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea5e0696_62414aba",
+        "filename": "wmfmariadbpy/WMFBackup.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2020-07-31T09:36:31Z",
+      "side": 1,
+      "message": "`staging`",
+      "range": {
+        "startLine": 102,
+        "startChar": 44,
+        "endLine": 102,
+        "endChar": 47
+      },
+      "revId": "f1320661588501ff28c1cdae0afc0da062b79d14",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae88ea88_b0f0f4bd",
+        "filename": "wmfmariadbpy/WMFBackup.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2020-07-31T09:36:31Z",
+      "side": 1,
+      "message": "`matomo`",
+      "range": {
+        "startLine": 105,
+        "startChar": 45,
+        "endLine": 105,
+        "endChar": 47
+      },
+      "revId": "f1320661588501ff28c1cdae0afc0da062b79d14",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7ed03c3_2071496b",
+        "filename": "wmfmariadbpy/WMFBackup.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2020-07-31T09:36:31Z",
+      "side": 1,
+      "message": "`analytics_meta`",
+      "range": {
+        "startLine": 108,
+        "startChar": 45,
+        "endLine": 108,
+        "endChar": 47
+      },
+      "revId": "f1320661588501ff28c1cdae0afc0da062b79d14",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
