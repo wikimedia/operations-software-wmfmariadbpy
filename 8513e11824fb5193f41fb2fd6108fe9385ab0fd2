@@ -66,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "94d2eac2_a17428c6",
+        "filename": "wmfbackups/check_mariadb_backups.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-08-13T13:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "027af7cf_121d8e13",
+      "revId": "8513e11824fb5193f41fb2fd6108fe9385ab0fd2",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "24140f11_53f861a4",
         "filename": "wmfbackups/recover_dump.py",
         "patchSetId": 1
@@ -83,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "46799885_dd64d4ed",
+        "filename": "wmfbackups/recover_dump.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-08-13T13:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "24140f11_53f861a4",
+      "revId": "8513e11824fb5193f41fb2fd6108fe9385ab0fd2",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e1dee2d8_beb53194",
         "filename": "wmfbackups/remote_backup_mariadb.py",
         "patchSetId": 1
@@ -97,6 +133,24 @@
       "revId": "8513e11824fb5193f41fb2fd6108fe9385ab0fd2",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "043c2c76_cc387576",
+        "filename": "wmfbackups/remote_backup_mariadb.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-08-13T13:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1dee2d8_beb53194",
+      "revId": "8513e11824fb5193f41fb2fd6108fe9385ab0fd2",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
     },
     {
       "key": {
