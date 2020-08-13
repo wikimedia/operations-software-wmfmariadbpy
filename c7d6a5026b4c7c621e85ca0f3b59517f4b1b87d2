@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4701ec90_687f959a",
+        "filename": "wmfbackups/remote_backup_mariadb.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2020-08-13T14:41:38Z",
+      "side": 1,
+      "message": "This should be executable.",
+      "revId": "c7d6a5026b4c7c621e85ca0f3b59517f4b1b87d2",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
