@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "8c31f5cd_1d9db42e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2020-08-13T14:45:01Z",
+      "side": 1,
+      "message": "Small grammar fixes:\n\n\"order to maintain them together. They will be eventually (along with other\"",
+      "range": {
+        "startLine": 12,
+        "startChar": 32,
+        "endLine": 12,
+        "endChar": 35
+      },
+      "revId": "c7d6a5026b4c7c621e85ca0f3b59517f4b1b87d2",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4701ec90_687f959a",
         "filename": "wmfbackups/remote_backup_mariadb.py",
         "patchSetId": 3
