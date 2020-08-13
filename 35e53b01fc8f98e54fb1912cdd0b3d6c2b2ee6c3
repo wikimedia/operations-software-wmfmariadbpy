@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e7d5c8e0_9f225808",
+        "filename": "debian/control",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-08-13T15:20:48Z",
+      "side": 1,
+      "message": "Here.",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 8
+      },
+      "revId": "35e53b01fc8f98e54fb1912cdd0b3d6c2b2ee6c3",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d05891a9_a6424daa",
+        "filename": "debian/python3-wmfmariadbpy-remote.install",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-08-13T15:20:48Z",
+      "side": 1,
+      "message": "Actually you include all, probably better only include Cumin, or cumin+local for now.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 92
+      },
+      "revId": "35e53b01fc8f98e54fb1912cdd0b3d6c2b2ee6c3",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
