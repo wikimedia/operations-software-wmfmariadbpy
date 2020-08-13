@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4266c2fb_d40d8b9f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-08-13T14:51:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c31f5cd_1d9db42e",
+      "range": {
+        "startLine": 12,
+        "startChar": 32,
+        "endLine": 12,
+        "endChar": 35
+      },
+      "revId": "c7d6a5026b4c7c621e85ca0f3b59517f4b1b87d2",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4701ec90_687f959a",
         "filename": "wmfbackups/remote_backup_mariadb.py",
         "patchSetId": 3
@@ -39,6 +63,24 @@
       "revId": "c7d6a5026b4c7c621e85ca0f3b59517f4b1b87d2",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a76c07a1_bbf1eb8e",
+        "filename": "wmfbackups/remote_backup_mariadb.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-08-13T14:51:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4701ec90_687f959a",
+      "revId": "c7d6a5026b4c7c621e85ca0f3b59517f4b1b87d2",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
     }
   ]
 }
