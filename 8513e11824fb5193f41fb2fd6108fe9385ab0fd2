@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5a8f9b76_98aab842",
+        "filename": "wmfbackups/backup_mariadb.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-08-13T12:59:49Z",
+      "side": 1,
+      "message": "I\u0027d like to have my patches small, so I split the 2 CRs of the pull request. I would combine both patches rather than make more changes on the first 1.",
+      "parentUuid": "b3583d4c_a33a9ed7",
+      "range": {
+        "startLine": 10,
+        "startChar": 5,
+        "endLine": 10,
+        "endChar": 17
+      },
+      "revId": "8513e11824fb5193f41fb2fd6108fe9385ab0fd2",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "027af7cf_121d8e13",
         "filename": "wmfbackups/check_mariadb_backups.py",
         "patchSetId": 1
