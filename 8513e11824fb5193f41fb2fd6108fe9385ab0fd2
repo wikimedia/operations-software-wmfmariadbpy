@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "027af7cf_121d8e13",
+        "filename": "wmfbackups/check_mariadb_backups.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2020-08-13T12:51:12Z",
+      "side": 1,
+      "message": "Where did this file come from? I wasn\u0027t expecting to see new files in a reorganisation CR.",
+      "revId": "8513e11824fb5193f41fb2fd6108fe9385ab0fd2",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24140f11_53f861a4",
+        "filename": "wmfbackups/recover_dump.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2020-08-13T12:51:12Z",
+      "side": 1,
+      "message": "`wmfmariadbpy/recover_dump.py` should be deleted.",
+      "revId": "8513e11824fb5193f41fb2fd6108fe9385ab0fd2",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1dee2d8_beb53194",
+        "filename": "wmfbackups/remote_backup_mariadb.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2020-08-13T12:51:12Z",
+      "side": 1,
+      "message": "Same question here re: where did this file come from.",
+      "revId": "8513e11824fb5193f41fb2fd6108fe9385ab0fd2",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
