@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "d0f7b11d_195dab0b",
+        "filename": "wmfbackups/backup_mariadb.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-08-13T16:17:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "90173962_7b651165",
+      "range": {
+        "startLine": 10,
+        "startChar": 5,
+        "endLine": 10,
+        "endChar": 17
+      },
+      "revId": "8513e11824fb5193f41fb2fd6108fe9385ab0fd2",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "027af7cf_121d8e13",
         "filename": "wmfbackups/check_mariadb_backups.py",
         "patchSetId": 1
