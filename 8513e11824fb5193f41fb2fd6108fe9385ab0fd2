@@ -114,6 +114,24 @@
       "revId": "8513e11824fb5193f41fb2fd6108fe9385ab0fd2",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6fc73d2_1b356303",
+        "filename": "wmfbackups/remote_backup_mariadb.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-08-13T13:17:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7fd4b34b_020e67b5",
+      "revId": "8513e11824fb5193f41fb2fd6108fe9385ab0fd2",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
     }
   ]
 }
