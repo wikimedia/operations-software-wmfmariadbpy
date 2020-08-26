@@ -30,6 +30,53 @@ class WMFMariaDB:
     __last_error = None
     __debug = False
 
+    def __init__(
+        self,
+        host,
+        port=3306,
+        database=None,
+        debug=False,
+        connect_timeout=10.0,
+        query_limit=None,
+        vendor="MariaDB",
+    ):
+        """
+        Try to connect to a mysql server instance and returns a python
+        connection identifier, which you can use to send one or more queries.
+        """
+        self.debug = debug
+        self.vendor = vendor
+        (host, port) = WMFMariaDB.resolve(host, port)
+        (user, password, socket, ssl) = WMFMariaDB.get_credentials(host, port, database)
+
+        try:
+            self.connection = pymysql.connect(
+                host=host,
+                port=port,
+                user=user,
+                password=password,
+                db=database,
+                charset="utf8mb4",
+                unix_socket=socket,
+                ssl=ssl,
+                connect_timeout=connect_timeout,
+                autocommit=True,
+            )
+        except (pymysql.err.OperationalError, pymysql.err.InternalError, OSError) as e:
+            self.connection = None
+            self.__last_error = [e.args[0], e.args[1]]
+            if self.debug:
+                print("ERROR {}: {}".format(e.args[0], e.args[1]))
+        self.host = host
+        self.socket = socket
+        self.port = int(port)
+        self.database = database
+        self.connect_timeout = connect_timeout
+        if query_limit is not None:
+            self.set_query_limit(query_limit)  # we ignore it silently if it fails
+        if self.debug:
+            print("Connected to {}".format(self.name()))
+
     def name(self, show_db=True):
         if self.host == "localhost":
             address = "{}[socket={}]".format(self.host, self.socket)
@@ -221,53 +268,6 @@ class WMFMariaDB:
                     domain = localhost_fqdn[localhost_fqdn.index(".") :]
             host = host + domain
         return (host, port)
-
-    def __init__(
-        self,
-        host,
-        port=3306,
-        database=None,
-        debug=False,
-        connect_timeout=10.0,
-        query_limit=None,
-        vendor="MariaDB",
-    ):
-        """
-        Try to connect to a mysql server instance and returns a python
-        connection identifier, which you can use to send one or more queries.
-        """
-        self.debug = debug
-        self.vendor = vendor
-        (host, port) = WMFMariaDB.resolve(host, port)
-        (user, password, socket, ssl) = WMFMariaDB.get_credentials(host, port, database)
-
-        try:
-            self.connection = pymysql.connect(
-                host=host,
-                port=port,
-                user=user,
-                password=password,
-                db=database,
-                charset="utf8mb4",
-                unix_socket=socket,
-                ssl=ssl,
-                connect_timeout=connect_timeout,
-                autocommit=True,
-            )
-        except (pymysql.err.OperationalError, pymysql.err.InternalError, OSError) as e:
-            self.connection = None
-            self.__last_error = [e.args[0], e.args[1]]
-            if self.debug:
-                print("ERROR {}: {}".format(e.args[0], e.args[1]))
-        self.host = host
-        self.socket = socket
-        self.port = int(port)
-        self.database = database
-        self.connect_timeout = connect_timeout
-        if query_limit is not None:
-            self.set_query_limit(query_limit)  # we ignore it silently if it fails
-        if self.debug:
-            print("Connected to {}".format(self.name()))
 
     def change_database(self, database):
         """
