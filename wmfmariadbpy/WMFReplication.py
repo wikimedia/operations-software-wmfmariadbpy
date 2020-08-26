@@ -13,9 +13,6 @@ class WMFReplication:
     Class to control replication at WMF MariaDB/MySQL Cluster
     """
 
-    connection = None
-    timeout = 5.0  # how much to wait after start slave to determine if it was successful or not
-
     def __init__(self, connection, timeout=5.0):
         """
         The constructore requires an open connection in the form of a WMFMariaDB object

@@ -20,16 +20,6 @@ class WMFMariaDB:
     unique, clean way to do stuff on the databases.
     """
 
-    connection = None
-    host = None
-    socket = None
-    port = None
-    database = None
-    query_limit = None
-    vendor = None
-    __last_error = None
-    __debug = False
-
     def __init__(
         self,
         host,
@@ -44,6 +34,7 @@ class WMFMariaDB:
         Try to connect to a mysql server instance and returns a python
         connection identifier, which you can use to send one or more queries.
         """
+        self.__last_error = None
         self.debug = debug
         self.vendor = vendor
         (host, port) = WMFMariaDB.resolve(host, port)
@@ -72,8 +63,7 @@ class WMFMariaDB:
         self.port = int(port)
         self.database = database
         self.connect_timeout = connect_timeout
-        if query_limit is not None:
-            self.set_query_limit(query_limit)  # we ignore it silently if it fails
+        self.set_query_limit(query_limit)  # we ignore it silently if it fails
         if self.debug:
             print("Connected to {}".format(self.name()))
 
