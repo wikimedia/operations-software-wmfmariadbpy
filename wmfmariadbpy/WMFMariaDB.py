@@ -138,7 +138,6 @@ class WMFMariaDB:
             mysql_sock = WMFMariaDB.get_socket_from_port(port)
             ssl = None
             password = None
-            charset = None
         elif host == "127.0.0.1":
             # connect to localhost throught the port without ssl
             config = configparser.ConfigParser(interpolation=None, allow_no_value=True)
@@ -147,7 +146,6 @@ class WMFMariaDB:
             password = config["client"]["password"]
             ssl = None
             mysql_sock = None
-            charset = None
         elif not host.startswith("labsdb"):
             # connect to a production remote host, use ssl and prod pass
             config = configparser.ConfigParser(interpolation=None, allow_no_value=True)
@@ -156,7 +154,6 @@ class WMFMariaDB:
             password = config["client"]["password"]
             ssl = {"ca": "/etc/ssl/certs/Puppet_Internal_CA.pem"}
             mysql_sock = None
-            charset = None
         else:
             # connect to a labs remote host, use ssl and labs pass
             config = configparser.ConfigParser(interpolation=None)
@@ -165,9 +162,8 @@ class WMFMariaDB:
             password = config["clientlabsdb"]["password"]
             ssl = {"ca": "/etc/ssl/certs/Puppet_Internal_CA.pem"}
             mysql_sock = None
-            charset = None
 
-        return (user, password, mysql_sock, ssl, charset)
+        return (user, password, mysql_sock, ssl)
 
     @property
     def debug(self):
@@ -243,9 +239,7 @@ class WMFMariaDB:
         self.debug = debug
         self.vendor = vendor
         (host, port) = WMFMariaDB.resolve(host, port)
-        (user, password, socket, ssl, charset) = WMFMariaDB.get_credentials(
-            host, port, database
-        )
+        (user, password, socket, ssl) = WMFMariaDB.get_credentials(host, port, database)
 
         try:
             self.connection = pymysql.connect(
