@@ -141,7 +141,9 @@ def do_preflight_checks(
         (
             "* Original read only values are as expected "
             "(master: read_only={}, slave: read_only=True)"
-        ).format((str(read_only_master)),)
+        ).format(
+            (str(read_only_master)),
+        )
     )
 
     # Check current replica is a direct slave of the current master

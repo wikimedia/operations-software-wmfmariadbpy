@@ -1,7 +1,7 @@
-from wmfmariadbpy.WMFMariaDB import WMFMariaDB
-
 import unittest
 import unittest.mock as um
+
+from wmfmariadbpy.WMFMariaDB import WMFMariaDB
 
 
 def mock_open(csvdata, *args, **kargs):
