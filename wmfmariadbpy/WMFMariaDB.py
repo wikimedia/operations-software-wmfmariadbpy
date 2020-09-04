@@ -10,7 +10,7 @@ import socket
 # requires python3-pymysql
 import pymysql
 
-SECTION_PORT_LIST_FILE = "/etc/mysql/section_ports.csv"
+SECTION_PORT_LIST_FILE = "/etc/wmfmariadbpy/section_ports.csv"
 
 
 class WMFMariaDB:
