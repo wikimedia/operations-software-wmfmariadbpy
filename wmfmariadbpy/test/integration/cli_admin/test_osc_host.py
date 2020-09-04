@@ -19,6 +19,7 @@ class TestOnlineSchemaChanger(unittest.TestCase):
         self.conf.host = "localhost"
         self.conf.port = 3306
         self.conf.user = "root"
+        self.conf.analyze = True
         self.conf.debug = True
         self.conf.dblist = [self.DB_NAME]
         self.conf.table = self.TABLE_NAME
