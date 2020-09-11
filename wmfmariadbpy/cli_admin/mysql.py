@@ -1,10 +1,9 @@
 #!/usr/bin/python3
 
-import ipaddress
 import os
-import re
-import socket
 import sys
+
+from wmfmariadbpy.WMFMariaDB import WMFMariaDB
 
 """
 mysql.py intends to be a wrapper around the mysql command line client,
@@ -18,51 +17,6 @@ password (e.g. labsdb hosts have its own, separate password.
 Other than automatically add some extra parameters, the script just
 execs mysql, behaving like it.
 """
-
-
-def get_host_tuple(host):
-    """
-    It parses a host argument (which can be in format 'host:port' and
-    returns a (host, port) tuple
-    """
-    if ":" in host:
-        # we do not support ipv6 yet
-        host, port = host.split(":")
-        port = int(port)
-    else:
-        port = 3306
-    return (host, port)
-
-
-def resolve(host):
-    """
-    Return the full qualified domain name for a database hostname. Normally
-    this return the hostname itself, except in the case where the
-    datacenter and network parts have been omitted, in which case, it is
-    completed as a best effort.
-    If the original address is an IPv4 or IPv6 address, leave it as is
-    """
-    try:
-        ipaddress.ip_address(host)
-        return host
-    except ValueError:
-        pass
-    if "." not in host and host != "localhost":
-        domain = ""
-        if re.match("^[a-z]+1[0-9][0-9][0-9]$", host) is not None:
-            domain = ".eqiad.wmnet"
-        elif re.match("^[a-z]+2[0-9][0-9][0-9]$", host) is not None:
-            domain = ".codfw.wmnet"
-        elif re.match("^[a-z]+3[0-9][0-9][0-9]$", host) is not None:
-            domain = ".esams.wmnet"
-        elif re.match("^[a-z]+4[0-9][0-9][0-9]$", host) is not None:
-            domain = ".ulsfo.wmnet"
-        else:
-            localhost_fqdn = socket.getfqdn()
-            if "." in localhost_fqdn and len(localhost_fqdn) > 1:
-                domain = localhost_fqdn[localhost_fqdn.index(".") :]
-        host = host + domain
-    return host
 
 
 def find_host(arguments):
@@ -101,26 +55,27 @@ def override_arguments(arguments):
     Finds the host parameters and applies ssl config, host/port
     transformations and default section (password) used
     """
-    (host, host_index) = find_host(arguments)
+    host, host_index = find_host(arguments)
+    if host is None:
+        arguments.append("--skip-ssl")
+        return arguments
+    host, port = WMFMariaDB.resolve(host)
 
     # Just add skip-ssl for localhost
-    if host == "localhost" or host is None:
+    if host == "localhost":
         arguments.append("--skip-ssl")
-    else:
-        port = None
-        if ":" in host:
-            (host, port) = get_host_tuple(host)
 
-        host = resolve(host)
+    # Add complete host and port
+    for i in host_index:
+        del arguments[host_index[0]]
+    arguments.insert(host_index[0], "--host={}".format(host))
+    if port is not None:
+        arguments.insert(host_index[0] + 1, "--port={}".format(port))
 
-        for i in host_index:
-            del arguments[host_index[0]]
-        arguments.insert(host_index[0], "--host={}".format(host))
-        if port is not None:
-            arguments.insert(host_index[0] + 1, "--port={}".format(port))
+    # different auth for labsdb hosts
+    if host.startswith("labsdb"):
+        arguments.insert(1, "--defaults-group-suffix=labsdb")
 
-        if host.startswith("labsdb"):
-            arguments.insert(1, "--defaults-group-suffix=labsdb")
     return arguments
 
 
