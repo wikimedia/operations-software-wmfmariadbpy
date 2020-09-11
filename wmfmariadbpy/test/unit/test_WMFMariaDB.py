@@ -61,13 +61,16 @@ class TestWMFMariaDB(unittest.TestCase):
         test_cases = [
             ("localhost", ("localhost", 3306)),
             ("localhost:3311", ("localhost", 3311)),
+            ("localhost:s1", ("localhost", 1)),
             ("db1001", ("db1001.eqiad.wmnet", 3306)),
             ("db5999:3321", ("db5999.eqsin.wmnet", 3321)),
+            ("db4999:m3", ("db4999.ulsfo.wmnet", 100)),
             ("db2001.codfw.wmnet", ("db2001.codfw.wmnet", 3306)),
             ("dbmonitor1001.wikimedia.org", ("dbmonitor1001.wikimedia.org", 3306)),
         ]
-        for test in test_cases:
-            self.assertEqual(WMFMariaDB.resolve(test[0]), test[1])
+        with um.patch("builtins.open", mock_open(self.test_csv_data)):
+            for test in test_cases:
+                self.assertEqual(WMFMariaDB.resolve(test[0]), test[1])
 
 
 if __name__ == "__main__":

@@ -242,8 +242,10 @@ class WMFMariaDB:
         if ":" in host:
             # we do not support ipv6 yet
             host, port = host.split(":")
-            port = int(port)
-
+            try:
+                port = int(port)
+            except ValueError:
+                port = WMFMariaDB.get_port_from_section(port)
         try:
             ipaddress.ip_address(host)
             return (host, port)
