@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86dfc40a_de99bea1",
+        "filename": "wmfmariadbpy/cli_admin/mysql.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2020-09-15T08:34:40Z",
+      "side": 1,
+      "message": "The ()\u0027s here are redundant.",
+      "range": {
+        "startLine": 64,
+        "startChar": 8,
+        "endLine": 64,
+        "endChar": 9
+      },
+      "revId": "994ea21b8c01dee13c6ad1f267ea409472dedd43",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
