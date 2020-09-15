@@ -22,6 +22,30 @@
       "revId": "994ea21b8c01dee13c6ad1f267ea409472dedd43",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16cef297_e29a12be",
+        "filename": "wmfmariadbpy/cli_admin/mysql.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2020-09-15T12:59:58Z",
+      "side": 1,
+      "message": "Note I didn\u0027t modify that on the patch, I just deleted code and kept the syntax of the original code on line 112, but nothing I cannot change now.",
+      "parentUuid": "86dfc40a_de99bea1",
+      "range": {
+        "startLine": 64,
+        "startChar": 8,
+        "endLine": 64,
+        "endChar": 9
+      },
+      "revId": "994ea21b8c01dee13c6ad1f267ea409472dedd43",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
     }
   ]
 }
