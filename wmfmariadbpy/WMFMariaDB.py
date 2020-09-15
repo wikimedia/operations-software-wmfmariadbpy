@@ -193,7 +193,7 @@ class WMFMariaDB:
             password = config["client"]["password"]
             ssl = None
             mysql_sock = None
-        elif not host.startswith("labsdb"):
+        elif not host.startswith("labsdb") and not host.startswith("clouddb"):
             # connect to a production remote host, use ssl and prod pass
             config = configparser.ConfigParser(interpolation=None, allow_no_value=True)
             config.read("/root/.my.cnf")

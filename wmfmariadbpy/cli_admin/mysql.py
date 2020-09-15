@@ -73,7 +73,7 @@ def override_arguments(arguments):
         arguments.insert(host_index[0] + 1, "--port={}".format(port))
 
     # different auth for labsdb hosts
-    if host.startswith("labsdb"):
+    if host.startswith("labsdb") or host.startswith("clouddb"):
         arguments.insert(1, "--defaults-group-suffix=labsdb")
 
     return arguments
