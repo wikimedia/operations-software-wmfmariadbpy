@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f5db670a_90466358",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2020-09-16T08:07:20Z",
+      "side": 1,
+      "message": "With the confirmation from bstorm, this can be changed to \"The new wmcs databases ...\"",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 17
+      },
+      "revId": "23bbd740bbad81a3b25b3176d4716396fd1318b1",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
