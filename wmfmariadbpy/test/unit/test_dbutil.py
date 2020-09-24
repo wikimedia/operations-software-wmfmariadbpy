@@ -1,7 +1,7 @@
 import unittest
 import unittest.mock as um
 
-from wmfmariadbpy.WMFMariaDB import WMFMariaDB
+import wmfmariadbpy.dbutil as dbutil
 
 
 def mock_open(csvdata, *args, **kargs):
@@ -17,7 +17,7 @@ class TestWMFMariaDB(unittest.TestCase):
 
     def test_read_section_ports_list(self):
         with um.patch("builtins.open", mock_open(self.test_csv_data)):
-            sections, ports = WMFMariaDB.read_section_ports_list()
+            sections, ports = dbutil.read_section_ports_list()
             self.assertEqual(sections[2], "s2")
             self.assertEqual(ports["m3"], 100)
 
@@ -25,16 +25,16 @@ class TestWMFMariaDB(unittest.TestCase):
         test_cases = [("m3", 100), ("nonexistent", 3306), (None, 3306)]
         with um.patch("builtins.open", mock_open(self.test_csv_data)):
             for case in test_cases:
-                self.assertEqual(WMFMariaDB.get_port_from_section(case[0]), case[1])
+                self.assertEqual(dbutil.get_port_from_section(case[0]), case[1])
 
     def test_get_section_from_port(self):
         test_cases = [(2, "s2"), (100, "m3")]
         null_cases = [655359, -1, 0, None]
         with um.patch("builtins.open", mock_open(self.test_csv_data)):
             for case in test_cases:
-                self.assertEqual(WMFMariaDB.get_section_from_port(case[0]), case[1])
+                self.assertEqual(dbutil.get_section_from_port(case[0]), case[1])
             for case in null_cases:
-                self.assertIsNone(WMFMariaDB.get_section_from_port(case))
+                self.assertIsNone(dbutil.get_section_from_port(case))
 
     def test_get_datadir_from_port(self):
         test_cases = [
@@ -45,7 +45,7 @@ class TestWMFMariaDB(unittest.TestCase):
         ]
         with um.patch("builtins.open", mock_open(self.test_csv_data)):
             for case in test_cases:
-                self.assertEqual(WMFMariaDB.get_datadir_from_port(case[0]), case[1])
+                self.assertEqual(dbutil.get_datadir_from_port(case[0]), case[1])
 
     def test_get_socket_from_port(self):
         test_cases = [
@@ -55,7 +55,7 @@ class TestWMFMariaDB(unittest.TestCase):
         ]
         with um.patch("builtins.open", mock_open(self.test_csv_data)):
             for case in test_cases:
-                self.assertEqual(WMFMariaDB.get_socket_from_port(case[0]), case[1])
+                self.assertEqual(dbutil.get_socket_from_port(case[0]), case[1])
 
     def test_resolve(self):
         test_cases = [
@@ -70,7 +70,7 @@ class TestWMFMariaDB(unittest.TestCase):
         ]
         with um.patch("builtins.open", mock_open(self.test_csv_data)):
             for test in test_cases:
-                self.assertEqual(WMFMariaDB.resolve(test[0]), test[1])
+                self.assertEqual(dbutil.resolve(test[0]), test[1])
 
 
 if __name__ == "__main__":
