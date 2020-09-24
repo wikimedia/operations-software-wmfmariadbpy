@@ -125,7 +125,7 @@ class WMFMariaDB:
         Returns the port integer corresponding to the given section name. If the section
         is None, or an unrecognized one, return the default one (3306).
         """
-        sections, ports = WMFMariaDB.read_section_ports_list()
+        _, ports = WMFMariaDB.read_section_ports_list()
         return ports.get(section, 3306)
 
     @staticmethod
@@ -134,7 +134,7 @@ class WMFMariaDB:
         Returns the section name corresponding to the given port. If the port is the
         default one (3306) or an unknown one, return a null value.
         """
-        sections, ports = WMFMariaDB.read_section_ports_list()
+        sections, _ = WMFMariaDB.read_section_ports_list()
         return sections.get(port, None)
 
     @staticmethod
