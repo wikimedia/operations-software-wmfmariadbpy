@@ -254,62 +254,6 @@ class WMFMariaDB:
         ver_nums = result["rows"][0][0].split("-")[0]
         return tuple(map(int, ver_nums.split(".")))
 
-    @staticmethod
-    def execute_many(command, shard=None, wiki=None, dryrun=True, debug=False):
-        """
-        Executes a command on all wikis from the given shard, once per
-        instance, serially. If dryrun is True, not execute, but connect and
-        print what would be done.
-        """
-        result = []
-        connection = None
-        dblist = dbutil.get_wikis(shard=shard, wiki=wiki)
-
-        for host, port, database in dblist:
-            if (
-                connection is not None
-                and connection.host == host
-                and connection.port == port
-                and connection.database != database
-            ):
-                connection.change_database(database)
-                if connection.database != database:
-                    print("Could not change to database {}".format(database))
-                    continue
-            else:
-                if connection is not None:
-                    connection.disconnect()
-                connection = WMFMariaDB(
-                    host=host, port=port, database=database, debug=debug
-                )
-
-            if connection.connection is None:
-                print(
-                    "ERROR: Could not connect to {}:{}/{}".format(host, port, database)
-                )
-                resultset = None
-            else:
-                resultset = connection.execute(command, dryrun)
-
-            if resultset is None:
-                result.append(
-                    {
-                        "success": False,
-                        "host": host,
-                        "port": port,
-                        "database": database,
-                        "numrows": 0,
-                        "rows": None,
-                        "fields": None,
-                    }
-                )
-            else:
-                result.append(resultset)
-
-        if connection.connection is not None:
-            connection.disconnect()
-        return result
-
     def disconnect(self):
         """
         Ends the connection to a database, freeing resources. No more queries
