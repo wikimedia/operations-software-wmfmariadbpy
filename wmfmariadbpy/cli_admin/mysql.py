@@ -3,7 +3,7 @@
 import os
 import sys
 
-from wmfmariadbpy.WMFMariaDB import WMFMariaDB
+import wmfmariadbpy.dbutil as dbutil
 
 """
 mysql.py intends to be a wrapper around the mysql command line client,
@@ -59,7 +59,7 @@ def override_arguments(arguments):
     if host is None:
         arguments.append("--skip-ssl")
         return arguments
-    host, port = WMFMariaDB.resolve(host)
+    host, port = dbutil.resolve(host)
 
     # Just add skip-ssl for localhost
     if host == "localhost":
