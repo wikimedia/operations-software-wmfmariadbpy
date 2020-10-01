@@ -77,9 +77,11 @@ def get_credentials(
     Given a database instance, return the authentication method, including
     the user, password, socket and ssl configuration.
     """
+    pw = pwd.getpwuid(os.getuid())
+    user_my_cnf = os.path.join(pw.pw_dir, ".my.cnf")
     mysql_sock = None  # type: Optional[str]
     if host == "localhost":
-        user = pwd.getpwuid(os.getuid()).pw_name
+        user = pw.pw_name
         # connnect to localhost using plugin_auth:
         config = configparser.ConfigParser(
             interpolation=None, allow_no_value=True, strict=False
@@ -91,7 +93,7 @@ def get_credentials(
     elif host == "127.0.0.1":
         # connect to localhost throught the port without ssl
         config = configparser.ConfigParser(interpolation=None, allow_no_value=True)
-        config.read("/root/.my.cnf")
+        config.read(user_my_cnf)
         user = config["client"]["user"]
         password = config["client"]["password"]
         ssl = None
@@ -99,7 +101,7 @@ def get_credentials(
     elif not host.startswith("labsdb") and not host.startswith("clouddb"):
         # connect to a production remote host, use ssl and prod pass
         config = configparser.ConfigParser(interpolation=None, allow_no_value=True)
-        config.read("/root/.my.cnf")
+        config.read(user_my_cnf)
         user = config["client"]["user"]
         password = config["client"]["password"]
         ssl = {"ca": "/etc/ssl/certs/Puppet_Internal_CA.pem"}
@@ -107,7 +109,7 @@ def get_credentials(
     else:
         # connect to a labs remote host, use ssl and labs pass
         config = configparser.ConfigParser(interpolation=None)
-        config.read("/root/.my.cnf")
+        config.read(user_my_cnf)
         user = config["clientlabsdb"]["user"]
         password = config["clientlabsdb"]["password"]
         ssl = {"ca": "/etc/ssl/certs/Puppet_Internal_CA.pem"}
