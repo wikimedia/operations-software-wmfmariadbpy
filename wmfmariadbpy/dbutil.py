@@ -1,6 +1,5 @@
 import configparser
 import csv
-import glob
 import ipaddress
 import os
 import pwd
@@ -148,67 +147,3 @@ def resolve(host, port=3306):
                 domain = localhost_fqdn[localhost_fqdn.index(".") :]
         host = host + domain
     return (host, port)
-
-
-def get_wikis(shard=None, wiki=None):
-    """
-    Returns a tuple of hosts, ports and database names for all wikis from
-    the given shard. If shard is the string 'ALL', return all wikis from
-    all servers. The returned list is ordered by instance- that means,
-    wikis from the same instance are grouped together.
-
-    Currently implemented with shard lists on disk, this logic should be
-    simplified in the future with a dynamic database. The following assumes
-    there are not repeated shards/hosts (except in the same instance has
-    more than one shard), so no virtual dblists or hosts files.
-    """
-    if shard == "ALL":
-        # do a recursive call for every shard found
-        wiki_list = []
-        shard_dblists = glob.glob("*.dblist")
-        for file in shard_dblists:
-            shard = re.search(r"([^/]+)\.dblist", file).group(1)
-            wiki_list += get_wikis(shard=shard, wiki=wiki)
-        return wiki_list
-    elif shard is None and wiki is None:
-        # No shards or wikis selected, return the empty list
-        print("No wikis selected")
-        return list()
-    elif shard is None and wiki is not None:
-        # TODO: shard is not set, search the shard for a wiki
-        dbs = [wiki]
-        shard_dblists = glob.glob("*.dblist")
-        for file in shard_dblists:
-            shard_dbs = []
-            with open(file, "r") as f:
-                shard_dbs = f.read().splitlines()
-            # print('{}: {}'.format(file, shard_dbs))
-            if wiki in shard_dbs:
-                shard = re.search(r"([^/]+)\.dblist", file).group(1)
-                break
-        if shard is None or shard == "":
-            print("The wiki '{}' wasn't found on any shard".format(wiki))
-            return list()
-    elif shard is not None and wiki is not None:
-        # both shard and wiki are set, check the wiki is really on the
-        # shard
-        shard_dbs = []
-        with open("{}.dblist".format(shard), "r") as f:
-            shard_dbs = f.read().splitlines()
-        if wiki not in shard_dbs:
-            print("The wiki '{}' wasn't found on the shard '{}'".format(wiki, shard))
-            return list()
-        dbs = [wiki]
-    else:
-        # shard is set, but not wiki, get all dbs from that shard
-        dbs = []
-        with open("{}.dblist".format(shard), "r") as f:
-            dbs = f.read().splitlines()
-
-    with open("{}.hosts".format(shard), "r") as f:
-        hosts = list(csv.reader(f, delimiter="\t"))
-
-    # print(hosts)
-    # print(dbs)
-
-    return sorted([([h[0], int(h[1])] + [d]) for h in hosts for d in dbs])
