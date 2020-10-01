@@ -5,45 +5,48 @@ import os
 import pwd
 import re
 import socket
+from typing import Dict, Optional, Tuple
 
 SECTION_PORT_LIST_FILE = "/etc/wmfmariadbpy/section_ports.csv"
 
 
-def read_section_ports_list(path=SECTION_PORT_LIST_FILE):
+def read_section_ports_list(
+    path: str = SECTION_PORT_LIST_FILE,
+) -> Tuple[Dict[int, str], Dict[str, int]]:
     """
     Reads the list of section and port assignment file and returns two dictionaries,
     one for the section -> port assignment, and the other with the port -> section
     assignment.
     """
-    sections = {}
-    ports = {}
+    port2sec = {}
+    sec2port = {}
     with open(path, mode="r", newline="") as section_port_list:
         reader = csv.reader(section_port_list)
         for row in reader:
-            ports[row[0]] = int(row[1])
-            sections[int(row[1])] = row[0]
-    return sections, ports
+            sec2port[row[0]] = int(row[1])
+            port2sec[int(row[1])] = row[0]
+    return port2sec, sec2port
 
 
-def get_port_from_section(section):
+def get_port_from_section(section: str) -> int:
     """
     Returns the port integer corresponding to the given section name. If the section
     is None, or an unrecognized one, return the default one (3306).
     """
-    _, ports = read_section_ports_list()
-    return ports.get(section, 3306)
+    _, sec2port = read_section_ports_list()
+    return sec2port.get(section, 3306)
 
 
-def get_section_from_port(port):
+def get_section_from_port(port: int) -> Optional[str]:
     """
     Returns the section name corresponding to the given port. If the port is the
     default one (3306) or an unknown one, return a null value.
     """
-    sections, _ = read_section_ports_list()
-    return sections.get(port, None)
+    port2sec, _ = read_section_ports_list()
+    return port2sec.get(port, None)
 
 
-def get_datadir_from_port(port):
+def get_datadir_from_port(port: int) -> str:
     """
     Translates port number to expected datadir path
     """
@@ -54,7 +57,7 @@ def get_datadir_from_port(port):
         return "/srv/sqldata." + section
 
 
-def get_socket_from_port(port):
+def get_socket_from_port(port: int) -> str:
     """
     Translates port number to expected socket location
     """
@@ -65,11 +68,16 @@ def get_socket_from_port(port):
         return "/run/mysqld/mysqld." + section + ".sock"
 
 
-def get_credentials(host, port, database):
+def get_credentials(
+    host: str,
+    port: int,
+    database: str,
+) -> Tuple[str, Optional[str], Optional[str], Optional[Dict[str, str]]]:
     """
     Given a database instance, return the authentication method, including
     the user, password, socket and ssl configuration.
     """
+    mysql_sock = None  # type: Optional[str]
     if host == "localhost":
         user = pwd.getpwuid(os.getuid()).pw_name
         # connnect to localhost using plugin_auth:
@@ -108,7 +116,7 @@ def get_credentials(host, port, database):
     return (user, password, mysql_sock, ssl)
 
 
-def resolve(host, port=3306):
+def resolve(host: str, port: int = 3306) -> Tuple[str, int]:
     """
     Return the full qualified domain name for a database hostname. Normally
     this return the hostname itself, except in the case where the
@@ -118,11 +126,11 @@ def resolve(host, port=3306):
     """
     if ":" in host:
         # we do not support ipv6 yet
-        host, port = host.split(":")
+        host, port_sec = host.split(":")
         try:
-            port = int(port)
+            port = int(port_sec)
         except ValueError:
-            port = get_port_from_section(port)
+            port = get_port_from_section(port_sec)
     try:
         ipaddress.ip_address(host)
         return (host, port)
