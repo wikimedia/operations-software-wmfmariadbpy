@@ -1,6 +1,8 @@
 # WMFReplication.py
 import configparser
 import ipaddress
+import os
+import pwd
 import socket
 import time
 from multiprocessing.pool import ThreadPool
@@ -69,8 +71,9 @@ class WMFReplication:
         If replication is already configured (even if the replica is stopped),
         it fails. Stop and reset replication before trying to run it.
         """
+        pw = pwd.getpwuid(os.getuid())
         config = configparser.ConfigParser(interpolation=None)
-        config.read("/root/.my.cnf")
+        config.read(os.path.join(pw.pw_dir, ".my.cnf"))
         master_user = config["clientreplication"]["user"]
         master_password = config["clientreplication"]["password"]
         slave_status = self.slave_status()
