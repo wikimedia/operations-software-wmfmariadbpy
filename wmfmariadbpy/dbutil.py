@@ -5,22 +5,28 @@ import os
 import pwd
 import re
 import socket
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Union, cast
 
 SECTION_PORT_LIST_FILE = "/etc/wmfmariadbpy/section_ports.csv"
+DBUTIL_SECTION_PORTS_ENV = "DBUTIL_SECTION_PORTS"
 
 
 def read_section_ports_list(
-    path: str = SECTION_PORT_LIST_FILE,
+    path: Optional[str] = None,
 ) -> Tuple[Dict[int, str], Dict[str, int]]:
     """
     Reads the list of section and port assignment file and returns two dictionaries,
     one for the section -> port assignment, and the other with the port -> section
     assignment.
     """
+    if path is None:
+        path = os.getenv(DBUTIL_SECTION_PORTS_ENV, SECTION_PORT_LIST_FILE)
     port2sec = {}
     sec2port = {}
-    with open(path, mode="r", newline="") as section_port_list:
+    # Use cast() to make mypy happy.
+    with open(
+        cast(Union[Union[str, bytes], int], path), mode="r", newline=""
+    ) as section_port_list:
         reader = csv.reader(section_port_list)
         for row in reader:
             sec2port[row[0]] = int(row[1])

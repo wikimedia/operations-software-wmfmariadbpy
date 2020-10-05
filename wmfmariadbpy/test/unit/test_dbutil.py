@@ -14,9 +14,27 @@ def mock_csv(mocker):
 
 
 def test_read_section_ports_list(mock_csv):
-    sections, ports = dbutil.read_section_ports_list()
-    assert sections[2] == "s2"
-    assert ports["m3"] == 100
+    port2sec, sec2port = dbutil.read_section_ports_list()
+    assert port2sec[2] == "s2"
+    assert sec2port["m3"] == 100
+
+
+@pytest.mark.parametrize(
+    "path,setenv,expected",
+    [
+        (None, False, "/default"),
+        (None, True, "/env"),
+        ("/path", False, "/path"),
+        ("/path", True, "/path"),
+    ],
+)
+def test_read_section_ports_list_env_path(monkeypatch, mocker, path, setenv, expected):
+    mocker.patch("wmfmariadbpy.dbutil.SECTION_PORT_LIST_FILE", "/default")
+    m = mocker.patch("builtins.open", mocker.mock_open())
+    if setenv:
+        monkeypatch.setenv(dbutil.DBUTIL_SECTION_PORTS_ENV, "/env")
+    dbutil.read_section_ports_list(path=path)
+    m.assert_called_once_with(expected, mode="r", newline="")
 
 
 @pytest.mark.parametrize(
