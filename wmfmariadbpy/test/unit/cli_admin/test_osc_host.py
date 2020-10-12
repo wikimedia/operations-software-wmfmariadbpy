@@ -658,7 +658,7 @@ class TestArgumentParsing(unittest.TestCase):
         with self.assertRaises(SystemExit) as exc:
             with hide_stderr():
                 self.parse_args(args)
-        self.assertEquals(exc.exception.code, 2)
+        self.assertEqual(exc.exception.code, 2)
 
     def test_missing_required_args(self):
         """Test errors with missing required args."""
@@ -770,7 +770,7 @@ class TestArgumentParsing(unittest.TestCase):
 
         with self.assertRaises(SystemExit) as exc:
             self.parse_args(args)
-        self.assertEquals(exc.exception.code, 1)
+        self.assertEqual(exc.exception.code, 1)
 
         open_mock.assert_called_once_with(dblist_file)
         self.assertEqual(1, print_mock.call_count)
