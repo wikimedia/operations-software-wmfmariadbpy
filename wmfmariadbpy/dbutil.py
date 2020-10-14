@@ -5,7 +5,7 @@ import os
 import pwd
 import re
 import socket
-from typing import Dict, Optional, Tuple, Union, cast
+from typing import Dict, Optional, Tuple
 
 SECTION_PORT_LIST_FILE = "/etc/wmfmariadbpy/section_ports.csv"
 DBUTIL_SECTION_PORTS_ENV = "DBUTIL_SECTION_PORTS"
@@ -23,10 +23,8 @@ def read_section_ports_list(
         path = os.getenv(DBUTIL_SECTION_PORTS_ENV, SECTION_PORT_LIST_FILE)
     port2sec = {}
     sec2port = {}
-    # Use cast() to make mypy happy.
-    with open(
-        cast(Union[Union[str, bytes], int], path), mode="r", newline=""
-    ) as section_port_list:
+    assert path is not None  # Make mypy happy
+    with open(path, mode="r", newline="") as section_port_list:
         reader = csv.reader(section_port_list)
         for row in reader:
             sec2port[row[0]] = int(row[1])
