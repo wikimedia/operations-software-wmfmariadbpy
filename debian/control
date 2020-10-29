@@ -1,7 +1,7 @@
 Source: wmfmariadbpy
 Section: utils
 Priority: optional
-Maintainer: Stephen Shirley <sshirley@wikimedia.org>
+Maintainer: Stevie Shirley <sshirley@wikimedia.org>
 Build-Depends: debhelper (>= 10), dh-python, python3-all-dev, python3-setuptools
 Standards-Version: 4.1.2
 Homepage: https://doc.wikimedia.org/wmfmariadbpy/master
