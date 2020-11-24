@@ -1,3 +1,13 @@
+wmfmariadbpy (0.6) buster-wikimedia; urgency=medium
+
+  * Move static methods out of wmfmariadbpy.WMFMariaDB to wmfmariadbpy.dbutil
+  * Don't trust $HOME when looking for ~/.my.cnf as WMF's sudo config doesn't
+    set it correctly.
+  * Allow overriding of path to section ports list using a
+   `$DBUTIL_SECTION_PORTS` env var.
+
+ -- Stevie Shirley <sshirley@wikimedia.org>  Tue, 24 Nov 2020 14:16:19 +0100
+
 wmfmariadbpy (0.5) buster-wikimedia; urgency=medium
 
   * Use config file for mapping between sections and ports.
