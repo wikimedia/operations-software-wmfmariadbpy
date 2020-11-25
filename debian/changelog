@@ -1,3 +1,9 @@
+wmfmariadbpy (0.6-1) buster-wikimedia; urgency=medium
+
+  * Fix dbutil.py not being included in package.
+
+ -- Stevie Shirley <sshirley@wikimedia.org>  Wed, 25 Nov 2020 11:15:54 +0100
+
 wmfmariadbpy (0.6) buster-wikimedia; urgency=medium
 
   * Move static methods out of wmfmariadbpy.WMFMariaDB to wmfmariadbpy.dbutil
