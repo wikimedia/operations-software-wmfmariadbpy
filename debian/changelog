@@ -1,4 +1,4 @@
-wmfmariadbpy (0.6-1) buster-wikimedia; urgency=medium
+wmfmariadbpy (0.6.1) buster-wikimedia; urgency=medium
 
   * Fix dbutil.py not being included in package.
 
