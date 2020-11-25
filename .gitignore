@@ -17,5 +17,6 @@
 /debian/wmfmariadbpy-admin/
 /debian/wmfmariadbpy-common/
 /debian/wmfmariadbpy/
+/integration/cache/
 /venv/
 __pycache__
