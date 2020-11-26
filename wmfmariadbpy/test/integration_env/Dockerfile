@@ -16,3 +16,6 @@ RUN curl -sSL https://github.com/datacharmer/dbdeployer/releases/download/v${DBD
 
 RUN mkdir /etc/bash_completion.d && echo '. /etc/bash_completion' >> /root/.bashrc
 RUN dbdeployer init --skip-tarball-download && rm dbdeployer_completion.sh
+
+COPY /contents/docker-entrypoint.sh /
+ENTRYPOINT ["/docker-entrypoint.sh"]

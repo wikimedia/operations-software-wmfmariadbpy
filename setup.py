@@ -26,6 +26,8 @@ setup(
             "mysql.py = wmfmariadbpy.cli_admin.mysql:main",
             # cli_common
             "db-check-health = wmfmariadbpy.cli_common.check_health:main",
+            # integration testing
+            "integration-env = wmfmariadbpy.test.integration_env.cli:cli",
         ]
     },
     test_suite="wmfmariadbpy.test",
