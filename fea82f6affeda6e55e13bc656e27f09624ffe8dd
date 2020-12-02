@@ -50,6 +50,24 @@
       "revId": "fea82f6affeda6e55e13bc656e27f09624ffe8dd",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4a8c110_f04a4668",
+        "filename": "wmfmariadbpy/test/integration_env/docker_env.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2020-12-02T14:02:09Z",
+      "side": 1,
+      "message": "I\u0027m using the same string for the image as for the container (because they\u0027re in different namespaces in docker), but i want the code to be clear about which it is referring to.",
+      "parentUuid": "6bbf142c_0f97aeb7",
+      "revId": "fea82f6affeda6e55e13bc656e27f09624ffe8dd",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
     }
   ]
 }
