@@ -2,10 +2,13 @@
 import unittest
 from unittest.mock import MagicMock
 
+import pytest
+
 from wmfmariadbpy.cli_admin.osc_host import OnlineSchemaChanger
 from wmfmariadbpy.WMFMariaDB import WMFMariaDB
 
 
+@pytest.mark.usefixtures("deploy_single")
 class TestOnlineSchemaChanger(unittest.TestCase):
     """Test cases for OnlineSchemaChanger."""
 
@@ -16,8 +19,8 @@ class TestOnlineSchemaChanger(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.conf = MagicMock()
-        self.conf.host = "localhost"
-        self.conf.port = 3306
+        self.conf.host = "127.0.0.1"
+        self.conf.port = 10110
         self.conf.user = "root"
         self.conf.analyze = True
         self.conf.debug = True

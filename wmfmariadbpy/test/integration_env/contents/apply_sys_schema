@@ -1,0 +1,66 @@
+#!/bin/bash
+
+PROG=${0##*/}
+
+error_out() {
+    echo "$PROG: ERROR: $*" >&2
+    exit 2
+}
+
+detect_flavor() {
+    flavor=$(jq -r .flavor $sandbox_dir/sbdescription.json)
+    case "$flavor" in
+        mariadb) schema_file=sys_10.sql;;
+        mysql) schema_file=sys_57.sql;;
+        *)
+            error_out "unsupported flavor '$flavor'"
+            ;;
+    esac
+}
+
+detect_sandbox_type() {
+    sandbox_type=$(jq -r .type $sandbox_dir/sbdescription.json)
+    case "$sandbox_type" in
+        single|master-slave) ;;
+        *)
+            error_out "unsupported sandbox type '$sandbox_type'"
+            ;;
+    esac
+}
+
+apply_schema() {
+    local use="${1:?}"
+    pushd ~/mariadb-sys > /dev/null
+    "$use" < "${schema_file:?}"
+    popd > /dev/null
+}
+
+if [ $# -ne 1 ]; then
+    echo "Usage:"
+    echo "    $PROG SANDBOX_NAME"
+    exit 1
+fi
+
+sandbox=${1}
+sandbox_dir=~/sandboxes/$sandbox
+
+[ -d "$sandbox_dir" ] || error_out "sandbox '$sandbox' doesn't exist"
+
+detect_sandbox_type
+detect_flavor
+
+case $sandbox_type in
+    single)
+        apply_schema "$sandbox_dir/use"
+        ;;
+    master-slave)
+        for n in "$sandbox_dir"/n?; do
+            apply_schema "$n"
+        done
+        ;;
+    *)
+        error_out "unsupported sandbox type '$sandbox_type'"
+        ;;
+esac
+
+echo "Sys schema applied"

@@ -1,9 +1,11 @@
 import io
 import os
+import sys
 import tarfile
 from typing import Dict, Iterable, List, Optional, Tuple, Union
 
 import docker
+import dockerpty
 
 from wmfmariadbpy.test.integration_env import common, dbver
 
@@ -48,7 +50,7 @@ def _get_img(c: docker.DockerClient) -> Optional[docker.models.images.Image]:
         return None
 
 
-def build(pull: bool, no_cache: bool) -> Iterable[Dict[str, str]]:
+def build(pull: bool, no_cache: bool) -> Tuple[str, Iterable[Dict[str, str]]]:
     """Build docker image"""
     c = _get_client()
     log = common.logger()
@@ -75,15 +77,16 @@ def build(pull: bool, no_cache: bool) -> Iterable[Dict[str, str]]:
     )
     if old_img:
         if old_img.id == img.id:
-            log.debug("Image already up-to-date")
+            status = "Image already up-to-date"
         else:
-            log.debug("Image updated")
+            status = "Image updated"
     else:
-        log.debug("Image built")
-    return output
+        status = "Image built"
+    log.debug(status)
+    return status, output
 
 
-def run(rm: bool) -> None:
+def start(rm: bool) -> None:
     """Run docker container"""
     c = _get_client()
     try:
@@ -96,27 +99,29 @@ def run(rm: bool) -> None:
         tty=True,
         detach=True,
         auto_remove=rm,
-        cap_drop="ALL",
         name=CONTAINER,
         volumes={
             common.cache_dir(): {"bind": CTR_CACHE_MNT, "mode": "ro"},
             VOLUME: {"bind": SANDBOX_MNT, "mode": "rw"},
         },
+        network_mode="host",
     )
 
 
-def stop() -> None:
+def stop() -> str:
     c = _get_client()
     log = common.logger()
     ctr = _get_ctr(c)
     if not ctr:
         common.fatal("Container not found")
     if ctr.status == "exited":
-        log.info("Already stopped")
-        return
-    log.debug("Stopping")
-    ctr.stop()
-    log.info("Stopped")
+        status = "Already stopped"
+    else:
+        log.debug("Stopping")
+        ctr.stop()
+        status = "Stopped"
+    log.info(status)
+    return status
 
 
 def status() -> str:
@@ -165,3 +170,31 @@ def _run_cmd(
 ) -> Tuple[int, str]:
     retcode, output = ctr.exec_run(cmd)
     return retcode, output.decode("utf8").strip()
+
+
+def exec(cmd: List[str]) -> int:
+    """Run a user-supplied command inside the container"""
+    c = _get_client()
+    ctr = _get_ctr(c)
+    if not ctr:
+        common.fatal("Container not running")
+    log = common.logger()
+    log.debug("Running: %r", cmd)
+    # Workaround docker-py ignoring $TERM
+    env = {"TERM": os.getenv("TERM", "xterm")}
+    tty = sys.stdin.isatty()
+
+    # Based on docker-compose's exec_command implementation.
+    exec_id = c.api.exec_create(
+        ctr.id,
+        cmd,
+        stdin=True,
+        tty=tty,
+        environment=env,
+    )
+    op = dockerpty.ExecOperation(c.api, exec_id, interactive=tty)
+    pty = dockerpty.PseudoTerminal(c.api, op)
+    pty.start()
+    ret = c.api.exec_inspect(exec_id).get("ExitCode")
+    log.debug("Exited with %d", ret)
+    return ret

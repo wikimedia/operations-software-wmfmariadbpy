@@ -12,6 +12,7 @@ a master rotation instead :-)
 Be afraid. Be very afraid...
 """
 import argparse
+import os
 import re
 import shutil
 import subprocess
@@ -202,6 +203,8 @@ class OnlineSchemaChanger(object):
             "--nocheck-replication-filters",
             "--no-version-check",
         ]
+        if "TESTENV_MY_CNF" in os.environ:
+            cmd.append("--defaults-file=%s" % os.environ["TESTENV_MY_CNF"])
 
         if dry_run:
             cmd.append("--dry-run")

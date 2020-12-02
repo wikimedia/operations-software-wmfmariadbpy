@@ -81,6 +81,8 @@ def override_arguments(arguments):
 
 def main():
     arguments = override_arguments(sys.argv)
+    if "TESTENV_MY_CNF" in os.environ:
+        arguments.insert(1, "--defaults-file=%s" % os.environ["TESTENV_MY_CNF"])
     sys.exit(os.execvp("mysql", arguments))
 
 

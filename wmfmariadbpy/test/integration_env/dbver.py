@@ -1,8 +1,4 @@
-import hashlib
-import os
-from typing import Tuple
-
-import requests
+from typing import Optional, Tuple
 
 from wmfmariadbpy.test.integration_env import common
 
@@ -39,15 +35,13 @@ class DBVersion:
         raise NotImplementedError("Unsupported flavor %s" % self.flavor)
 
     def checksum(self, path: str) -> Tuple[bool, str]:
-        hash = hashlib.sha256()
-        with open(path, "rb") as f:
-            while True:
-                data = f.read(1024 * 1024)
-                if not data:
-                    break
-                hash.update(data)
-        digest = hash.hexdigest()
-        return digest == self.sha256sum, digest
+        return common.checksum(path, self.sha256sum)
+
+    def sandbox_name(self, sbtype: str) -> str:
+        ver = self.ver.replace(".", "_")
+        if sbtype == "single":
+            return "msb_%s" % ver
+        return "rsandbox_%s" % ver
 
 
 # For mariadb, checksums can be gotten from this page:
@@ -74,35 +68,16 @@ def download_all() -> bool:
 
 
 def download(dbver: DBVersion) -> bool:
-    log = common.prefix_logger("%s: %s" % (dbver.flavor, dbver.ver))
-    target = os.path.join(common.cache_dir(), dbver.filename())
-    exists = os.path.exists(target)
-    if exists:
-        log.debug("File exists: %s. Calculating checksum", dbver.filename())
-        ok, digest = dbver.checksum(target)
-        if ok:
-            log.debug("Checksum matches: %s", dbver.sha256sum)
-            log.info("OK")
-            return True
-        log.error("Checksum failed. Expected %s, got %s", dbver.sha256sum, digest)
-        log.debug("Removing file")
-        os.remove(target)
+    return common.download_cache(
+        common.prefix_logger("%s: %s" % (dbver.flavor, dbver.ver)),
+        dbver.url(),
+        dbver.filename(),
+        dbver.sha256sum,
+    )
 
-    log.debug("Downloading")
-    req = requests.get(dbver.url())
-    assert req.status_code == 200, req.status_code
-    with open(target, "wb") as f:
-        for chunk in req.iter_content(chunk_size=1024 * 1024):
-            n = f.write(chunk)
-            assert n == len(chunk), "Expected %d, got %d" % (len(chunk), n)
-    log.debug("Downloaded. Calculating checksum")
-    ok, digest = dbver.checksum(target)
-    if ok:
-        log.info("Downloaded OK")
-    else:
-        log.critical(
-            "Checksum failed on downloaded file. Expected %s, got %s",
-            dbver.sha256sum,
-            digest,
-        )
-    return ok
+
+def get_ver(version: str) -> Optional[DBVersion]:
+    for db in DB_VERSIONS:
+        if db.ver == version:
+            return db
+    return None

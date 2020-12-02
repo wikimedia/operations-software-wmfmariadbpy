@@ -1,6 +1,7 @@
 click
 coverage
 docker
+dockerpty
 flake8
 pytest
 pytest-cov

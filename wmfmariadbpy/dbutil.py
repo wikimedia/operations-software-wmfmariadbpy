@@ -84,7 +84,14 @@ def get_credentials(
     pw = pwd.getpwuid(os.getuid())
     user_my_cnf = os.path.join(pw.pw_dir, ".my.cnf")
     mysql_sock = None  # type: Optional[str]
-    if host == "localhost":
+    if "TESTENV_MY_CNF" in os.environ:
+        config = configparser.ConfigParser(interpolation=None, allow_no_value=True)
+        config.read(os.environ["TESTENV_MY_CNF"])
+        user = config["client"]["user"]
+        password = config["client"]["password"]  # type: Optional[str]
+        ssl = None
+        mysql_sock = None
+    elif host == "localhost":
         user = pw.pw_name
         # connnect to localhost using plugin_auth:
         config = configparser.ConfigParser(
