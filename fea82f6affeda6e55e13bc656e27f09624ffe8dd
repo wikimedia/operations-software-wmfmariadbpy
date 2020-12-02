@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e9aaea14_049c9ff6",
+        "filename": "wmfmariadbpy/test/integration_env/dbver.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 3215
+      },
+      "writtenOn": "2020-12-02T13:44:40Z",
+      "side": 1,
+      "message": "[nit] being a \"constant\" slightly better to use an immutable tuple instead (not that it changes that much)",
+      "revId": "fea82f6affeda6e55e13bc656e27f09624ffe8dd",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88ffbb71_13b6d912",
+        "filename": "wmfmariadbpy/test/integration_env/dbver.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 3215
+      },
+      "writtenOn": "2020-12-02T13:44:40Z",
+      "side": 1,
+      "message": "[nit] I would move all constants to the top for clarity and discoverability",
+      "revId": "fea82f6affeda6e55e13bc656e27f09624ffe8dd",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6bbf142c_0f97aeb7",
+        "filename": "wmfmariadbpy/test/integration_env/docker_env.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 3215
+      },
+      "writtenOn": "2020-12-02T13:44:40Z",
+      "side": 1,
+      "message": "For future use?",
+      "revId": "fea82f6affeda6e55e13bc656e27f09624ffe8dd",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
