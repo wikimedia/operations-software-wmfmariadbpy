@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c1a8d301_fdb8d616",
+        "filename": "wmfmariadbpy/test/integration_env/dbver.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 3215
+      },
+      "writtenOn": "2020-12-02T14:09:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e9aaea14_049c9ff6",
+      "revId": "fea82f6affeda6e55e13bc656e27f09624ffe8dd",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "88ffbb71_13b6d912",
         "filename": "wmfmariadbpy/test/integration_env/dbver.py",
         "patchSetId": 9
@@ -33,6 +51,24 @@
       "revId": "fea82f6affeda6e55e13bc656e27f09624ffe8dd",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e3937b3_aee80c01",
+        "filename": "wmfmariadbpy/test/integration_env/dbver.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 3215
+      },
+      "writtenOn": "2020-12-02T14:09:33Z",
+      "side": 1,
+      "message": "Can\u0027t be done as depends on DBVersion",
+      "parentUuid": "88ffbb71_13b6d912",
+      "revId": "fea82f6affeda6e55e13bc656e27f09624ffe8dd",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
     },
     {
       "key": {
@@ -68,6 +104,24 @@
       "revId": "fea82f6affeda6e55e13bc656e27f09624ffe8dd",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8dad2a1_c81d3320",
+        "filename": "wmfmariadbpy/test/integration_env/docker_env.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 3215
+      },
+      "writtenOn": "2020-12-02T14:09:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e4a8c110_f04a4668",
+      "revId": "fea82f6affeda6e55e13bc656e27f09624ffe8dd",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
     }
   ]
 }
