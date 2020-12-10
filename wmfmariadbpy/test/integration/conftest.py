@@ -44,9 +44,9 @@ def deploy_single_all_versions():
     undeploy_all()
 
 
-def deploy_ver(type: str, ver: str, port=common.BASE_PORT):
+def deploy_ver(sb_type: str, ver: str, port=common.BASE_PORT):
     subprocess.run(
-        ["integration-env", "deploy", "--type=%s" % type, "--port=%d" % port, ver],
+        ["integration-env", "deploy", "--type=%s" % sb_type, "--port=%d" % port, ver],
         check=True,
     )
 

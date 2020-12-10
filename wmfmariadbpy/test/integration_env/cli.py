@@ -1,6 +1,6 @@
 import logging
 import sys
-from typing import Tuple
+from typing import List, Optional, Tuple
 
 import click
 
@@ -118,9 +118,10 @@ def exec(cmd: str, args: Tuple[str, ...]) -> None:
 @click.option(
     "-t",
     "--type",
-    "type_",
-    default="single",
+    "sb_type",
+    default=common.TOPO_TYPE_SINGLE,
     show_default=True,
+    type=click.Choice(common.TOPO_TYPES, case_sensitive=False),
     help="Type of topology to deploy (single|replication)",
 )
 @click.option(
@@ -130,28 +131,46 @@ def exec(cmd: str, args: Tuple[str, ...]) -> None:
     show_default=True,
     help="Port/base port for deployment",
 )
-@click.argument("version", nargs=1)
-def deploy(type_: str, version: str, port=int) -> None:
-    """Manage deployments within container"""
-    d = dbver.get_ver(version)
-    if not d:
+@click.option(
+    "--bind", default=None, help="IP to bind to. If unspecified, 127.0.0.1 will be used"
+)
+@click.option(
+    "-e",
+    "--extra-opt",
+    default=[],
+    multiple=True,
+    help="Extra option to pass to 'dbdeployer deploy'. Can be specified multiple times",
+)
+@click.argument("version", default=None, nargs=1, required=False)
+def deploy(
+    sb_type: str, port: int, bind: str, extra_opt: List[str], version: Optional[str]
+) -> None:
+    """Manage deployments within container
+
+    If VERSION is not specified, the default database version is used.
+    """
+    try:
+        d = dbver.get_ver(version)
+    except KeyError:
         common.fatal("Unknown db version '%s'" % version)
-    sb_type = type_.lower()
-    if sb_type not in common.TOPO_TYPES:
-        common.fatal("Unknown topology type '%s'" % sb_type)
     sb_name = d.sandbox_name(sb_type)
     cmd = [
         "dbdeployer",
         "deploy",
         sb_type,
-        version,
+        d.ver,
+        "--log-sb-operations",
         "--concurrent",
         "--skip-report-host",
         "--skip-report-port",
         "--my-cnf-options=report_host=localhost",
     ]
+    if bind:
+        cmd.append("--bind-address=%s" % bind)
+    cmd.extend(extra_opt)
     if sb_type == common.TOPO_TYPE_SINGLE:
         cmd.append("--port=%d" % port)
+        cmd.append("--master")
     else:
         cmd.append("--base-port=%d" % port)
     cmd += ["&&", "apply_sys_schema", sb_name]
