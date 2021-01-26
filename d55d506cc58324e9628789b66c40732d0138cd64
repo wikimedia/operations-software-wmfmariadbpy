@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fac13c5e_3d2a073c",
+        "filename": "wmfmariadbpy/cli_admin/switchover.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2021-01-26T12:57:11Z",
+      "side": 1,
+      "message": "Given zarcillo variable scope starts here...",
+      "range": {
+        "startLine": 706,
+        "startChar": 4,
+        "endLine": 706,
+        "endChar": 12
+      },
+      "revId": "d55d506cc58324e9628789b66c40732d0138cd64",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "070bf32b_a7adfdc4",
+        "filename": "wmfmariadbpy/cli_admin/switchover.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 746,
+      "author": {
+        "id": 2556
+      },
+      "writtenOn": "2021-01-26T12:57:11Z",
+      "side": 1,
+      "message": "And ends here, we can ignore the return of default- it won\u0027t be reused, unless you think you we will add more stuff later on a different format.",
+      "range": {
+        "startLine": 742,
+        "startChar": 4,
+        "endLine": 746,
+        "endChar": 17
+      },
+      "revId": "d55d506cc58324e9628789b66c40732d0138cd64",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": true
+    }
+  ]
+}
