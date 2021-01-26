@@ -719,6 +719,7 @@ def update_zarcillo(master, slave):
     dc = result["rows"][0][1]
     # update section with section name from the former slave
     query = (
+        "SET STATEMENT binlog_format='ROW' FOR "  # Workaround for T272954
         "UPDATE masters "
         "SET instance = (SELECT name "
         "                FROM instances "
