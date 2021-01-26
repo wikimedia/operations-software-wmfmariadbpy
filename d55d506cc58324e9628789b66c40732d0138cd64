@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e8a73c72_c258600f",
+        "filename": "wmfmariadbpy/cli_admin/switchover.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2021-01-26T14:46:30Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fac13c5e_3d2a073c",
+      "range": {
+        "startLine": 706,
+        "startChar": 4,
+        "endLine": 706,
+        "endChar": 12
+      },
+      "revId": "d55d506cc58324e9628789b66c40732d0138cd64",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "070bf32b_a7adfdc4",
         "filename": "wmfmariadbpy/cli_admin/switchover.py",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "d55d506cc58324e9628789b66c40732d0138cd64",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6d555df_3728d8db",
+        "filename": "wmfmariadbpy/cli_admin/switchover.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 746,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2021-01-26T14:46:30Z",
+      "side": 1,
+      "message": "Excellent point.",
+      "parentUuid": "070bf32b_a7adfdc4",
+      "range": {
+        "startLine": 742,
+        "startChar": 4,
+        "endLine": 746,
+        "endChar": 17
+      },
+      "revId": "d55d506cc58324e9628789b66c40732d0138cd64",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951",
+      "unresolved": false
     }
   ]
 }
