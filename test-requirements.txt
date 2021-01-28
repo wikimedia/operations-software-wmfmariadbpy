@@ -3,6 +3,7 @@ coverage
 docker
 dockerpty
 flake8
+pip>=20.1b1,<21
 pytest
 pytest-cov
 pytest-mock
