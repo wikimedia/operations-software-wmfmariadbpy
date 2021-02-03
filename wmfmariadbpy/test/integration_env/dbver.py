@@ -58,6 +58,7 @@ DB_VERSIONS = (
         "2f22e645ca982bb485423606343cb0757f9e393391b2d4a15ba51e8a2b94aeac",
     ),
 )
+DEFAULT_VER = "10.4.15"
 
 
 def download_all() -> bool:
@@ -76,8 +77,10 @@ def download(dbver: DBVersion) -> bool:
     )
 
 
-def get_ver(version: str) -> Optional[DBVersion]:
+def get_ver(version: Optional[str] = None) -> DBVersion:
+    if not version:
+        version = DEFAULT_VER
     for db in DB_VERSIONS:
         if db.ver == version:
             return db
-    return None
+    raise KeyError(version)

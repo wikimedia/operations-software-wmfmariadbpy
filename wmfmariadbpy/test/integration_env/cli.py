@@ -62,6 +62,16 @@ def cache() -> None:
 
 
 @cli.command()
+def dbvers() -> None:
+    """List all database versions available"""
+    for d in dbver.DB_VERSIONS:
+        print(
+            "%s %s%s"
+            % (d.ver, d.flavor, " DEFAULT" if d.ver == dbver.DEFAULT_VER else "")
+        )
+
+
+@cli.command()
 @click.option(
     "--rm/--no-rm",
     default=True,

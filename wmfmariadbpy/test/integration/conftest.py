@@ -29,7 +29,8 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
 
 @pytest.fixture(scope="class")
 def deploy_single():
-    deploy_ver(common.TOPO_TYPE_SINGLE, dbver.DB_VERSIONS[0].ver)
+    d = dbver.get_ver()
+    deploy_ver(common.TOPO_TYPE_SINGLE, d.ver)
     yield
     undeploy_all()
 
