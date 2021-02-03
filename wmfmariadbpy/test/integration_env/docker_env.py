@@ -18,8 +18,8 @@ STATUS_EXITED = "exited"
 STATUS_NONEXISTANT = "nonexistant"
 STATUSES = (STATUS_RUNNING, STATUS_EXITED, STATUS_NONEXISTANT)
 
-SANDBOX_MNT = "/root/opt/mysql"
-CTR_CACHE_MNT = "/cache"
+MYSQL_BIN_MNT = "/root/opt/mysql"
+CACHE_MNT = "/cache"
 
 
 def _get_client() -> docker.DockerClient:
@@ -101,8 +101,8 @@ def start(rm: bool) -> None:
         auto_remove=rm,
         name=CONTAINER,
         volumes={
-            common.cache_dir(): {"bind": CTR_CACHE_MNT, "mode": "ro"},
-            VOLUME: {"bind": SANDBOX_MNT, "mode": "rw"},
+            common.cache_dir(): {"bind": CACHE_MNT, "mode": "ro"},
+            VOLUME: {"bind": MYSQL_BIN_MNT, "mode": "rw"},
         },
         network_mode="host",
     )
@@ -146,7 +146,9 @@ def populate_dbver(
     d: dbver.DBVersion,
 ) -> None:
     log = common.prefix_logger("%s: %s" % (d.flavor, d.ver))
-    retcode, output = _run_cmd(ctr, "stat -c %%F %s" % os.path.join(SANDBOX_MNT, d.ver))
+    retcode, output = _run_cmd(
+        ctr, "stat -c %%F %s" % os.path.join(MYSQL_BIN_MNT, d.ver)
+    )
     log.debug("Stat sandbox dir [%d]: %s", retcode, output)
     if retcode == 0:
         log.debug("Dir already exists in sandbox, skipping")
@@ -155,8 +157,7 @@ def populate_dbver(
     print("Unpacking %s" % d.ver)
     retcode, output = _run_cmd(
         ctr,
-        "dbdeployer unpack --verbosity 0 %s"
-        % os.path.join(CTR_CACHE_MNT, d.filename()),
+        "dbdeployer unpack --verbosity 0 %s" % os.path.join(CACHE_MNT, d.filename()),
     )
     if retcode != 0:
         common.fatal("Unpacking failed [%d]: %s" % (retcode, output))
