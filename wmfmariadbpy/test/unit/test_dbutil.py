@@ -1,4 +1,6 @@
+import ipaddress
 import os.path
+import socket
 
 import pytest
 
@@ -94,20 +96,61 @@ def test_get_socket_from_port(port, sock):
 
 
 @pytest.mark.parametrize(
-    "target, host",
+    "ip",
     [
-        ("192.0.2.1", "192.0.2.1"),
-        ("2001:db8::11", "2001:db8::11"),
-        ("localhost", "localhost"),
-        ("db1001", "db1001.eqiad.wmnet"),
-        ("db5999", "db5999.eqsin.wmnet"),
-        ("db4999", "db4999.ulsfo.wmnet"),
-        ("db2001.codfw.wmnet", "db2001.codfw.wmnet"),
-        ("dbmonitor1001.wikimedia.org", "dbmonitor1001.wikimedia.org"),
+        ("192.0.2.1"),
+        ("2001:db8::11"),
     ],
 )
-def test_resolve(target, host):
-    assert dbutil.resolve(target) == host
+def test_resolve_ip(mocker, ip):
+    m = mocker.patch("wmfmariadbpy.dbutil._resolve_ip")
+    assert dbutil.resolve(ip) == m.return_value
+    m.assert_called_once_with(ipaddress.ip_address(ip))
+
+
+def test_resolve_host(mocker):
+    m = mocker.patch("wmfmariadbpy.dbutil._dc_map")
+    assert dbutil.resolve("db2099") == m.return_value
+    m.assert_called_once_with("db2099")
+
+
+@pytest.mark.parametrize(
+    "ip, host",
+    [
+        ("127.0.0.1", "localhost"),
+        ("::1", "localhost"),
+        ("192.0.2.1", "host-192.0.2.1"),
+        ("2001:db8::11", "host-2001:db8::11"),
+    ],
+)
+def test__resolve_ip(mocker, ip, host):
+    m = mocker.patch("wmfmariadbpy.dbutil.socket.gethostbyaddr")
+    m.side_effect = lambda ip: ("host-%s" % ip, None, None)
+    assert dbutil._resolve_ip(ipaddress.ip_address(ip)) == host
+
+
+def test__resolve_ip_err(mocker):
+    m = mocker.patch("wmfmariadbpy.dbutil.socket.gethostbyaddr")
+    m.side_effect = socket.herror()
+    with pytest.raises(ValueError):
+        dbutil._resolve_ip(ipaddress.ip_address("1.1.1.1"))
+
+
+@pytest.mark.parametrize(
+    "host, fqdn",
+    [
+        ("es1024", "es1024.eqiad.wmnet"),
+        ("db2085", "db2085.codfw.wmnet"),
+        ("localhost", "localhost"),
+    ],
+)
+def test__dc_map(host, fqdn):
+    assert dbutil._dc_map(host) == fqdn
+
+
+def test__dc_map_err():
+    with pytest.raises(ValueError):
+        dbutil._dc_map("pc9999")
 
 
 @pytest.mark.parametrize(

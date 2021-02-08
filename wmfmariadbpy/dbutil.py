@@ -5,7 +5,7 @@ import os
 import pwd
 import re
 import socket
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Union
 
 SECTION_PORT_LIST_FILE = "/etc/wmfmariadbpy/section_ports.csv"
 DBUTIL_SECTION_PORTS_ENV = "DBUTIL_SECTION_PORTS"
@@ -138,30 +138,41 @@ def resolve(host: str) -> str:
     If the original address is an IPv4 or IPv6 address, leave it as is
     """
     try:
-        # IP address
-        ipaddress.ip_address(host)
-        return host
+        ip = ipaddress.ip_address(host)
     except ValueError:
         pass
+    else:
+        return _resolve_ip(ip)
 
-    if "." not in host and host != "localhost":
-        domain = ""
-        if re.match("^[a-z]+1[0-9][0-9][0-9]$", host) is not None:
-            domain = ".eqiad.wmnet"
-        elif re.match("^[a-z]+2[0-9][0-9][0-9]$", host) is not None:
-            domain = ".codfw.wmnet"
-        elif re.match("^[a-z]+3[0-9][0-9][0-9]$", host) is not None:
-            domain = ".esams.wmnet"
-        elif re.match("^[a-z]+4[0-9][0-9][0-9]$", host) is not None:
-            domain = ".ulsfo.wmnet"
-        elif re.match("^[a-z]+5[0-9][0-9][0-9]$", host) is not None:
-            domain = ".eqsin.wmnet"
-        else:
-            localhost_fqdn = socket.getfqdn()
-            if "." in localhost_fqdn and len(localhost_fqdn) > 1:
-                domain = localhost_fqdn[localhost_fqdn.index(".") :]
-        host = host + domain
+    return _dc_map(host)
+
+
+def _resolve_ip(ip: Union[ipaddress.IPv4Address, ipaddress.IPv6Address]) -> str:
+    if ip.is_loopback:
+        return "localhost"
+    try:
+        host, _, _ = socket.gethostbyaddr(ip.compressed)
+    except socket.herror:
+        raise ValueError("Unable to resolve ip address: '%s'" % ip) from None
     return host
+
+
+def _dc_map(host: str) -> str:
+    dcs = {
+        1: "eqiad",
+        2: "codfw",
+        3: "esams",
+        4: "ulsfo",
+        5: "eqsin",
+    }
+    dc_rx = re.compile(r"^[a-zA-Z]+(?P<dc_id>\d)\d{3}$")
+    m = dc_rx.match(host)
+    if not m:
+        return host
+    dc_id = int(m.group("dc_id"))
+    if dc_id not in dcs:
+        raise ValueError("Unknown datacenter ID '%d' (from '%s')" % (dc_id, host))
+    return "%s.%s.wmnet" % (host, dcs[dc_id])
 
 
 def addr_split(addr: str, def_port: int = 3306) -> Tuple[str, int]:
