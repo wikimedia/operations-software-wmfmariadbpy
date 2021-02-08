@@ -94,17 +94,61 @@ def test_get_socket_from_port(port, sock):
 
 
 @pytest.mark.parametrize(
-    "target, host, port",
+    "target, host",
     [
-        ("localhost", "localhost", 3306),
-        ("localhost:3311", "localhost", 3311),
-        ("localhost:f1", "localhost", 10111),
-        ("db1001", "db1001.eqiad.wmnet", 3306),
-        ("db5999:3321", "db5999.eqsin.wmnet", 3321),
-        ("db4999:alpha", "db4999.ulsfo.wmnet", 10320),
-        ("db2001.codfw.wmnet", "db2001.codfw.wmnet", 3306),
-        ("dbmonitor1001.wikimedia.org", "dbmonitor1001.wikimedia.org", 3306),
+        ("192.0.2.1", "192.0.2.1"),
+        ("2001:db8::11", "2001:db8::11"),
+        ("localhost", "localhost"),
+        ("db1001", "db1001.eqiad.wmnet"),
+        ("db5999", "db5999.eqsin.wmnet"),
+        ("db4999", "db4999.ulsfo.wmnet"),
+        ("db2001.codfw.wmnet", "db2001.codfw.wmnet"),
+        ("dbmonitor1001.wikimedia.org", "dbmonitor1001.wikimedia.org"),
     ],
 )
-def test_resolve(target, host, port):
-    assert dbutil.resolve(target) == (host, port)
+def test_resolve(target, host):
+    assert dbutil.resolve(target) == host
+
+
+@pytest.mark.parametrize(
+    "addr, host, port",
+    [
+        ("2001:db8::11", "2001:db8::11", 3306),
+        ("[2001:db8::11]", "2001:db8::11", 3306),
+        ("[2001:db8::11]:3317", "2001:db8::11", 3317),
+        ("[2001:db8::11]:f1", "2001:db8::11", 10111),
+        ("192.0.2.1", "192.0.2.1", 3306),
+        ("192.0.2.1:3317", "192.0.2.1", 3317),
+        ("192.0.2.1:f1", "192.0.2.1", 10111),
+        ("db2099", "db2099", 3306),
+        ("db2099:3317", "db2099", 3317),
+        ("db2099:f2", "db2099", 10112),
+        ("db2099.codfw.wmnet", "db2099.codfw.wmnet", 3306),
+        ("db2099.codfw.wmnet:3317", "db2099.codfw.wmnet", 3317),
+        ("db2099.codfw.wmnet:alpha", "db2099.codfw.wmnet", 10320),
+    ],
+)
+def test_addr_split(addr, host, port):
+    assert dbutil.addr_split(addr) == (host, port)
+
+
+@pytest.mark.parametrize(
+    "addr",
+    [("[2001:db8::11"), ("[2001:db8::11]::3")],
+)
+def test_addr_split_err(addr):
+    with pytest.raises(ValueError):
+        dbutil.addr_split(addr)
+
+
+@pytest.mark.parametrize(
+    "port_sec, port",
+    [
+        ("f0", 10110),
+        ("alpha", 10320),
+        ("1234", 1234),
+        ("u7", 3306),
+    ],
+)
+def test__port_sec_to_port(port_sec, port):
+    assert dbutil._port_sec_to_port(port_sec) == port

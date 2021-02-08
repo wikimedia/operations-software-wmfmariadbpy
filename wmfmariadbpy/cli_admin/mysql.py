@@ -59,7 +59,8 @@ def override_arguments(arguments):
     if host is None:
         arguments.append("--skip-ssl")
         return arguments
-    host, port = dbutil.resolve(host)
+    host, port = dbutil.addr_split(host)
+    host = dbutil.resolve(host)
 
     # Just add skip-ssl for localhost
     if host == "localhost":

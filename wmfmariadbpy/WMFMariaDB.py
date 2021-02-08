@@ -28,8 +28,9 @@ class WMFMariaDB:
         self.__last_error = None
         self.debug = debug
         self.vendor = vendor
-        (host, port) = dbutil.resolve(host, port)
-        (user, password, socket, ssl) = dbutil.get_credentials(host, port, database)
+        host, port = dbutil.addr_split(host, port)
+        host = dbutil.resolve(host)
+        user, password, socket, ssl = dbutil.get_credentials(host, port, database)
 
         try:
             self.connection = pymysql.connect(

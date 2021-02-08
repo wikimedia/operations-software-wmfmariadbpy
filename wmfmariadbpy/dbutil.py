@@ -129,7 +129,7 @@ def get_credentials(
     return (user, password, mysql_sock, ssl)
 
 
-def resolve(host: str, port: int = 3306) -> Tuple[str, int]:
+def resolve(host: str) -> str:
     """
     Return the full qualified domain name for a database hostname. Normally
     this return the hostname itself, except in the case where the
@@ -137,16 +137,10 @@ def resolve(host: str, port: int = 3306) -> Tuple[str, int]:
     completed as a best effort.
     If the original address is an IPv4 or IPv6 address, leave it as is
     """
-    if ":" in host:
-        # we do not support ipv6 yet
-        host, port_sec = host.split(":")
-        try:
-            port = int(port_sec)
-        except ValueError:
-            port = get_port_from_section(port_sec)
     try:
+        # IP address
         ipaddress.ip_address(host)
-        return (host, port)
+        return host
     except ValueError:
         pass
 
@@ -167,4 +161,50 @@ def resolve(host: str, port: int = 3306) -> Tuple[str, int]:
             if "." in localhost_fqdn and len(localhost_fqdn) > 1:
                 domain = localhost_fqdn[localhost_fqdn.index(".") :]
         host = host + domain
-    return (host, port)
+    return host
+
+
+def addr_split(addr: str, def_port: int = 3306) -> Tuple[str, int]:
+    """Split address into (host, port).
+
+    Supports:
+    - Plain ipv4: 192.0.2.1
+    - ipv4+port: 192.0.2.1:3007
+    - Plain ipv6: 2001:db8::11 or [2001:db8::11]
+    - ipv6+port: [2001:db8::11]:3116
+    - Plain hostname: db2034
+    - Hostname+port: db2054.codfw.wmnet:3241
+
+    Any port aliases (e.g. :s4) are mapped to the tcp port number.
+    If the address doesn't contain a port, the def_port argument is used.
+    No validation of the formatting of hostnames or ip addresses is done.
+
+    Returns:
+        Tuple(str, int): Host/IP + port.
+    """
+    port = def_port
+    if addr.count(":") > 1:
+        # IPv6
+        if addr[0] == "[":
+            # [ipv6]:port
+            addr_port_rx = re.compile(r"^\[(?P<host>[^]]+)\](?::(?P<port>\w+))?$")
+            m = addr_port_rx.match(addr)
+            if not m:
+                raise ValueError("Invalid [ipv6]:port format: '%s'" % addr)
+            addr = m.group("host")
+            port_sec = m.group("port")
+            if port_sec is not None:
+                port = _port_sec_to_port(port_sec)
+        # plain ipv6
+    elif ":" in addr:
+        addr, port_sec = addr.split(":")
+        port = _port_sec_to_port(port_sec)
+    return addr, port
+
+
+def _port_sec_to_port(port_sec: str) -> int:
+    try:
+        port = int(port_sec)
+    except ValueError:
+        port = get_port_from_section(port_sec)
+    return port
