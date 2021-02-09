@@ -6,7 +6,7 @@ Some dependencies are required in order to run the scripts and the tests. The ea
 
 ```
 tox --notest
-tox -e venv -- <some command>
+tox -e py3-venv -- <some command>
 ```
 
 ## Run tests
@@ -14,7 +14,7 @@ tox -e venv -- <some command>
 Tests are located under *wmfmariadbpy/test*. They are split between unit and integration tests. To run unit tests:
 
 ```
-tox -e unit
+tox -e py3-unit
 ```
 
 ### Integration tests requirements
@@ -26,7 +26,7 @@ In order to be able to to run the tests you'll need to be able to run the script
 
 Then:
 ```
-tox -e integration
+tox -e py3-integration
 ```
 
 ### Tests coverage report
@@ -34,7 +34,7 @@ tox -e integration
 To run the unit and integration tests and generate a HTML coverage report under `cover/`
 
 ```
-tox -e cover
+tox -e py3-cover
 ```
 
 ## Code style compliance
@@ -42,19 +42,19 @@ tox -e cover
 To check the code style compliance:
 
 ```
-tox -e flake8
+tox -e py3-flake8
 ```
 
 To check if the formatters would make changes:
 
 ```
-tox -e format
+tox -e py3-format
 ```
 
 ## Reformat the code with 'isort' and 'black'
 
 ```
-tox -e reformat
+tox -e py3-reformat
 ```
 
 ## Execution
