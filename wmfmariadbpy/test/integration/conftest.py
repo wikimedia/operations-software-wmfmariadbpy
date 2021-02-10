@@ -6,7 +6,8 @@ import pytest
 from wmfmariadbpy.test.integration_env import common, dbver
 
 
-def pytest_sessionstart(session: pytest.Session):
+@pytest.fixture(scope="session", autouse=True)
+def manage_env():
     ret = subprocess.run(
         "integration-env build && integration-env start",
         shell=True,
@@ -16,9 +17,7 @@ def pytest_sessionstart(session: pytest.Session):
     if ret.returncode != 0:
         print(ret.stdout.decode("utf8"), file=sys.stderr)
         pytest.exit("integration env setup failed", returncode=ret.returncode)
-
-
-def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
+    yield
     ret = subprocess.run(
         ["integration-env", "stop"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT
     )
