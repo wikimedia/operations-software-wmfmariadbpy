@@ -31,16 +31,14 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
 def deploy_single():
     d = dbver.get_ver()
     deploy_ver(common.TOPO_TYPE_SINGLE, d.ver)
-    yield
+    yield d.ver
     undeploy_all()
 
 
-@pytest.fixture(scope="class")
-def deploy_single_all_versions():
-    for i, d in enumerate(dbver.DB_VERSIONS):
-        port = common.BASE_PORT + i
-        deploy_ver(common.TOPO_TYPE_SINGLE, d.ver, port=port)
-    yield
+@pytest.fixture(scope="class", params=dbver.DB_VERSIONS, ids=lambda d: d.ver)
+def deploy_single_all_versions(request):
+    deploy_ver(common.TOPO_TYPE_SINGLE, request.param.ver)
+    yield request.param.ver
     undeploy_all()
 
 
@@ -64,8 +62,3 @@ def undeploy_all():
         ],
         check=True,
     )
-
-
-def pytest_generate_tests(metafunc):
-    if "single_idx" in metafunc.fixturenames:
-        metafunc.parametrize("single_idx", range(len(dbver.DB_VERSIONS)))
