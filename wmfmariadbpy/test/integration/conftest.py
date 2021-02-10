@@ -44,6 +44,21 @@ def deploy_single_all_versions(request):
     undeploy_all()
 
 
+@pytest.fixture(scope="class")
+def deploy_replicate():
+    d = dbver.get_ver()
+    deploy_ver(common.TOPO_TYPE_REPLICATION, d.ver)
+    yield
+    undeploy_all()
+
+
+@pytest.fixture(scope="class", params=dbver.DB_VERSIONS, ids=lambda d: d.ver)
+def deploy_replicate_all_versions(request):
+    deploy_ver(common.TOPO_TYPE_REPLICATION, request.param.ver)
+    yield request.param.ver
+    undeploy_all()
+
+
 def deploy_ver(sb_type: str, ver: str, port=common.BASE_PORT):
     subprocess.run(
         ["integration-env", "deploy", "--type=%s" % sb_type, "--port=%d" % port, ver],
