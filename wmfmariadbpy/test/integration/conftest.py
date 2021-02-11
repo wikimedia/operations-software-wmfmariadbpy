@@ -1,5 +1,4 @@
 import subprocess
-import sys
 
 import pytest
 
@@ -15,15 +14,19 @@ def manage_env():
         stderr=subprocess.STDOUT,
     )
     if ret.returncode != 0:
-        print(ret.stdout.decode("utf8"), file=sys.stderr)
-        pytest.exit("integration env setup failed", returncode=ret.returncode)
+        pytest.exit(
+            "integration env setup failed: \n\n%s\n." % ret.stdout.decode("utf8"),
+            returncode=ret.returncode,
+        )
     yield
     ret = subprocess.run(
         ["integration-env", "stop"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT
     )
     if ret.returncode != 0:
-        print("\n%s" % ret.stdout.decode("utf8"), file=sys.stderr)
-        pytest.exit("integration env teardown failed", returncode=ret.returncode)
+        pytest.exit(
+            "integration env teardown failed: \n\n%s\n." % ret.stdout.decode("utf8"),
+            returncode=ret.returncode,
+        )
 
 
 @pytest.fixture(scope="class")
