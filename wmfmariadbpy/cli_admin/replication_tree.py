@@ -31,6 +31,7 @@ class Instance:
         binlog_format=None,
         replicas=[],
         cross_dc_replication=False,
+        no_color=False,
     ):
         self.name = name if name is not None else "<None>"
         self.uptime = uptime
@@ -46,27 +47,33 @@ class Instance:
         self.read_only = read_only
         self.replicas = replicas
         self.cross_dc_replication = cross_dc_replication
+        self.no_color = no_color
+
+    def _color(self, color, *args):
+        content = "".join(args)
+        if self.no_color:
+            return content
+        return "%s%s%s" % (color, content, COLOR_NORMAL)
 
     def print_name(self):
-        return COLOR_UNDERLINE + str(self.name) + COLOR_NORMAL
+        return self._color(COLOR_UNDERLINE, str(self.name))
 
     def print_uptime(self):
         if not isinstance(self.uptime, int):
             time = str(self.uptime)
         elif self.uptime < 60:
-            time = COLOR_RED + str(self.uptime) + "s" + COLOR_NORMAL
+            time = self._color(COLOR_RED, str(self.uptime), "s")
         elif self.uptime < 3600:
-            time = COLOR_RED + str(int(self.uptime / 60)) + "m" + COLOR_NORMAL
+            time = self._color(COLOR_RED, str(int(self.uptime / 60)), "m")
         elif self.uptime < (3600 * 24):
-            time = COLOR_DARK_YELLOW + str(int(self.uptime / 3600)) + "h" + COLOR_NORMAL
+            time = self._color(COLOR_DARK_YELLOW, str(int(self.uptime / 3600)), "h")
         elif self.uptime < (3600 * 24 * 365):
             time = str(int(self.uptime / 3600 / 24)) + "d"
         else:
-            time = (
-                COLOR_DARK_YELLOW
-                + str(int(self.uptime / 3600 / 24 / 365))
-                + "y"
-                + COLOR_NORMAL
+            time = self._color(
+                COLOR_DARK_YELLOW,
+                str(int(self.uptime / 3600 / 24 / 365)),
+                "y",
             )
         return "up: " + time
 
@@ -80,7 +87,7 @@ class Instance:
         else:
             read_only = "ON"
             color = COLOR_GREEN
-        return "RO: " + color + str(read_only) + COLOR_NORMAL
+        return "RO: " + self._color(color, str(read_only))
 
     def print_lag(self):
         if self.lag is None or self.lag > 10:
@@ -89,7 +96,7 @@ class Instance:
             color = COLOR_DARK_YELLOW
         else:
             color = COLOR_GREEN
-        return "lag: " + color + str(self.lag) + COLOR_NORMAL
+        return "lag: " + self._color(color, str(self.lag))
 
     def print_processes(self):
         if self.processes is None or self.processes >= 200:
@@ -98,7 +105,7 @@ class Instance:
             color = COLOR_DARK_YELLOW
         else:
             color = COLOR_GREEN
-        return "processes: " + color + str(self.processes) + COLOR_NORMAL
+        return "processes: " + self._color(color, str(self.processes))
 
     def print_version(self):
         return "version: " + str(self.version)
@@ -108,14 +115,17 @@ class Instance:
             color = COLOR_MAGENTA
         else:
             color = COLOR_BLUE
-        return color + "+" + COLOR_NORMAL + " "
+        return self._color(color, "+") + " "
 
     def print_latency(self):
         return "latency: {:.4f}".format(self.query_latency)
 
     def console(self, level=0):
         if self.version is None:
-            fields = [self.print_name(), COLOR_RED + "DOWN" + COLOR_NORMAL]
+            fields = [
+                self.print_name(),
+                self._color(COLOR_RED, "DOWN"),
+            ]
         else:
             fields = [
                 self.print_name(),
@@ -149,11 +159,14 @@ def handle_parameters():
     parser.add_argument(
         "instance", help=("Host part of the replica set which information is shown")
     )
+    parser.add_argument(
+        "--no-color", action="store_true", help="Disable colored output"
+    )
     options = parser.parse_args()
     return options
 
 
-def get_instance_data(instance):
+def get_instance_data(instance, no_color):
     name = instance.name(show_db=False)
     binlog_format = None
     processes = None
@@ -186,7 +199,7 @@ def get_instance_data(instance):
     numerical_dc = name.split(":")[0].split(".")[0][-4:-3]
     slaves = replication.slaves()
     for slave in slaves:
-        instance = get_instance_data(slave)
+        instance = get_instance_data(slave, no_color)
         # Mark different dcs from the master
         if instance.name.split(":")[0].split(".")[0][-4:-3] != numerical_dc:
             instance.cross_dc_replication = True
@@ -201,18 +214,19 @@ def get_instance_data(instance):
         query_latency=query_latency,
         replicas=replicas,
         uptime=uptime,
+        no_color=no_color,
     )
 
 
-def generate_tree(instance):
+def generate_tree(instance, no_color):
     db = WMFMariaDB(instance)
-    master = get_instance_data(db)
+    master = get_instance_data(db, no_color)
     return master
 
 
 def main():
     options = handle_parameters()
-    tree = generate_tree(options.instance)
+    tree = generate_tree(options.instance, options.no_color)
     print(tree)
     sys.exit(0)
 
