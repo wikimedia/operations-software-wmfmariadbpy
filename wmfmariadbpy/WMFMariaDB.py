@@ -60,7 +60,7 @@ class WMFMariaDB:
             print("Connected to {}".format(self.name()))
 
     def name(self, show_db=True):
-        if self.host == "localhost":
+        if self.host == "localhost" and self.socket:
             address = "{}[socket={}]".format(self.host, self.socket)
         else:
             host = self.host.split(".")[0]
