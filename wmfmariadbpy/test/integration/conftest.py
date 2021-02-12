@@ -5,7 +5,7 @@ import pytest
 from wmfmariadbpy.test.integration_env import common, dbver
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="module", autouse=True)
 def manage_env():
     ret = subprocess.run(
         "integration-env build && integration-env start",
