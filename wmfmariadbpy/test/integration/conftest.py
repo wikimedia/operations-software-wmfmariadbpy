@@ -61,21 +61,10 @@ def deploy_replicate_all_versions(request):
 
 def deploy_ver(sb_type: str, ver: str, port=common.BASE_PORT):
     subprocess.run(
-        ["integration-env", "deploy", "--type=%s" % sb_type, "--port=%d" % port, ver],
+        ["integration-env", "deploy", sb_type, "--port=%d" % port, ver],
         check=True,
     )
 
 
 def undeploy_all():
-    subprocess.run(
-        [
-            "integration-env",
-            "exec",
-            "--",
-            "dbdeployer",
-            "destroy",
-            "ALL",
-            "--skip-confirm",
-        ],
-        check=True,
-    )
+    subprocess.run(["integration-env", "delete", "ALL"], check=True)

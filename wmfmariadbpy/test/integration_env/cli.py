@@ -1,6 +1,7 @@
 import logging
+import os
 import sys
-from typing import List, Optional, Tuple
+from typing import NoReturn, Tuple
 
 import click
 
@@ -16,7 +17,7 @@ from wmfmariadbpy.test.integration_env import common, dbver, docker_env
     help="Logging level (DEBUG|INFO|WARNING|ERROR|CRITICAL)",
 )
 def cli(log_level: str) -> None:
-    """Integration testing environment manager"""
+    """Integration testing environment manager."""
     logger = common.logger()
     logger.setLevel(logging.DEBUG)
     ch = logging.StreamHandler()
@@ -44,7 +45,7 @@ def cli(log_level: str) -> None:
     "-v", "--verbose", is_flag=True, default=False, help="Display docker build output"
 )
 def build(pull: bool, no_cache: bool, verbose: bool) -> None:
-    """Build docker image"""
+    """Build docker image."""
     status, output = docker_env.build(pull, no_cache)
     print(status)
     if not verbose:
@@ -56,14 +57,14 @@ def build(pull: bool, no_cache: bool, verbose: bool) -> None:
 
 @cli.command()
 def cache() -> None:
-    """Maintain cache of database versions"""
+    """Maintain cache of database versions."""
     if not dbver.download_all():
         sys.exit(1)
 
 
 @cli.command()
 def dbvers() -> None:
-    """List all database versions available"""
+    """List all database versions available."""
     for d in dbver.DB_VERSIONS:
         print(
             "%s %s%s"
@@ -79,7 +80,7 @@ def dbvers() -> None:
     help="Auto-remove the container after exit",
 )
 def start(rm: bool) -> None:
-    """Start docker container"""
+    """Start docker container."""
     status = docker_env.status()
     log = common.logger()
     log.debug("Initial container status: %s", status)
@@ -96,82 +97,163 @@ def start(rm: bool) -> None:
 
 @cli.command()
 def stop() -> None:
-    """Stop docker container"""
+    """Stop docker container."""
     print(docker_env.stop())
 
 
 @cli.command()
 def status() -> None:
-    """Show status of docker container"""
+    """Show status of docker container."""
     print(docker_env.status())
 
 
-@cli.command()
+@cli.command(context_settings={"ignore_unknown_options": True})
+@click.argument("args", nargs=-1)
+def sandboxes(args: Tuple[str, ...]) -> None:
+    """Show existing sandboxes.
+
+    \b
+    $ integration-env sandboxes --header
+                name                  type       version           port
+    ---------------------------- -------------- --------- ----------------------
+     msb_10_4_15              :   single         10.4.15   [10300 ]
+     rsandbox_10_1_44         :   master-slave   10.1.44   [10114 10115 10116 ]
+     rsandbox_10_4_15         :   master-slave   10.4.15   [10111 10112 10113 ]
+    """
+    sys.exit(docker_env.exec(["dbdeployer", "sandboxes"] + list(args)))
+
+
+@cli.command(context_settings={"ignore_unknown_options": True})
+@click.argument("sandbox", nargs=1)
 @click.argument("cmd", nargs=1)
 @click.argument("args", nargs=-1)
-def exec(cmd: str, args: Tuple[str, ...]) -> None:
-    """Exececute command inside container"""
-    sys.exit(docker_env.exec([cmd] + list(args)))
+def sandexec(sandbox: str, cmd: str, args: Tuple[str, ...]) -> None:
+    """Execute command in specified sandbox.
+
+    The command is run from inside the sandbox directory.
+
+    \b
+    $ integration-env sandexec msb_10_4_15 ./use -e 'select @@Version'
+    +---------------------+
+    | @@Version           |
+    +---------------------+
+    | 10.4.15-MariaDB-log |
+    +---------------------+
+    """
+    workdir = os.path.join(common.SANDBOXES_DIR, sandbox)
+    sys.exit(docker_env.exec([cmd] + list(args), workdir=workdir))
 
 
-@cli.command()
+@cli.command(context_settings={"ignore_unknown_options": True})
 @click.option(
-    "-t",
-    "--type",
-    "sb_type",
-    default=common.TOPO_TYPE_SINGLE,
-    show_default=True,
-    type=click.Choice(common.TOPO_TYPES, case_sensitive=False),
-    help="Type of topology to deploy (single|replication)",
+    "-d",
+    "--workdir",
+    help="Working dir inside container to run command from.",
 )
+@click.argument("cmd", nargs=1)
+@click.argument("args", nargs=-1)
+def exec(workdir: str, cmd: str, args: Tuple[str, ...]) -> None:
+    """Exececute command inside container."""
+    sys.exit(docker_env.exec([cmd] + list(args), workdir=workdir))
+
+
+@cli.group()
+def deploy() -> None:
+    """Deploy a database sandbox inside the docker container."""
+
+
+@deploy.command(context_settings={"ignore_unknown_options": True})
+@click.argument("version", default=None, nargs=1, required=False)
 @click.option(
     "-p",
     "--port",
     default=common.BASE_PORT,
     show_default=True,
-    help="Port/base port for deployment",
+    help="Port for deployment",
 )
-@click.option(
-    "--bind", default=None, help="IP to bind to. If unspecified, 127.0.0.1 will be used"
-)
-@click.option(
-    "-e",
-    "--extra-opt",
-    default=[],
-    multiple=True,
-    help="Extra option to pass to 'dbdeployer deploy'. Can be specified multiple times",
-)
-@click.argument("version", default=None, nargs=1, required=False)
-def deploy(
-    sb_type: str, port: int, bind: str, extra_opt: List[str], version: Optional[str]
-) -> None:
-    """Manage deployments within container
+def single(version: str, port: int) -> None:
+    """Deploy 'single' sandbox.
 
-    If VERSION is not specified, the default database version is used.
-    """
+    If VERSION is not specified, the default database version is used."""
+    sb_type = common.TOPO_TYPE_SINGLE
     try:
         d = dbver.get_ver(version)
     except KeyError:
         common.fatal("Unknown db version '%s'" % version)
     sb_name = d.sandbox_name(sb_type)
+    _deploy(
+        sb_name,
+        sb_type,
+        d.ver,
+        "--port=%d" % port,
+        "--master",
+    )
+
+
+@deploy.command(context_settings={"ignore_unknown_options": True})
+@click.argument("version", default=None, nargs=1, required=False)
+@click.option(
+    "-p",
+    "--port",
+    default=common.BASE_PORT,
+    show_default=True,
+    help="Base port for deployment",
+)
+def replication(version: str, port: int) -> None:
+    """Deploy 'replication' sandbox.
+
+    If VERSION is not specified, the default database version is used."""
+    sb_type = common.TOPO_TYPE_REPLICATION
+    try:
+        d = dbver.get_ver(version)
+    except KeyError:
+        common.fatal("Unknown db version '%s'" % version)
+    sb_name = d.sandbox_name(sb_type)
+    _deploy(
+        sb_name,
+        sb_type,
+        d.ver,
+        "--base-port=%d" % port,
+    )
+
+
+def _deploy(sb_name: str, sb_type: str, ver: str, *args: str) -> NoReturn:
     cmd = [
         "dbdeployer",
         "deploy",
         sb_type,
-        d.ver,
+        ver,
         "--log-sb-operations",
         "--concurrent",
+        "--port-as-server-id",
         "--skip-report-host",
         "--skip-report-port",
         "--my-cnf-options=report_host=localhost",
     ]
-    if bind:
-        cmd.append("--bind-address=%s" % bind)
-    cmd.extend(extra_opt)
-    if sb_type == common.TOPO_TYPE_SINGLE:
-        cmd.append("--port=%d" % port)
-        cmd.append("--master")
-    else:
-        cmd.append("--base-port=%d" % port)
+    cmd += args
     cmd += ["&&", "apply_sys_schema", sb_name]
     sys.exit(docker_env.exec(["bash", "-c", " ".join(cmd)]))
+
+
+@cli.command(context_settings={"ignore_unknown_options": True})
+@click.argument("sandbox", nargs=1)
+@click.argument("args", nargs=-1)
+def delete(sandbox: str, args: Tuple[str, ...]) -> None:
+    """Delete a sandbox.
+
+    Use "ALL" to delete all sandboxes.
+
+    \b
+    $ integration-env delete ALL
+    List of deployed sandboxes:
+    /root/sandboxes/rsandbox_10_1_44
+    /root/sandboxes/rsandbox_10_4_15
+    """
+    cmd = [
+        "dbdeployer",
+        "delete",
+        "--concurrent",
+        "--skip-confirm",
+        sandbox,
+    ]
+    sys.exit(docker_env.exec(cmd + list(args)))

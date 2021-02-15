@@ -12,6 +12,8 @@ TOPO_TYPES = [TOPO_TYPE_SINGLE, TOPO_TYPE_REPLICATION]
 
 BASE_PORT = 10110
 
+SANDBOXES_DIR = "/root/sandboxes"
+
 
 class LogPrefixAdaptor(logging.LoggerAdapter):
     def process(self, msg, kwargs):

@@ -173,7 +173,7 @@ def _run_cmd(
     return retcode, output.decode("utf8").strip()
 
 
-def exec(cmd: List[str]) -> int:
+def exec(cmd: List[str], workdir: str = "") -> int:
     """Run a user-supplied command inside the container"""
     c = _get_client()
     ctr = _get_ctr(c)
@@ -192,6 +192,7 @@ def exec(cmd: List[str]) -> int:
         stdin=True,
         tty=tty,
         environment=env,
+        workdir=workdir,
     )
     op = dockerpty.ExecOperation(c.api, exec_id, interactive=tty)
     pty = dockerpty.PseudoTerminal(c.api, op)
