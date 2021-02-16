@@ -33,14 +33,14 @@ def manage_env():
 def deploy_single():
     d = dbver.get_ver()
     deploy_ver(common.TOPO_TYPE_SINGLE, d.ver)
-    yield d.ver
+    yield d
     undeploy_all()
 
 
 @pytest.fixture(scope="class", params=dbver.DB_VERSIONS, ids=lambda d: d.ver)
 def deploy_single_all_versions(request):
     deploy_ver(common.TOPO_TYPE_SINGLE, request.param.ver)
-    yield request.param.ver
+    yield request.param
     undeploy_all()
 
 
@@ -48,14 +48,14 @@ def deploy_single_all_versions(request):
 def deploy_replicate():
     d = dbver.get_ver()
     deploy_ver(common.TOPO_TYPE_REPLICATION, d.ver)
-    yield
+    yield d
     undeploy_all()
 
 
 @pytest.fixture(scope="class", params=dbver.DB_VERSIONS, ids=lambda d: d.ver)
 def deploy_replicate_all_versions(request):
     deploy_ver(common.TOPO_TYPE_REPLICATION, request.param.ver)
-    yield request.param.ver
+    yield request.param
     undeploy_all()
 
 

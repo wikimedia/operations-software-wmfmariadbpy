@@ -104,6 +104,9 @@ def start(rm: bool) -> None:
             common.cache_dir(): {"bind": CACHE_MNT, "mode": "ro"},
             VOLUME: {"bind": MYSQL_BIN_MNT, "mode": "rw"},
         },
+        tmpfs={
+            "/root/sandboxes": "exec",
+        },
         network_mode="host",
     )
 
