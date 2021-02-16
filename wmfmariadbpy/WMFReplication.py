@@ -71,9 +71,12 @@ class WMFReplication:
         If replication is already configured (even if the replica is stopped),
         it fails. Stop and reset replication before trying to run it.
         """
-        pw = pwd.getpwuid(os.getuid())
         config = configparser.ConfigParser(interpolation=None)
-        config.read(os.path.join(pw.pw_dir, ".my.cnf"))
+        if "TESTENV_MY_CNF" in os.environ:
+            config.read(os.environ["TESTENV_MY_CNF"])
+        else:
+            pw = pwd.getpwuid(os.getuid())
+            config.read(os.path.join(pw.pw_dir, ".my.cnf"))
         master_user = config["clientreplication"]["user"]
         master_password = config["clientreplication"]["password"]
         slave_status = self.slave_status()
