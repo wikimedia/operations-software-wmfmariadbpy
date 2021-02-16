@@ -52,8 +52,17 @@ def deploy_replicate():
     undeploy_all()
 
 
-@pytest.fixture(scope="class", params=dbver.DB_VERSIONS, ids=lambda d: d.ver)
+@pytest.fixture(params=dbver.DB_VERSIONS, ids=lambda d: d.ver)
 def deploy_replicate_all_versions(request):
+    yield from _deploy_replicate_all_versions(request)
+
+
+@pytest.fixture(scope="class", params=dbver.DB_VERSIONS, ids=lambda d: d.ver)
+def deploy_replicate_all_versions_class(request):
+    yield from _deploy_replicate_all_versions(request)
+
+
+def _deploy_replicate_all_versions(request):
     deploy_ver(common.TOPO_TYPE_REPLICATION, request.param.ver)
     yield request.param
     undeploy_all()

@@ -18,22 +18,25 @@ class TestReplicationTree:
         ver_part = " version: %s," % ver
         assert ver_part in line
 
-    def test_repl(self, deploy_replicate_all_versions):
+    def test_repl(self, deploy_replicate_all_versions_class):
         port = common.BASE_PORT + 1
         ret = self._run(port)
         lines = ret.stdout.decode("utf8").splitlines()
         assert len(lines) == 3
         for i, line in enumerate(lines, start=port):
             self._line_assert(
-                line, "" if i == port else "+ ", i, deploy_replicate_all_versions.ver
+                line,
+                "" if i == port else "+ ",
+                i,
+                deploy_replicate_all_versions_class.ver,
             )
 
-    def test_single(self, deploy_replicate_all_versions):
+    def test_single(self, deploy_replicate_all_versions_class):
         port = common.BASE_PORT + 2
         ret = self._run(port)
         lines = ret.stdout.decode("utf8").splitlines()
         assert len(lines) == 1
-        self._line_assert(lines[0], "", port, deploy_replicate_all_versions.ver)
+        self._line_assert(lines[0], "", port, deploy_replicate_all_versions_class.ver)
 
     def test_failure(self):
         ret = self._run(1)
