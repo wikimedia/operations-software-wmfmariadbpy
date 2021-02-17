@@ -1,17 +1,8 @@
-import subprocess
-
+from wmfmariadbpy.test.integration.utils import tree
 from wmfmariadbpy.test.integration_env import common
 
 
 class TestReplicationTree:
-    def _run(self, port):
-        cmd = [
-            "db-replication-tree",
-            "--no-color",
-            "localhost:%d" % port,
-        ]
-        return subprocess.run(cmd, check=True, stdout=subprocess.PIPE)
-
     def _line_assert(self, line, prefix, port, ver):
         start = "%slocalhost:%d," % (prefix, port)
         assert line.startswith(start)
@@ -20,8 +11,7 @@ class TestReplicationTree:
 
     def test_repl(self, deploy_replicate_all_versions_class):
         port = common.BASE_PORT + 1
-        ret = self._run(port)
-        lines = ret.stdout.decode("utf8").splitlines()
+        lines = tree(port)
         assert len(lines) == 3
         for i, line in enumerate(lines, start=port):
             self._line_assert(
@@ -33,14 +23,12 @@ class TestReplicationTree:
 
     def test_single(self, deploy_replicate_all_versions_class):
         port = common.BASE_PORT + 2
-        ret = self._run(port)
-        lines = ret.stdout.decode("utf8").splitlines()
+        lines = tree(port)
         assert len(lines) == 1
         self._line_assert(lines[0], "", port, deploy_replicate_all_versions_class.ver)
 
     def test_failure(self):
-        ret = self._run(1)
-        lines = ret.stdout.decode("utf8").splitlines()
+        lines = tree(1)
         assert len(lines) == 1
         assert lines[0].startswith("localhost:1,")
         assert lines[0].endswith("DOWN")
