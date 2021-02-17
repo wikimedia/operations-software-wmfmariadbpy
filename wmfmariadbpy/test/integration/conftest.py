@@ -8,7 +8,7 @@ from wmfmariadbpy.test.integration_env import common, dbver
 @pytest.fixture(scope="module", autouse=True)
 def manage_env():
     ret = subprocess.run(
-        "integration-env build && integration-env start",
+        "integration-env build && integration-env cache --skip-csum && integration-env start",
         shell=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,

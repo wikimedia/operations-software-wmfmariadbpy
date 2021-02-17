@@ -53,10 +53,19 @@ def checksum(path: str, expected: str) -> Tuple[bool, str]:
     return digest == expected, digest
 
 
-def download_cache(log: LogPrefixAdaptor, url: str, filename: str, csum: str) -> bool:
+def download_cache(
+    log: LogPrefixAdaptor,
+    url: str,
+    filename: str,
+    csum: str,
+    skip_existing_csum: bool = False,
+) -> bool:
     target = os.path.join(cache_dir(), filename)
     exists = os.path.exists(target)
     if exists:
+        if skip_existing_csum:
+            log.debug("File exists: %s  (skipping checksum)", filename)
+            return True
         log.debug("File exists: %s. Calculating checksum", filename)
         ok, digest = checksum(target, csum)
         if ok:

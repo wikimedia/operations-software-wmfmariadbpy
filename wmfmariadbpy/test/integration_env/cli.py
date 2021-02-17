@@ -56,9 +56,14 @@ def build(pull: bool, no_cache: bool, verbose: bool) -> None:
 
 
 @cli.command()
-def cache() -> None:
+@click.option(
+    "--skip-csum",
+    is_flag=True,
+    help="Do not calculate checksums for existing downloads.",
+)
+def cache(skip_csum: bool) -> None:
     """Maintain cache of database versions."""
-    if not dbver.download_all():
+    if not dbver.download_all(skip_csum):
         sys.exit(1)
 
 

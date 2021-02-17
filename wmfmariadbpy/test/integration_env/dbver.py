@@ -61,19 +61,20 @@ DB_VERSIONS = (
 DEFAULT_VER = "10.4.15"
 
 
-def download_all() -> bool:
+def download_all(skip_csum: bool) -> bool:
     for ver in DB_VERSIONS:
-        if not download(ver):
+        if not download(ver, skip_csum):
             return False
     return True
 
 
-def download(dbver: DBVersion) -> bool:
+def download(dbver: DBVersion, skip_csum: bool) -> bool:
     return common.download_cache(
         common.prefix_logger("%s: %s" % (dbver.flavor, dbver.ver)),
         dbver.url(),
         dbver.filename(),
         dbver.sha256sum,
+        skip_csum,
     )
 
 
