@@ -17,16 +17,27 @@ Tests are located under *wmfmariadbpy/test*. They are split between unit and int
 tox -e py3-unit
 ```
 
-### Integration tests requirements
+### Integration tests
 
-In order to be able to to run the tests you'll need to be able to run the script localy. You'll need to have:
-* A *.my.cnf* file with the proper configuration
-* A MariaDB listening on localhost:3306
-* *pt-online-schema-change* script on your PATH
+Requirements:
+* docker (and be in the `docker` group)
+* `mysql` (client binary)
+* `pt-online-schema-change`
+
+On a debian/ubuntu system, this should install the required packages:
+```bash
+sudo apt install docker.io mariadb-client percona-toolkit
+# You'll need to relog after this:
+sudo usermod -a -G docker $LOGNAME
+```
 
 Then:
 ```
 tox -e py3-integration
+```
+If it ever ends up in a broken state:
+```
+tox -e py3-integration_env stop
 ```
 
 ### Tests coverage report
