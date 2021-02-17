@@ -63,7 +63,10 @@ class WMFMariaDB:
         if self.host == "localhost" and self.socket:
             address = "{}[socket={}]".format(self.host, self.socket)
         else:
-            host = self.host.split(".")[0]
+            host = self.host
+            if not host[0].isdigit():
+                # Don't split on . if host is an IP address
+                host = host.split(".")[0]
             if self.port == 3306:
                 address = host
             else:
