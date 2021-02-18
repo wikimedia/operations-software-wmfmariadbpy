@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-from typing import NoReturn, Tuple
+from typing import List, NoReturn, Tuple
 
 import click
 
@@ -169,6 +169,7 @@ def deploy() -> None:
 
 @deploy.command(context_settings={"ignore_unknown_options": True})
 @click.argument("version", default=None, nargs=1, required=False)
+@click.argument("args", nargs=-1)
 @click.option(
     "-p",
     "--port",
@@ -176,7 +177,7 @@ def deploy() -> None:
     show_default=True,
     help="Port for deployment",
 )
-def single(version: str, port: int) -> None:
+def single(version: str, port: int, args: List[str]) -> None:
     """Deploy 'single' sandbox.
 
     If VERSION is not specified, the default database version is used."""
@@ -192,11 +193,13 @@ def single(version: str, port: int) -> None:
         d.ver,
         "--port=%d" % port,
         "--master",
+        *args,
     )
 
 
 @deploy.command(context_settings={"ignore_unknown_options": True})
 @click.argument("version", default=None, nargs=1, required=False)
+@click.argument("args", nargs=-1)
 @click.option(
     "-p",
     "--port",
@@ -204,7 +207,7 @@ def single(version: str, port: int) -> None:
     show_default=True,
     help="Base port for deployment",
 )
-def replication(version: str, port: int) -> None:
+def replication(version: str, port: int, args: List[str]) -> None:
     """Deploy 'replication' sandbox.
 
     If VERSION is not specified, the default database version is used."""
@@ -219,6 +222,7 @@ def replication(version: str, port: int) -> None:
         sb_type,
         d.ver,
         "--base-port=%d" % port,
+        *args,
     )
 
 
