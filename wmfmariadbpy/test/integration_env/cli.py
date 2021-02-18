@@ -222,6 +222,7 @@ def replication(version: str, port: int, args: List[str]) -> None:
         sb_type,
         d.ver,
         "--base-port=%d" % port,
+        "--change-master-options=master_heartbeat_period=1",
         *args,
     )
 
@@ -238,6 +239,7 @@ def _deploy(sb_name: str, sb_type: str, ver: str, *args: str) -> NoReturn:
         "--skip-report-host",
         "--skip-report-port",
         "--my-cnf-options=report_host=localhost",
+        "--my-cnf-options=slave_net_timeout=2",
     ]
     cmd += args
     cmd += ["&&", "apply_sys_schema", sb_name]

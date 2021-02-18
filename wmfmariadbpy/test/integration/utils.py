@@ -32,24 +32,18 @@ def query_db_one(port: int, query: str) -> Dict[str, Any]:
     return cast(List[Dict[str, Any]], results)[0]
 
 
-def flush_slave_hosts(port: int, dver: dbver.DBVersion, target: int) -> None:
-    """Flush binary log, and wait until 'show slave hosts' contains the expected
-    number of entries."""
-    query_db(port, "flush no_write_to_binlog binary logs")
+def refresh_slave_hosts(port: int, dver: dbver.DBVersion, target: int) -> None:
+    """Wait until 'show slave hosts' contains the expected number of entries."""
     starttime = time.time()
-    timeout = 15
+    timeout = 5
     # Poll at 1hz until either we timeout, or the target number of entries is reached.
     while time.time() - starttime < timeout:
         ret = query_db(port, "show slave hosts")
         print(ret)
         if len(ret) == target:
+            print("Converged after %.2fs" % (time.time() - starttime))
             return
         time.sleep(1.0 - ((time.time() - starttime) % 1.0))
-        if dver.flavor == dbver.FLAVOR_MARIADB and dver.ver.startswith("10.1."):
-            # XXX(kormat): There seems to be a bug with mariadb 10.1 where the
-            # output of 'show slave hosts' can be stale for a long time.
-            # Repeatedly flushing the logs works around this (somehow).
-            query_db(port, "flush no_write_to_binlog binary logs")
     assert False, "Failed to converge within %ds" % timeout
 
 

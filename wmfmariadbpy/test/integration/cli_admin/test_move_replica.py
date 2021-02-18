@@ -4,8 +4,8 @@ import pytest
 
 from wmfmariadbpy.test.integration.utils import (
     enable_gtid,
-    flush_slave_hosts,
     query_db,
+    refresh_slave_hosts,
     tree,
 )
 
@@ -44,7 +44,7 @@ class TestMoveReplicaBasic:
         ]
         ret = subprocess.run(cmd, check=True, stdout=subprocess.PIPE)
         print(ret.stdout.decode("utf8"))
-        flush_slave_hosts(10111, deploy_replicate_all_versions, 1)
+        refresh_slave_hosts(10111, deploy_replicate_all_versions, 1)
         self._assert_vertical()
 
     @pytest.mark.parametrize(
@@ -58,7 +58,7 @@ class TestMoveReplicaBasic:
         query_db(10113, "stop slave")
         query_db(10113, "change master to master_port=10112")
         query_db(10113, "start slave")
-        flush_slave_hosts(10111, deploy_replicate_all_versions, 1)
+        refresh_slave_hosts(10111, deploy_replicate_all_versions, 1)
         self._assert_vertical()
         # Now we're in the expected state to run the test
         cmd = [
@@ -70,5 +70,5 @@ class TestMoveReplicaBasic:
         ]
         ret = subprocess.run(cmd, check=True, stdout=subprocess.PIPE)
         print(ret.stdout.decode("utf8"))
-        flush_slave_hosts(10112, deploy_replicate_all_versions, 0)
+        refresh_slave_hosts(10112, deploy_replicate_all_versions, 0)
         self._assert_flat()
