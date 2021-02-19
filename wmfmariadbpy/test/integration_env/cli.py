@@ -238,8 +238,11 @@ def _deploy(sb_name: str, sb_type: str, ver: str, *args: str) -> NoReturn:
         "--port-as-server-id",
         "--skip-report-host",
         "--skip-report-port",
+        "--enable-general-log",
         "--my-cnf-options=report_host=localhost",
         "--my-cnf-options=slave_net_timeout=2",
+        "--my-cnf-options=log_slave_updates=1",
+        "--my-cnf-options=transaction_isolation=READ-COMMITTED",
     ]
     cmd += args
     cmd += ["&&", "apply_sys_schema", sb_name]
