@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import argparse
-import re
 import sys
 import time
 
@@ -11,12 +10,7 @@ from wmfmariadbpy.RemoteExecution.CuminExecution import (
 from wmfmariadbpy.WMFMariaDB import WMFMariaDB
 from wmfmariadbpy.WMFReplication import WMFReplication
 
-# Heartbeat execution line, expected to be found on all masters, and to be run after a master switch
-# Update if operations/puppet:modules/mariadb/manifests/heartbeat.pp changes
-HEARTBEAT_EXEC = "/usr/bin/perl /usr/local/bin/pt-heartbeat-wikimedia --defaults-file=/dev/null \
---user=root --host=localhost -D heartbeat --shard={0} --datacenter={1} --update --replace \
---interval={2} --set-vars=binlog_format=STATEMENT -S {3} --daemonize \
---pid /var/run/pt-heartbeat.pid"
+HEARTBEAT_SERVICE = "pt-heartbeat-wikimedia"
 
 TENDRIL_INSTANCE = "db1115"  # instance_name:port format
 ZARCILLO_INSTANCE = "db1115"  # instance_name:port format
@@ -544,87 +538,27 @@ def move_replicas_to_new_master(master_replication, slave_replication, timeout):
 
 def stop_heartbeat(master):
     """
-    Tries to kill heartbeat at the given master host so it stops writing to it before setting it in read only.
-    It gathers the options it was using from the process. If heartbeat wasn't running, it takes the information
-    from the last heartbeat row available on the database and shows a warning.
-    If any error happens, where the kill is not successful, it exits. Otherwise is retuns the section, datacenter,
-    interval and socket used by this master
+    Stops pt-heartbeat on the host. On failure, the process exits with an error.
     """
+    print("Stopping heartbeat on %s" % master.name())
     runner = RemoteExecution()
-    result = runner.run(master.host, "/bin/ps --no-headers -o pid,args -C perl")
-    process_id = None
-    regex = "([0-9]+) " + HEARTBEAT_EXEC.format(
-        "(.+)", "(.+)", "(.+)", "(.+)"
-    )  # section, datacenter, interval, socket
-    if result.stdout is not None:
-        for line in result.stdout.splitlines():
-            match = re.search(regex, line)
-            if match is not None:
-                process_id = int(match.group(1))
-                section = match.group(2)
-                datacenter = match.group(3)
-                interval = match.group(4)
-                socket = match.group(5)
-                break
-    if process_id is None:
-        result = master.execute(
-            "SELECT * FROM heartbeat.heartbeat ORDER BY ts DESC LIMIT 1"
-        )
-        if result["success"] and result["numrows"] == 1:
-            print(
-                "[WARNING]: Could not find a pt-heartbeat process to kill, "
-                "using heartbeat table to determine the section"
-            )
-            section = str(result["rows"][0][6].decode("ascii"))
-            datacenter = str(result["rows"][0][7].decode("ascii"))
-            interval = 1
-            socket = "/var/run/mysqld.sock"
-            return section, datacenter, interval, socket
-        else:
-            print(
-                "[ERROR]: Could not find pt-heartbeat process, nor read the heartbeat.heartbeat table"
-            )
-            sys.exit(-1)
-
-    print("Stopping heartbeat pid {} at {}".format(str(process_id), master.name()))
-    result = runner.run(master.host, "/bin/kill {}".format(str(process_id)))
+    result = runner.run(master.host, "systemctl stop %s" % HEARTBEAT_SERVICE)
     if result.returncode != 0:
-        print("[ERROR]: Could not stop the heartbeat process correctly")
+        print("[ERROR]: Could not stop the %s service" % HEARTBEAT_SERVICE)
         sys.exit(-1)
-    return section, datacenter, interval, socket
 
 
-def start_heartbeat(master, section, datacenter, interval, socket):
+def start_heartbeat(master):
     """
-    Starts heartbeat on the given master, with the given section name (e.g. 's1', 'pc3', ...) and interval.
-    Datacenter, and socket given are only used if we cannot determine the ones of the current host automatically.
+    Starts heartbeat on the given master. On failure, the process exits with an error.
     """
-    if master.host.endswith("eqiad.wmnet"):
-        datacenter = "eqiad"
-    elif master.host.endswith("codfw.wmnet"):
-        datacenter = "codfw"
-    else:
-        print(
-            "[WARNING]: We could not determine the datacenter of {}, "
-            "using the same as the original master".format(master.host)
-        )
-    result = master.execute("SELECT @@GLOBAL.socket")
-    if not result["success"] or result["numrows"] != 1:
-        print(
-            "[WARNING]: We could not determine the socket of {}, "
-            "using the same as the original master".format(master.host)
-        )
-    else:
-        socket = result["rows"][0][0]
-
-    print("Starting heartbeat section {} at {}".format(section, master.host))
-    command = (
-        "/usr/bin/nohup "
-        + HEARTBEAT_EXEC.format(section, datacenter, interval, socket)
-        + " &> /dev/null &"
-    )
+    print("Starting heartbeat on %s" % master.name())
     runner = RemoteExecution()
-    result = runner.run(master.host, command)
+    result = runner.run(
+        master.host,
+        "systemctl start %s; systemctl is-active %s"
+        % (HEARTBEAT_SERVICE, HEARTBEAT_SERVICE),
+    )
     if result.returncode != 0:
         print(
             "[ERROR]: Could not run pt-heartbeat-wikimedia, got output: {} {}".format(
@@ -632,29 +566,6 @@ def start_heartbeat(master, section, datacenter, interval, socket):
             )
         )
         sys.exit(-1)
-
-    result = runner.run(master.host, "/bin/ps --no-headers -o pid,args -C perl")
-    process_id = None
-    regex = "([0-9]+) " + HEARTBEAT_EXEC.format(
-        "(.+)", "(.+)", "(.+)", "(.+)"
-    )  # section, datacenter, interval, socket
-    if result.stdout is not None:
-        for line in result.stdout.splitlines():
-            match = re.search(regex, line)
-            if match is not None:
-                process_id = int(match.group(1))
-                break
-    if process_id is None:
-        print(
-            "[ERROR]: pt-heartbeat execution was not successful- it could not be detected running"
-        )
-        sys.exit(-1)
-    else:
-        print(
-            "Detected heartbeat at {} running with PID {}".format(
-                master.host, str(process_id)
-            )
-        )
 
 
 def update_tendril(master, slave):
@@ -842,7 +753,7 @@ def main():
 
     # core steps
     if not options.skip_heartbeat:
-        section, datacenter, interval, socket = stop_heartbeat(master)
+        stop_heartbeat(master)
 
     if replicating_master:
         old_master_slave_status = stop_master_replication(master_replication)
@@ -876,7 +787,7 @@ def main():
     handle_old_master_semisync_replication(master)
 
     if not options.skip_heartbeat:
-        start_heartbeat(slave, section, datacenter, interval, socket)
+        start_heartbeat(slave)
 
     if replicating_master:
         setup_new_master_replication(slave_replication, old_master_slave_status)
