@@ -1,5 +1,5 @@
 FROM debian:buster
-ARG DBDEPLOYER_VERSION=1.57.0
+ARG DBDEPLOYER_VERSION=1.58.2
 ARG MARIADB_SYS_VERSION=c000211d17f833f79e4fce9802d69834513079fb
 
 RUN apt-get update -q -y && DEBIAN_FRONTEND=noninteractive apt-get install  --no-install-recommends -y \
