@@ -2,3 +2,4 @@ extend-diff-ignore = "^([^/]*[.]egg-info/)"
 # Ignore .tox, .mypy_cache, etc.
 tar-ignore = '.*'
 tar-ignore = 'cover'
+tar-ignore = 'wmfmariadbpy/test/integration_env/cache'
