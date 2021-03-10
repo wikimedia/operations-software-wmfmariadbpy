@@ -168,7 +168,7 @@ def _dc_map(host: str) -> str:
     dc_rx = re.compile(r"^[a-zA-Z]+(?P<dc_id>\d)\d{3}$")
     m = dc_rx.match(host)
     if not m:
-        return host
+        return socket.getfqdn(host)
     dc_id = int(m.group("dc_id"))
     if dc_id not in dcs:
         raise ValueError("Unknown datacenter ID '%d' (from '%s')" % (dc_id, host))
