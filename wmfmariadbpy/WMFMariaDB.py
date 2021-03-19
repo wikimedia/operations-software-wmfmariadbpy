@@ -1,4 +1,5 @@
-# requires python3-pymysql
+import os
+
 import pymysql
 
 import wmfmariadbpy.dbutil as dbutil
@@ -26,7 +27,7 @@ class WMFMariaDB:
         connection identifier, which you can use to send one or more queries.
         """
         self.__last_error = None
-        self.debug = debug
+        self.debug = ("DEBUG" in os.environ) or debug
         self.vendor = vendor
         host, port = dbutil.addr_split(host, port)
         host = dbutil.resolve(host)
