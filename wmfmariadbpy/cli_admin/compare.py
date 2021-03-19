@@ -4,6 +4,7 @@ import sys
 from datetime import datetime
 from multiprocessing.pool import ThreadPool
 
+from wmfmariadbpy.dbutil import addr_split
 from wmfmariadbpy.WMFMariaDB import WMFMariaDB
 
 
@@ -77,28 +78,18 @@ def parse_args():
     return parser.parse_args()
 
 
-def get_host_tuple(host):
-    if ":" in host:
-        # we do not support ipv6 yet
-        host, port = host.split(":")
-        port = int(port)
-    else:
-        port = 3306
-    return (host, port)
-
-
 def connect_in_parallel(hosts, database, threads):
     pool = ThreadPool(processes=len(hosts))
     async_result = dict()
     conn = list()
     for host_string in hosts:
-        (host, port) = get_host_tuple(host_string)
+        (host, port) = addr_split(host_string)
         async_result[host + "_" + str(port)] = pool.apply_async(
             WMFMariaDB, (host, port, database)
         )
 
     for host_string in hosts:
-        (host, port) = get_host_tuple(host_string)
+        (host, port) = addr_split(host_string)
         mysql = async_result[host + "_" + str(port)].get()
         if mysql.connection is None:
             sys.stderr.write("Could not connect to {}\n".format(host))
