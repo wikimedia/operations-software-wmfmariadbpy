@@ -13,7 +13,12 @@ setup(
     url="https://phabricator.wikimedia.org/diffusion/OSMD/",
     packages=("wmfmariadbpy", "wmfmariadbpy.RemoteExecution"),
     install_requires=["pymysql>=0.9.3", "tabulate>=0.8.2"],
-    extras_require={"cumin": ["cumin"]},
+    extras_require={
+        "cumin": [
+            "cumin <= 4.0.0; python_version < '3.6'",
+            "cumin; python_version >= '3.6'",
+        ]
+    },
     entry_points={
         "console_scripts": [
             # cli_admin
