@@ -31,6 +31,7 @@ class Instance:
         binlog_format=None,
         replicas=[],
         cross_dc_replication=False,
+        circular_replication=False,
         no_color=False,
     ):
         self.name = name if name is not None else "<None>"
@@ -47,6 +48,7 @@ class Instance:
         self.read_only = read_only
         self.replicas = replicas
         self.cross_dc_replication = cross_dc_replication
+        self.circular_replication = circular_replication
         self.no_color = no_color
 
     def _color(self, color, *args):
@@ -115,7 +117,11 @@ class Instance:
             color = COLOR_MAGENTA
         else:
             color = COLOR_BLUE
-        return self._color(color, "+") + " "
+        if self.circular_replication:
+            symbol = "∞"
+        else:
+            symbol = "+"
+        return self._color(color, symbol) + " "
 
     def print_latency(self):
         return "latency: {:.4f}".format(self.query_latency)
@@ -166,8 +172,16 @@ def handle_parameters():
     return options
 
 
+seen_instances = set()
+
+
 def get_instance_data(instance, no_color):
     name = instance.name(show_db=False)
+    # Don't immediately abort if an instance has already been seen
+    # Instead, scan it again but ignores its replicas. That way it'll show
+    # up in the output hierarchy under the node it replicates from too.
+    already_seen = name in seen_instances
+    seen_instances.add(name)
     binlog_format = None
     processes = None
     version = None
@@ -197,13 +211,14 @@ def get_instance_data(instance, no_color):
     replication = WMFReplication(instance)
     lag = replication.lag()
     numerical_dc = name.split(":")[0].split(".")[0][-4:-3]
-    slaves = replication.slaves()
-    for slave in slaves:
-        instance = get_instance_data(slave, no_color)
-        # Mark different dcs from the master
-        if instance.name.split(":")[0].split(".")[0][-4:-3] != numerical_dc:
-            instance.cross_dc_replication = True
-        replicas.append(instance)
+    if not already_seen:
+        slaves = replication.slaves()
+        for slave in slaves:
+            instance = get_instance_data(slave, no_color)
+            # Mark different dcs from the master
+            if instance.name.split(":")[0].split(".")[0][-4:-3] != numerical_dc:
+                instance.cross_dc_replication = True
+            replicas.append(instance)
     return Instance(
         name=name,
         binlog_format=binlog_format,
@@ -214,6 +229,7 @@ def get_instance_data(instance, no_color):
         query_latency=query_latency,
         replicas=replicas,
         uptime=uptime,
+        circular_replication=already_seen,
         no_color=no_color,
     )
 
