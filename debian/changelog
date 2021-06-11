@@ -1,3 +1,9 @@
+wmfmariadbpy (0.7.1) buster-wikimedia; urgency=medium
+
+  * db-replication-tree: Support circular replication.
+
+ -- Stevie Shirley <sshirley@wikimedia.org>  Fri, 11 Jun 2021 14:23:46 +0200
+
 wmfmariadbpy (0.7) buster-wikimedia; urgency=medium
 
   * db-replication-tree: Add --no-color option.
