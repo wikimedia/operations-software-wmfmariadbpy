@@ -1,3 +1,10 @@
+wmfmariadbpy (0.7.2) buster-wikimedia; urgency=medium
+
+  * db-switchover: Don't set rpl_semi_sync_master_enabled with
+    --skip-slave-move
+
+ -- Stevie Beth Mhaol <sbmhaol@wikimedia.org>  Mon, 16 Aug 2021 16:58:30 +0200
+
 wmfmariadbpy (0.7.1) buster-wikimedia; urgency=medium
 
   * db-replication-tree: Support circular replication.
