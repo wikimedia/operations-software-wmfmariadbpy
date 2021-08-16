@@ -737,9 +737,8 @@ def main():
         read_only_master,
     )
 
-    handle_new_master_semisync_replication(slave)
-
     if not options.skip_slave_move:
+        handle_new_master_semisync_replication(slave)
         move_replicas_to_new_master(master_replication, slave_replication, timeout)
 
     if options.only_slave_move:
