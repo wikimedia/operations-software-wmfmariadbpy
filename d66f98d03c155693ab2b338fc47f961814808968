@@ -33,6 +33,24 @@
       "message": "What happens (and what should happen) if path is \"\" here? or is that case rule out upstream from calling this function?",
       "revId": "d66f98d03c155693ab2b338fc47f961814808968",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0d551d3_affbba43",
+        "filename": "wmfmariadbpy/dbutil.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2021-12-06T16:40:40Z",
+      "side": 1,
+      "message": "It\u0027ll fail with file-not-found on \u0027open()\u0027 below. This patch does not change that behaviour.\n\nOutside of unit tests, there are zero call sites that provide \u0027path\u0027 currently (and, in fact, the only 2 call sites are in this file).",
+      "parentUuid": "e19ffe56_1403f152",
+      "revId": "d66f98d03c155693ab2b338fc47f961814808968",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
     }
   ]
 }
