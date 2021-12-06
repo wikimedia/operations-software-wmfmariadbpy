@@ -51,6 +51,24 @@
       "parentUuid": "e19ffe56_1403f152",
       "revId": "d66f98d03c155693ab2b338fc47f961814808968",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5b740ea_179bd914",
+        "filename": "wmfmariadbpy/dbutil.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 8504
+      },
+      "writtenOn": "2021-12-06T16:43:54Z",
+      "side": 1,
+      "message": "Alright. Only mentioned it since `if ... is None:` always tickles my what-if-meter.",
+      "parentUuid": "f0d551d3_affbba43",
+      "revId": "d66f98d03c155693ab2b338fc47f961814808968",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
     }
   ]
 }
