@@ -5,10 +5,18 @@ import os
 import pwd
 import re
 import socket
+import tempfile
 from typing import Dict, Optional, Tuple, Union
 
 SECTION_PORT_LIST_FILE = "/etc/wmfmariadbpy/section_ports.csv"
-DBUTIL_SECTION_PORTS_ENV = "DBUTIL_SECTION_PORTS"
+DBUTIL_SECTION_PORTS_TEST_DATA_ENV = "DBUTIL_SECTION_PORTS_TEST_DATA"
+SECTION_PORTS_TEST_DATA = """\
+f0, 10110
+f1, 10111
+f2, 10112
+f3, 10113
+alpha, 10320
+"""
 
 
 def read_section_ports_list(
@@ -19,11 +27,14 @@ def read_section_ports_list(
     one for the section -> port assignment, and the other with the port -> section
     assignment.
     """
-    if path is None:
-        path = os.getenv(DBUTIL_SECTION_PORTS_ENV, SECTION_PORT_LIST_FILE)
+    if path is None and DBUTIL_SECTION_PORTS_TEST_DATA_ENV in os.environ:
+        tmpfile = tempfile.NamedTemporaryFile()
+        tmpfile.write(SECTION_PORTS_TEST_DATA.encode("utf-8"))
+        tmpfile.flush()
+        path = tmpfile.name
+    assert path is not None
     port2sec = {}
     sec2port = {}
-    assert path is not None  # Make mypy happy
     with open(path, mode="r", newline="") as section_port_list:
         reader = csv.reader(section_port_list)
         for row in reader:

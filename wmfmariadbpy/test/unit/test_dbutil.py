@@ -1,5 +1,4 @@
 import ipaddress
-import os.path
 import socket
 
 import pytest
@@ -9,38 +8,30 @@ import wmfmariadbpy.dbutil as dbutil
 
 @pytest.fixture(autouse=True)
 def set_dbutil_section_ports(monkeypatch):
-    # This is a bit ugly, but needed to make it work without being dependent
-    # on the current dir.
-    monkeypatch.setenv(
-        dbutil.DBUTIL_SECTION_PORTS_ENV,
-        os.path.join(os.path.dirname(__file__), "..", "section_ports.csv"),
-    )
+    monkeypatch.setenv(dbutil.DBUTIL_SECTION_PORTS_TEST_DATA_ENV, "y")
 
 
 def test_read_section_ports_list():
+    # Checks that the test data is read correctly
     port2sec, sec2port = dbutil.read_section_ports_list()
     assert port2sec[10112] == "f2"
     assert sec2port["alpha"] == 10320
 
 
-@pytest.mark.parametrize(
-    "path,setenv,expected",
-    [
-        (None, False, "/default"),
-        (None, True, "/env"),
-        ("/path", False, "/path"),
-        ("/path", True, "/path"),
-    ],
-)
-def test_read_section_ports_list_env_path(monkeypatch, mocker, path, setenv, expected):
+def test_read_section_ports_list_no_path(monkeypatch):
     # Unset the env var so this test is hermetic.
-    monkeypatch.delenv(dbutil.DBUTIL_SECTION_PORTS_ENV, raising=False)
-    mocker.patch("wmfmariadbpy.dbutil.SECTION_PORT_LIST_FILE", "/default")
+    monkeypatch.delenv(dbutil.DBUTIL_SECTION_PORTS_TEST_DATA_ENV, raising=False)
+    with pytest.raises(AssertionError):
+        dbutil.read_section_ports_list()
+
+
+def test_read_section_ports_list_path(monkeypatch, mocker):
+    # Unset the env var so this test is hermetic.
+    monkeypatch.delenv(dbutil.DBUTIL_SECTION_PORTS_TEST_DATA_ENV, raising=False)
     m = mocker.patch("builtins.open", mocker.mock_open())
-    if setenv:
-        monkeypatch.setenv(dbutil.DBUTIL_SECTION_PORTS_ENV, "/env")
+    path = "/path"
     dbutil.read_section_ports_list(path=path)
-    m.assert_called_once_with(expected, mode="r", newline="")
+    m.assert_called_once_with(path, mode="r", newline="")
 
 
 @pytest.mark.parametrize(
