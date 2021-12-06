@@ -18,6 +18,40 @@
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "35254133_77b32c65",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3215
+      },
+      "writtenOn": "2021-12-06T17:33:39Z",
+      "side": 1,
+      "message": "Looks reasonable to me, see a couple of optional suggestions inline.",
+      "revId": "d66f98d03c155693ab2b338fc47f961814808968",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a43cab10_f6342733",
+        "filename": "tox.ini",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 3215
+      },
+      "writtenOn": "2021-12-06T17:33:39Z",
+      "side": 1,
+      "message": "The problem with CI seems to be caused by this, as it\u0027s testing with mypy the whole repo, instead of just the wmfmariadbpy/ directory with the project\u0027s code.",
+      "revId": "d66f98d03c155693ab2b338fc47f961814808968",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e19ffe56_1403f152",
@@ -67,6 +101,24 @@
       "side": 1,
       "message": "Alright. Only mentioned it since `if ... is None:` always tickles my what-if-meter.",
       "parentUuid": "f0d551d3_affbba43",
+      "revId": "d66f98d03c155693ab2b338fc47f961814808968",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "43fa7938_b948bd5f",
+        "filename": "wmfmariadbpy/dbutil.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 3215
+      },
+      "writtenOn": "2021-12-06T17:33:39Z",
+      "side": 1,
+      "message": "One option could be to remove the Optional[str] and have:\n\n  path: str \u003d \u0027\u0027",
+      "parentUuid": "c5b740ea_179bd914",
       "revId": "d66f98d03c155693ab2b338fc47f961814808968",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
     }
