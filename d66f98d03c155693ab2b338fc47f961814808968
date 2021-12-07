@@ -52,6 +52,24 @@
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad013fca_570d0dc3",
+        "filename": "tox.ini",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2021-12-07T13:08:37Z",
+      "side": 1,
+      "message": "Fixed via https://gerrit.wikimedia.org/r/c/operations/software/wmfmariadbpy/+/744767\nI prefer not having to specify the wmfmariadbpy dir, as these tools can be run in lots of different ways (e.g. from an editor), and not requiring changes in the various calling locations is easier on humans.",
+      "parentUuid": "a43cab10_f6342733",
+      "revId": "d66f98d03c155693ab2b338fc47f961814808968",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e19ffe56_1403f152",
@@ -119,6 +137,24 @@
       "side": 1,
       "message": "One option could be to remove the Optional[str] and have:\n\n  path: str \u003d \u0027\u0027",
       "parentUuid": "c5b740ea_179bd914",
+      "revId": "d66f98d03c155693ab2b338fc47f961814808968",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "90779941_b3a26838",
+        "filename": "wmfmariadbpy/dbutil.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 8161
+      },
+      "writtenOn": "2021-12-07T13:08:37Z",
+      "side": 1,
+      "message": "Yeah that would be a pretty elegant solution. I\u0027m hoping to deprecate and rewrite this code in the near future, though, so i don\u0027t want to change it any more than strictly necessary in the meantime.",
+      "parentUuid": "43fa7938_b948bd5f",
       "revId": "d66f98d03c155693ab2b338fc47f961814808968",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
     }
