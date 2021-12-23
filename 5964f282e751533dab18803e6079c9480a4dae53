@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1748463c_de8d70b9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3215
+      },
+      "writtenOn": "2021-12-23T10:41:56Z",
+      "side": 1,
+      "message": "looks fine, although I think that the events should be properly deployed somewhere and not read blindly from gerrit.",
+      "revId": "5964f282e751533dab18803e6079c9480a4dae53",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
+    }
+  ]
+}
