@@ -27,11 +27,13 @@ def read_section_ports_list(
     one for the section -> port assignment, and the other with the port -> section
     assignment.
     """
-    if path is None and DBUTIL_SECTION_PORTS_TEST_DATA_ENV in os.environ:
-        tmpfile = tempfile.NamedTemporaryFile()
-        tmpfile.write(SECTION_PORTS_TEST_DATA.encode("utf-8"))
-        tmpfile.flush()
-        path = tmpfile.name
+    if path is None:
+        path = SECTION_PORT_LIST_FILE
+        if DBUTIL_SECTION_PORTS_TEST_DATA_ENV in os.environ:
+            tmpfile = tempfile.NamedTemporaryFile()
+            tmpfile.write(SECTION_PORTS_TEST_DATA.encode("utf-8"))
+            tmpfile.flush()
+            path = tmpfile.name
     assert path is not None
     port2sec = {}
     sec2port = {}

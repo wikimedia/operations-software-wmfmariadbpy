@@ -18,11 +18,13 @@ def test_read_section_ports_list():
     assert sec2port["alpha"] == 10320
 
 
-def test_read_section_ports_list_no_path(monkeypatch):
+def test_read_section_ports_list_no_path(monkeypatch, mocker):
     # Unset the env var so this test is hermetic.
     monkeypatch.delenv(dbutil.DBUTIL_SECTION_PORTS_TEST_DATA_ENV, raising=False)
-    with pytest.raises(AssertionError):
-        dbutil.read_section_ports_list()
+    m = mocker.patch("builtins.open", mocker.mock_open())
+    path = dbutil.SECTION_PORT_LIST_FILE
+    dbutil.read_section_ports_list()
+    m.assert_called_once_with(path, mode="r", newline="")
 
 
 def test_read_section_ports_list_path(monkeypatch, mocker):
