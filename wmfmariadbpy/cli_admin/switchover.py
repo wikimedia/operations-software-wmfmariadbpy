@@ -12,7 +12,6 @@ from wmfmariadbpy.WMFReplication import WMFReplication
 
 HEARTBEAT_SERVICE = "pt-heartbeat-wikimedia"
 
-TENDRIL_INSTANCE = "db1115"  # instance_name:port format
 ZARCILLO_INSTANCE = "db1115"  # instance_name:port format
 
 
@@ -568,45 +567,6 @@ def start_heartbeat(master):
         sys.exit(-1)
 
 
-def update_tendril(master, slave):
-    """
-    After switching over the master role from the 'master' host to the 'slave' one,
-    update tendril so it reflects reality
-    """
-    print("Updating tendril...")
-    # get section of the original master
-    tendril = WMFMariaDB(TENDRIL_INSTANCE, database="tendril")
-    query = (
-        "SELECT name "
-        "FROM shards "
-        "WHERE master_id = (SELECT id "
-        "                   FROM servers "
-        "                   WHERE host = '{}' AND port = {})"
-    )
-    result = tendril.execute(query.format(master.host, master.port))
-    if not result["success"] or result["numrows"] != 1:
-        print("[WARNING] Old master not found on tendril server list")
-        return -1
-    section = result["rows"][0][0]
-    # update section with new host id
-    query = (
-        "UPDATE shards "
-        "SET master_id = "
-        "(SELECT id FROM servers WHERE host = '{}' and port = {}) "
-        "WHERE name = '{}' LIMIT 1"
-    )
-    result = tendril.execute(query.format(slave.host, slave.port, section))
-    if not result["success"]:
-        print("[WARNING] New master could not be updated on tendril")
-        return -1
-    print(
-        ("Tendril updated successfully: " "{} is the new master of {}").format(
-            slave.name(), section
-        )
-    )
-    return 0
-
-
 def update_zarcillo(master, slave):
     """
     After switching over the master role from the 'master' host to the 'slave' one,
@@ -803,7 +763,6 @@ def main():
 
     # Additional steps
     reenable_gtid_on_old_master(master_replication)
-    update_tendril(master, slave)
     update_zarcillo(master, slave)
     update_events(options.master, options.slave)
 
