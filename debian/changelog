@@ -1,3 +1,9 @@
+wmfmariadbpy (0.8.1) buster-wikimedia; urgency=medium
+
+  * dbutils: Fix bug that prevented loading section_ports.csv.
+
+ -- Stevie Beth Mhaol <sbmhaol@wikimedia.org>  Fri, 21 Jan 2022 11:37:41 +0100
+
 wmfmariadbpy (0.8) buster-wikimedia; urgency=medium
 
   * db-switchover: Drop tendril support, switch to db-mysql, download events
