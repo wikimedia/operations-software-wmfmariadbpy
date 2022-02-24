@@ -8,3 +8,6 @@ pytest
 pytest-cov
 pytest-mock
 requests
+types-PyMySQL
+types-requests
+types-setuptools

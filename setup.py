@@ -11,7 +11,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://phabricator.wikimedia.org/diffusion/OSMD/",
-    packages=("wmfmariadbpy", "wmfmariadbpy.RemoteExecution"),
+    packages=["wmfmariadbpy", "wmfmariadbpy.RemoteExecution"],
     install_requires=["pymysql>=0.9.3", "tabulate>=0.8.2"],
     extras_require={
         "cumin": [
