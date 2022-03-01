@@ -1,3 +1,9 @@
+wmfmariadbpy (0.9) buster-wikimedia; urgency=medium
+
+  * No code changes, just dropping stretch support, and adding bullseye.
+
+ -- Stevie Beth Mhaol <sbmhaol@wikimedia.org>  Tue, 01 Mar 2022 13:44:11 +0100
+
 wmfmariadbpy (0.8.1) buster-wikimedia; urgency=medium
 
   * dbutils: Fix bug that prevented loading section_ports.csv.
