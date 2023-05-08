@@ -24,7 +24,6 @@ setup(
             # cli_admin
             "db-compare = wmfmariadbpy.cli_admin.compare:main",
             "db-move-replica = wmfmariadbpy.cli_admin.move_replica:main",
-            "db-osc-host = wmfmariadbpy.cli_admin.osc_host:main",
             "db-replication-tree = wmfmariadbpy.cli_admin.replication_tree:main",
             "db-stop-in-sync = wmfmariadbpy.cli_admin.stop_in_sync:main",
             "db-switchover = wmfmariadbpy.cli_admin.switchover:main",
