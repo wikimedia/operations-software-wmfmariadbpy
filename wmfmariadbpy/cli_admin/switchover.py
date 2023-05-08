@@ -12,7 +12,7 @@ from wmfmariadbpy.WMFReplication import WMFReplication
 
 HEARTBEAT_SERVICE = "pt-heartbeat-wikimedia"
 
-ZARCILLO_INSTANCE = "db1115"  # instance_name:port format
+ZARCILLO_INSTANCE = "db1215"  # instance_name:port format
 
 
 def handle_parameters():
