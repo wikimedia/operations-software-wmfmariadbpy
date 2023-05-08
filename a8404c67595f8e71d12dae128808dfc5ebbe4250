@@ -16,6 +16,23 @@
       "message": "Wait for the switchover to happen",
       "revId": "a8404c67595f8e71d12dae128808dfc5ebbe4250",
       "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a7d6be0_19e1adfd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 920
+      },
+      "writtenOn": "2023-05-08T12:50:00Z",
+      "side": 1,
+      "message": "recheck",
+      "revId": "a8404c67595f8e71d12dae128808dfc5ebbe4250",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
     }
   ]
 }
