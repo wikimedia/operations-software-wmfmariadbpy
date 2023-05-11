@@ -1,3 +1,10 @@
+wmfmariadbpy (0.10) bullseye-wikimedia; urgency=medium
+
+  * Dropped support for online schema changes
+  * Update zarcillo host
+
+ -- Amir Sarabadani <asarabadani@wikimedia.org>  Thu, 11 May 2023 16:24:53 +0200
+
 wmfmariadbpy (0.9) buster-wikimedia; urgency=medium
 
   * No code changes, just dropping stretch support, and adding bullseye.

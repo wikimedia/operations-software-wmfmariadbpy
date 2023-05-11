@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 setup(
     name="wmfmariadbpy",
     description="wmfmariadbpy",
-    version="0.9",
+    version="0.10",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://phabricator.wikimedia.org/diffusion/OSMD/",
