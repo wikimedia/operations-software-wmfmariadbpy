@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "585ac99a_2d925d85",
+        "filename": "debian/changelog",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2483
+      },
+      "writtenOn": "2023-05-11T15:39:13Z",
+      "side": 1,
+      "message": "Better use 0.10 as the version (that is what your are using in setup.py) and replace UNRELEASED with bullseye-wikimedia",
+      "revId": "ff51c61e0349acbc91466d4f1ff7e6940ecf5f6e",
+      "serverId": "e9e9afe9-4712-486d-8885-f54b72dd1951"
+    }
+  ]
+}
