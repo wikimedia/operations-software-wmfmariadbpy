@@ -43,6 +43,8 @@ class WMFMariaDB:
                 charset="utf8mb4",
                 unix_socket=socket,
                 ssl=ssl,
+                ssl_verify_cert=False,
+                ssl_verify_identity=False,
                 connect_timeout=connect_timeout,
                 autocommit=True,
             )
