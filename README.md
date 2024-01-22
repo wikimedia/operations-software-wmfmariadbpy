@@ -1,3 +1,5 @@
+[![pipeline status](https://gitlab.wikimedia.org/repos/sre/wmfmariadbpy/badges/main/pipeline.svg)](https://gitlab.wikimedia.org/repos/sre/wmfmariadbpy/-/commits/main) 
+[![Latest Release](https://gitlab.wikimedia.org/repos/sre/wmfmariadbpy/-/badges/release.svg)](https://gitlab.wikimedia.org/repos/sre/wmfmariadbpy/-/releases)
 Collection of Python classes and scripts to operate with MariaDB servers.
 
 ## Dependencies
