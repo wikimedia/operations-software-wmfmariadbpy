@@ -1,9 +1,15 @@
+wmfmariadbpy (0.11.1) bookworm-wikimedia; urgency=medium
+
+  * add ssl_ca to connection object
+
+ -- Arnaud Bran <abran@wikimedia.org>  Wed, 24 Jan 2024 12:23:56 +0000
+
 wmfmariadbpy (0.11~wmf1) bullseye-wikimedia; urgency=medium
 
   * skips host verification on SSL connection
   * backport to bullseye
 
- -- root <abran@wikimedia.org>  Mon, 22 Jan 2024 14:12:35 +0000
+ -- Arnaud Bran <abran@wikimedia.org>  Mon, 22 Jan 2024 14:12:35 +0000
 
 wmfmariadbpy (0.11) bookworm-wikimedia; urgency=medium
 
