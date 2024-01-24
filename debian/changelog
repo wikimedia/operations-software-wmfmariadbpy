@@ -1,4 +1,4 @@
-wmfmariadbpy (0.11.1~wmf1) bookworm-wikimedia; urgency=medium
+wmfmariadbpy (0.11.1~wmf1) bullseye-wikimedia; urgency=medium
 
   * add ssl_ca to connection object
   * backport to bullseye
