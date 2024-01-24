@@ -1,3 +1,10 @@
+wmfmariadbpy (0.11.1~wmf1) bookworm-wikimedia; urgency=medium
+
+  * add ssl_ca to connection object
+  * backport to bullseye
+
+ -- Arnaud Bran <abran@wikimedia.org>  Wed, 24 Jan 2024 12:37:36 +0000
+
 wmfmariadbpy (0.11.1) bookworm-wikimedia; urgency=medium
 
   * add ssl_ca to connection object
