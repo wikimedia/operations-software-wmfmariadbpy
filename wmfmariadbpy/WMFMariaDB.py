@@ -45,6 +45,7 @@ class WMFMariaDB:
                 ssl=ssl,
                 ssl_verify_cert=False,
                 ssl_verify_identity=False,
+                ssl_ca="/etc/ssl/certs/wmf-ca-certificates.crt",
                 connect_timeout=connect_timeout,
                 autocommit=True,
             )
