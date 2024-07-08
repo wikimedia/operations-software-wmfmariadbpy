@@ -46,6 +46,14 @@ def handle_parameters():
         ),
     )
     parser.add_argument(
+        "--sleep",
+        type=float,
+        default=5.0,
+        help=(
+            "To sleep after many operations to make sure replication is consumed."
+        ),
+    )
+    parser.add_argument(
         "--skip-slave-move",
         action="store_true",
         help="When set, it does not migrate current master replicas to the new host",
@@ -487,7 +495,7 @@ def verify_status_after_switch(
         sys.exit(-1)
 
 
-def move_replicas_to_new_master(master_replication, slave_replication, timeout):
+def move_replicas_to_new_master(master_replication, slave_replication, timeout, sleep):
     """
     Migrates all old master direct slaves to the new master, maintaining the consistency.
     """
@@ -507,7 +515,7 @@ def move_replicas_to_new_master(master_replication, slave_replication, timeout):
         print("Disabling GTID on {}...".format(replica.name()))
         replication.set_gtid_mode("no")
         print("Waiting some seconds for db to catch up...")
-        time.sleep(timeout)
+        time.sleep(sleep)
         result = replication.move(
             new_master=slave_replication.connection, start_if_stopped=True
         )
@@ -684,8 +692,9 @@ def main():
     master = WMFMariaDB(options.master)
     slave = WMFMariaDB(options.slave)
     timeout = options.timeout
-    slave_replication = WMFReplication(slave, timeout)
-    master_replication = WMFReplication(master, timeout)
+    sleep = options.sleep
+    slave_replication = WMFReplication(slave, timeout, sleep)
+    master_replication = WMFReplication(master, timeout, sleep)
     replicating_master = options.replicating_master
     read_only_master = options.read_only_master
 
@@ -699,7 +708,7 @@ def main():
 
     if not options.skip_slave_move:
         handle_new_master_semisync_replication(slave)
-        move_replicas_to_new_master(master_replication, slave_replication, timeout)
+        move_replicas_to_new_master(master_replication, slave_replication, timeout, sleep)
 
     if options.only_slave_move:
         print(

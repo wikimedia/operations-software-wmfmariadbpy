@@ -15,12 +15,13 @@ class WMFReplication:
     Class to control replication at WMF MariaDB/MySQL Cluster
     """
 
-    def __init__(self, connection, timeout=5.0):
+    def __init__(self, connection, timeout=5.0, sleep=5.0):
         """
         The constructore requires an open connection in the form of a WMFMariaDB object
         """
         self.connection = connection
         self.timeout = timeout
+        self.sleep = sleep
 
     def slave_status(self):
         """
@@ -633,63 +634,80 @@ class WMFReplication:
         ):
             # 2. Stop replication on current host
             self.stop_slave(thread="sql")
-            # 3. Wait timeout seconds
-            time.sleep(self.timeout)
+            # 3. Wait
+            time.sleep(self.sleep)
             # 4. Stop replication on sibling
             sibling_replication.stop_slave(thread="sql")
             # 5. Ensure sibling replicating (slave status) coordinates are equal or higher than
             #    the current host's (slave status)
-            current_status = self.slave_status()
-            sibling_status = sibling_replication.slave_status()
-            if not (
-                current_status["success"]
-                and sibling_status["success"]
-                and current_status["slave_sql_running"] == "No"
-                and sibling_status["slave_sql_running"] == "No"
-                and (
-                    sibling_status["relay_master_log_file"]
-                    > current_status["relay_master_log_file"]
-                    or (
+            time_waited = 0
+            replication_reached = False
+            while time_waited < self.timeout:
+                time.sleep(1)
+                time_waited += 1
+                current_status = self.slave_status()
+                sibling_status = sibling_replication.slave_status()
+                if not (
+                    current_status["success"]
+                    and sibling_status["success"]
+                    and current_status["slave_sql_running"] == "No"
+                    and sibling_status["slave_sql_running"] == "No"
+                    and (
                         sibling_status["relay_master_log_file"]
-                        == current_status["relay_master_log_file"]
-                        and sibling_status["exec_master_log_pos"]
-                        >= current_status["exec_master_log_pos"]
+                        > current_status["relay_master_log_file"]
+                        or (
+                            sibling_status["relay_master_log_file"]
+                            == current_status["relay_master_log_file"]
+                            and sibling_status["exec_master_log_pos"]
+                            >= current_status["exec_master_log_pos"]
+                        )
                     )
-                )
-            ):
+                ):
+                    continue
+                else:
+                    replication_reached = True
+                    break
+            if not replication_reached:
                 return {
-                    "success": False,
-                    "errno": -1,
-                    "errmsg": (
-                        "We expected the other host "
-                        "replication to be stopped and "
-                        "ahead of the current, but it "
-                        "was behind or other error "
-                        "happened"
-                    ),
-                }
+                        "success": False,
+                        "errno": -1,
+                        "errmsg": (
+                            "We expected the other host "
+                            "replication to be stopped and "
+                            "ahead of the current, but it "
+                            "was behind or other error "
+                            "happened"
+                        ),
+                    }
             # 6. Run on current host "start slave until" sibling coordinates (slave status)
             self.start_slave(
                 thread="sql",
                 until_log=sibling_status["relay_master_log_file"],
                 until_pos=sibling_status["exec_master_log_pos"],
             )
-            # 7. Wait timeout seconds
-            time.sleep(self.timeout)  # TODO: or wait until it stops again?
-            # 8. Check both hosts are stopped replication and on the same (slave status)
-            #    coordinates
-            current_status = self.slave_status()
-            sibling_status = sibling_replication.slave_status()
-            if not (
-                current_status["success"]
-                and sibling_status["success"]
-                and current_status["slave_sql_running"] == "No"
-                and sibling_status["slave_sql_running"] == "No"
-                and sibling_status["relay_master_log_file"]
-                == current_status["relay_master_log_file"]
-                and sibling_status["exec_master_log_pos"]
-                == current_status["exec_master_log_pos"]
-            ):
+            time_waited = 0
+            replication_reached = False
+            while time_waited < self.timeout:
+                time.sleep(1)
+                # 7. Check both hosts are stopped replication and on the same (slave status)
+                #    coordinates
+                current_status = self.slave_status()
+                sibling_status = sibling_replication.slave_status()
+                if not (
+                    current_status["success"]
+                    and sibling_status["success"]
+                    and current_status["slave_sql_running"] == "No"
+                    and sibling_status["slave_sql_running"] == "No"
+                    and sibling_status["relay_master_log_file"]
+                    == current_status["relay_master_log_file"]
+                    and sibling_status["exec_master_log_pos"]
+                    == current_status["exec_master_log_pos"]
+                ):
+                    continue
+                else:
+                    replication_reached = True
+                    break
+            if replication_reached:
                 return {
                     "success": False,
                     "errno": -1,
@@ -761,19 +779,27 @@ class WMFReplication:
             result = sibling_replication.start_slave()
             if not result["success"]:
                 return result
-            time.sleep(self.timeout)
-            current_status = self.slave_status()
-            sibling_status = sibling_replication.slave_status()
-            if (
-                current_status["success"]
-                and sibling_status["success"]
-                and current_status["slave_io_running"] == "Yes"
-                and current_status["slave_sql_running"] == "Yes"
-                and sibling_status["slave_io_running"] == "Yes"
-                and sibling_status["slave_sql_running"] == "Yes"
-                and self.lag() < self.timeout
-                and sibling_replication.lag() < self.timeout
-            ):
+            time_waited = 0
+            replication_reached = False
+            while time_waited < self.timeout:
+                time.sleep(1)
+                current_status = self.slave_status()
+                sibling_status = sibling_replication.slave_status()
+                if (
+                    current_status["success"]
+                    and sibling_status["success"]
+                    and current_status["slave_io_running"] == "Yes"
+                    and current_status["slave_sql_running"] == "Yes"
+                    and sibling_status["slave_io_running"] == "Yes"
+                    and sibling_status["slave_sql_running"] == "Yes"
+                    and self.lag() < self.timeout
+                    and sibling_replication.lag() < self.timeout
+                ):
+                    continue
+                else:
+                    replication_reached = True
+                    break
+            if replication_reached:
                 return {
                     "success": True,
                 }
