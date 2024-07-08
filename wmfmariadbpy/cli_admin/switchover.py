@@ -649,12 +649,12 @@ def update_events(master, slave):
         )
     )
     print(
-        "curl -sS 'https://gerrit.wikimedia.org/r/plugins/gitiles/operations/software/+/refs/heads/master/dbtools/events_coredb_slave.sql?format=TEXT' | base64 -d | db-mysql {}".format(
+        "curl -sS 'https://gerrit.wikimedia.org/r/plugins/gitiles/operations/software/+/refs/heads/master/dbtools/events_coredb_slave.sql?format=TEXT' | base64 -d | sudo db-mysql {}".format(
             master
         )
     )
     print(
-        "curl -sS 'https://gerrit.wikimedia.org/r/plugins/gitiles/operations/software/+/refs/heads/master/dbtools/events_coredb_master.sql?format=TEXT' | base64 -d | db-mysql {}".format(
+        "curl -sS 'https://gerrit.wikimedia.org/r/plugins/gitiles/operations/software/+/refs/heads/master/dbtools/events_coredb_master.sql?format=TEXT' | base64 -d | sudo db-mysql {}".format(
             slave
         )
     )
