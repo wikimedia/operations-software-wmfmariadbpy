@@ -1,5 +1,10 @@
 stages:
   - test
+  - prepare
+  - build
+  - upload
+  - release
+
 test:
   stage: test
   image:
@@ -7,3 +12,12 @@ test:
     entrypoint: [""]
   script:
     - tox
+variables:
+  USEBACKPORTS: "1"
+  WMF_CI_RELEASE_DEB: "0"
+
+include:
+  - project: 'repos/sre/wmf-debci'
+    ref: main
+    file:
+      - 'wmfdeb.yml'
