@@ -12,6 +12,7 @@ test:
     entrypoint: [""]
   script:
     - tox
+
 variables:
   USEBACKPORTS: "1"
   WMF_CI_RELEASE_DEB: "0"
