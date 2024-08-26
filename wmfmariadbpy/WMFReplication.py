@@ -707,7 +707,7 @@ class WMFReplication:
                 else:
                     replication_reached = True
                     break
-            if replication_reached:
+            if not replication_reached:
                 return {
                     "success": False,
                     "errno": -1,
@@ -795,10 +795,10 @@ class WMFReplication:
                     and self.lag() < self.timeout
                     and sibling_replication.lag() < self.timeout
                 ):
-                    continue
-                else:
                     replication_reached = True
                     break
+                else:
+                    continue
             if replication_reached:
                 return {
                     "success": True,
