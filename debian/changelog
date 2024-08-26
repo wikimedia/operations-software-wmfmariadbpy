@@ -1,3 +1,9 @@
+wmfmariadbpy (0.12.1) bullseye-wikimedia; urgency=medium
+
+  * Bug fixes
+
+ -- Amir Sarabadani <asarabadani@wikimedia.org>  Mon, 26 Aug 2024 17:16:25 +0200
+
 wmfmariadbpy (0.12.0) bullseye-wikimedia; urgency=medium
 
   * New release: Improve switchover tool
