@@ -1,3 +1,9 @@
+wmfmariadbpy (0.12.1~wmf1) bookworm-wikimedia; urgency=medium
+
+  * Rebuild for Bookworm
+
+ -- Federico Ceratto <fceratto@wikimedia.org>  Wed, 18 Jun 2025 13:11:42 +0200
+
 wmfmariadbpy (0.12.1) bullseye-wikimedia; urgency=medium
 
   * Bug fixes
