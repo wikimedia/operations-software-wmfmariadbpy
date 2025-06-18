@@ -49,9 +49,7 @@ def handle_parameters():
         "--sleep",
         type=float,
         default=5.0,
-        help=(
-            "To sleep after many operations to make sure replication is consumed."
-        ),
+        help=("To sleep after many operations to make sure replication is consumed."),
     )
     parser.add_argument(
         "--skip-slave-move",
@@ -708,7 +706,9 @@ def main():
 
     if not options.skip_slave_move:
         handle_new_master_semisync_replication(slave)
-        move_replicas_to_new_master(master_replication, slave_replication, timeout, sleep)
+        move_replicas_to_new_master(
+            master_replication, slave_replication, timeout, sleep
+        )
 
     if options.only_slave_move:
         print(

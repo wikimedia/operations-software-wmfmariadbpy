@@ -1,4 +1,5 @@
 """Tests for CuminExecution class."""
+
 import pytest
 
 from wmfmariadbpy.RemoteExecution.CuminExecution import CuminExecution

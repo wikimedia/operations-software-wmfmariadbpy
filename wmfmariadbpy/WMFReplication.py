@@ -669,16 +669,16 @@ class WMFReplication:
                     break
             if not replication_reached:
                 return {
-                        "success": False,
-                        "errno": -1,
-                        "errmsg": (
-                            "We expected the other host "
-                            "replication to be stopped and "
-                            "ahead of the current, but it "
-                            "was behind or other error "
-                            "happened"
-                        ),
-                    }
+                    "success": False,
+                    "errno": -1,
+                    "errmsg": (
+                        "We expected the other host "
+                        "replication to be stopped and "
+                        "ahead of the current, but it "
+                        "was behind or other error "
+                        "happened"
+                    ),
+                }
             # 6. Run on current host "start slave until" sibling coordinates (slave status)
             self.start_slave(
                 thread="sql",
