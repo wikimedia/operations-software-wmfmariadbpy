@@ -8,9 +8,10 @@ stages:
 test:
   stage: test
   image:
-    name: docker-registry.wikimedia.org/wmf-debci-bookworm
+    name: docker-registry.wikimedia.org/bookworm
     entrypoint: [""]
   script:
+    -  apt-get -qq update && apt-get -qq install tox
     - tox
 
 variables:
