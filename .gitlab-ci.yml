@@ -8,7 +8,7 @@ stages:
 test:
   stage: test
   image:
-    name: docker-registry.wikimedia.org/releng/tox-buster:latest
+    name: docker-registry.wikimedia.org/wmf-debci-bookworm
     entrypoint: [""]
   script:
     - tox
