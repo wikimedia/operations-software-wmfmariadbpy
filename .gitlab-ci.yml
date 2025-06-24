@@ -23,3 +23,7 @@ include:
     ref: main
     file:
       - 'wmfdeb.yml'
+
+build_ci_deb:
+  tags:
+    - trusted
