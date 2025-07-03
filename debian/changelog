@@ -1,4 +1,4 @@
-wmfmariadbpy (0.12.1~wmf3) bookworm-wikimedia; urgency=medium
+wmfmariadbpy (0.12.1~wmf4) bookworm-wikimedia; urgency=medium
 
   * Rebuild for Bookworm
 
