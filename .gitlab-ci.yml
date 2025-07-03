@@ -14,9 +14,7 @@ test:
     -  apt-get -qq update && apt-get -qq install tox
     - tox
 
-variables:
-  USEBACKPORTS: "1"
-  WMF_CI_RELEASE_DEB: "0"
+# # Deb pkg build # #
 
 include:
   - project: 'repos/sre/wmf-debci'
@@ -24,6 +22,24 @@ include:
     file:
       - 'wmfdeb.yml'
 
+.backport:
+  extends: build_ci_deb
+  stage: build
+  tags:
+    - trusted
+  before_script:
+    - dch -v "$(dpkg-parsechangelog -S version)+deb${DEB_VERSION_NUMBER}u1"
+      -D "${DISTRO_NAME}"
+      "Backport to ${DISTRO_NAME}"
+
 build_ci_deb:
   tags:
     - trusted
+
+build_ci_deb_bookworm:
+  extends: .backport
+  image: docker-registry.wikimedia.org/wmf-debci-bookworm
+  variables:
+    SUITE: "bookworm"
+    DISTRO_NAME: "bookworm-wikimedia"
+    DEB_VERSION_NUMBER: "12"
