@@ -1,0 +1,21 @@
+[tool.pylsp-mypy]
+enabled = true
+live_mode = true
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+# follow_imports = "skip"
+ignore_missing_imports = true
+no_implicit_reexport = true
+pretty = true
+show_error_context = true
+strict_bytes = true
+strict_equality = true
+# strict = true
+warn_return_any = true
+warn_unused_configs = true
+warn_unused_ignores = true
