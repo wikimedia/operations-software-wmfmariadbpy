@@ -88,7 +88,7 @@ def get_socket_from_port(port: int) -> str:
 def get_credentials(
     host: str,
     port: int,
-    database: str,
+    database: Optional[str],
 ) -> Tuple[str, Optional[str], Optional[str], Optional[Dict[str, str]]]:
     """
     Given a database instance, return the authentication method, including

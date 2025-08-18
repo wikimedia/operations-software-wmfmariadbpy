@@ -1,8 +1,35 @@
+from __future__ import annotations
 import os
+from typing import TypedDict, Optional, Tuple, Union, Any
 
 import pymysql
 
 import wmfmariadbpy.dbutil as dbutil
+
+
+class Status(TypedDict, total=False):
+    query: str
+    host: str
+    port: int
+    database: Optional[str]
+    success: bool
+    errno: Optional[int]
+    errmsg: Optional[str]
+    numrows: Optional[int]
+    rows: list[Tuple[Any, ...]]
+    fields: Tuple[str, ...]
+    slave_io_running: str
+    slave_sql_running: str
+    last_io_error: str
+    last_sql_error: str
+    seconds_behind_master: int
+    master_host: str
+    master_port: int
+    relay_master_log_file: str
+    file: str
+    exec_master_log_pos: int
+    position: int
+    using_gtid: str
 
 
 class WMFMariaDB:
@@ -14,13 +41,13 @@ class WMFMariaDB:
 
     def __init__(
         self,
-        host,
-        port=3306,
-        database=None,
-        debug=False,
-        connect_timeout=10.0,
-        query_limit=None,
-        vendor="MariaDB",
+        host: str,
+        port: int = 3306,
+        database: Optional[str] = None,
+        debug: bool = False,
+        connect_timeout: float = 10.0,
+        query_limit: Optional[int] = None,
+        vendor: str = "MariaDB",
     ):
         """
         Try to connect to a mysql server instance and returns a python
@@ -34,7 +61,8 @@ class WMFMariaDB:
         user, password, socket, ssl = dbutil.get_credentials(host, port, database)
 
         try:
-            self.connection = pymysql.connect(
+            assert password is not None
+            self.connection: Optional[pymysql.Connection[Any]] = pymysql.connect(
                 host=host,
                 port=port,
                 user=user,
@@ -48,7 +76,7 @@ class WMFMariaDB:
                 ssl_ca="/etc/ssl/certs/wmf-ca-certificates.crt",
                 connect_timeout=connect_timeout,
                 autocommit=True,
-            )
+            )  # type: ignore
         except (pymysql.err.OperationalError, pymysql.err.InternalError, OSError) as e:
             self.connection = None
             self.__last_error = [e.args[0], e.args[1]]
@@ -63,7 +91,7 @@ class WMFMariaDB:
         if self.debug:
             print("Connected to {}".format(self.name()))
 
-    def name(self, show_db=True):
+    def name(self, show_db: bool = True) -> str:
         if self.host == "localhost" and self.socket:
             address = "{}[socket={}]".format(self.host, self.socket)
         else:
@@ -84,7 +112,7 @@ class WMFMariaDB:
         else:
             return address
 
-    def is_same_instance_as(self, other_instance):
+    def is_same_instance_as(self, other_instance: WMFMariaDB) -> bool:
         """
         Returns True if the current WMFMariaDB is connected to the same one than the one given.
         False otherwise (not the same, they are not WMFMariaDB objects, etc.)
@@ -141,14 +169,14 @@ class WMFMariaDB:
         if self.debug:
             print("Changed database to '{}'".format(self.database))
 
-    def set_query_limit(self, query_limit):
+    def set_query_limit(self, query_limit: Optional[Union[int, float]]):
         """
         Changes the default query limit to the given value, in seconds. Fractional
         time, e.g. 0.1, 1.5 are allowed. Set to 0 or None to disable the query
         limit.
         """
         if query_limit is None or not query_limit or query_limit == 0:
-            self.query_limit = 0
+            self.query_limit: int | float = 0
         elif self.vendor == "MariaDB":
             self.query_limit = float(query_limit)
         else:
@@ -166,7 +194,9 @@ class WMFMariaDB:
             "success"
         ]  # many versions will not accept query time restrictions
 
-    def execute(self, command, timeout=None, dryrun=False):
+    def execute(
+        self, command: str, timeout: Optional[float] = None, dryrun: bool = False
+    ) -> Status:
         """
         Sends a single query to a previously connected server instance, returns
         if that query was successful, and the rows read if it was a SELECT
@@ -213,7 +243,7 @@ class WMFMariaDB:
             self.__last_error = [e.args[0], e.args[1]]
             if self.debug:
                 print("ERROR {}: {}".format(e.args[0], e.args[1]))
-            result = {
+            result: Status = {
                 "query": query,
                 "host": host,
                 "port": port,
@@ -248,21 +278,22 @@ class WMFMariaDB:
             "database": database,
             "success": True,
             "numrows": numrows,
-            "rows": rows,
-            "fields": fields,
+            "rows": rows,  # type: ignore
+            "fields": fields,  # type: ignore
         }
 
-    def get_version(self):
+    def get_version(self) -> tuple[int, ...]:
         """
         Returns the version of the db server in the form of a (major, minor, patch) tuple.
         """
         result = self.execute("SELECT @@VERSION")
         if not result["success"]:
             return ()
+        assert result is not None
         ver_nums = result["rows"][0][0].split("-")[0]
         return tuple(map(int, ver_nums.split(".")))
 
-    def disconnect(self):
+    def disconnect(self) -> None:
         """
         Ends the connection to a database, freeing resources. No more queries
         will be able to be sent to this connection id after this is executed
