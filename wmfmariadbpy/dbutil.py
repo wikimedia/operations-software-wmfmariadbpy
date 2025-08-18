@@ -6,7 +6,6 @@ import pwd
 import re
 import socket
 import tempfile
-from typing import Dict, Optional, Tuple, Union
 
 SECTION_PORT_LIST_FILE = "/etc/wmfmariadbpy/section_ports.csv"
 DBUTIL_SECTION_PORTS_TEST_DATA_ENV = "DBUTIL_SECTION_PORTS_TEST_DATA"
@@ -20,8 +19,8 @@ alpha, 10320
 
 
 def read_section_ports_list(
-    path: Optional[str] = None,
-) -> Tuple[Dict[int, str], Dict[str, int]]:
+    path: str | None = None,
+) -> tuple[dict[int, str], dict[str, int]]:
     """
     Reads the list of section and port assignment file and returns two dictionaries,
     one for the section -> port assignment, and the other with the port -> section
@@ -54,7 +53,7 @@ def get_port_from_section(section: str) -> int:
     return sec2port.get(section, 3306)
 
 
-def get_section_from_port(port: int) -> Optional[str]:
+def get_section_from_port(port: int) -> str | None:
     """
     Returns the section name corresponding to the given port. If the port is the
     default one (3306) or an unknown one, return a null value.
@@ -89,19 +88,19 @@ def get_credentials(
     host: str,
     port: int,
     database: str,
-) -> Tuple[str, Optional[str], Optional[str], Optional[Dict[str, str]]]:
+) -> tuple[str, str | None, str | None, dict[str, str] | None]:
     """
     Given a database instance, return the authentication method, including
     the user, password, socket and ssl configuration.
     """
     pw = pwd.getpwuid(os.getuid())
     user_my_cnf = os.path.join(pw.pw_dir, ".my.cnf")
-    mysql_sock = None  # type: Optional[str]
+    mysql_sock: str | None = None
     if "TESTENV_MY_CNF" in os.environ:
         config = configparser.ConfigParser(interpolation=None, allow_no_value=True)
         config.read(os.environ["TESTENV_MY_CNF"])
         user = config["client"]["user"]
-        password = config["client"]["password"]  # type: Optional[str]
+        password: str | None = config["client"]["password"]
         ssl = None
         mysql_sock = None
     elif host == "localhost":
@@ -158,7 +157,7 @@ def resolve(host: str) -> str:
     return _dc_map(host)
 
 
-def _resolve_ip(ip: Union[ipaddress.IPv4Address, ipaddress.IPv6Address]) -> str:
+def _resolve_ip(ip: ipaddress.IPv4Address | ipaddress.IPv6Address) -> str:
     if ip.is_loopback:
         return "localhost"
     try:
@@ -186,7 +185,7 @@ def _dc_map(host: str) -> str:
     return "%s.%s.wmnet" % (host, dcs[dc_id])
 
 
-def addr_split(addr: str, def_port: int = 3306) -> Tuple[str, int]:
+def addr_split(addr: str, def_port: int = 3306) -> tuple[str, int]:
     """Split address into (host, port).
 
     Supports:

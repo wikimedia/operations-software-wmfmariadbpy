@@ -13,7 +13,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://phabricator.wikimedia.org/diffusion/OSMD/",
     packages=["wmfdbtools", "wmfmariadbpy", "wmfmariadbpy.RemoteExecution"],
-    python_requires=">=3.9",
+    python_requires=">=3.11",
     install_requires=["pymysql>=0.9.3", "tabulate>=0.8.2"],
     extras_require={
         "cumin": [

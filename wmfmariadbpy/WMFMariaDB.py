@@ -1,8 +1,36 @@
+from __future__ import annotations
+
 import os
+from typing import Any, TypedDict
 
 import pymysql
 
 import wmfmariadbpy.dbutil as dbutil
+
+
+class Status(TypedDict, total=False):
+    query: str
+    host: str
+    port: int
+    database: str | None
+    success: bool
+    errno: int | None
+    errmsg: str | None
+    numrows: int | None
+    rows: list[tuple[Any, ...]] | None
+    fields: tuple[str, ...] | None
+    slave_io_running: str
+    slave_sql_running: str
+    last_io_error: str
+    last_sql_error: str
+    seconds_behind_master: int
+    master_host: str
+    master_port: int
+    relay_master_log_file: str
+    file: str
+    exec_master_log_pos: int
+    position: int
+    using_gtid: str
 
 
 class WMFMariaDB:
@@ -14,13 +42,13 @@ class WMFMariaDB:
 
     def __init__(
         self,
-        host,
-        port=3306,
-        database=None,
-        debug=False,
-        connect_timeout=10.0,
-        query_limit=None,
-        vendor="MariaDB",
+        host: str,
+        port: int = 3306,
+        database: str | None = None,
+        debug: bool = False,
+        connect_timeout: float = 10.0,
+        query_limit: int | None = None,
+        vendor: str = "MariaDB",
     ):
         """
         Try to connect to a mysql server instance and returns a python
@@ -34,7 +62,8 @@ class WMFMariaDB:
         user, password, socket, ssl = dbutil.get_credentials(host, port, database)
 
         try:
-            self.connection = pymysql.connect(
+            assert password is not None
+            self.connection: pymysql.Connection[Any] | None = pymysql.connect(
                 host=host,
                 port=port,
                 user=user,
@@ -63,7 +92,7 @@ class WMFMariaDB:
         if self.debug:
             print("Connected to {}".format(self.name()))
 
-    def name(self, show_db=True):
+    def name(self, show_db: bool = True) -> str:
         if self.host == "localhost" and self.socket:
             address = "{}[socket={}]".format(self.host, self.socket)
         else:
@@ -84,7 +113,7 @@ class WMFMariaDB:
         else:
             return address
 
-    def is_same_instance_as(self, other_instance):
+    def is_same_instance_as(self, other_instance: WMFMariaDB) -> bool:
         """
         Returns True if the current WMFMariaDB is connected to the same one than the one given.
         False otherwise (not the same, they are not WMFMariaDB objects, etc.)
@@ -96,10 +125,7 @@ class WMFMariaDB:
             and other_instance.host is not None
             and self.host == other_instance.host
             and self.port == other_instance.port
-            and (
-                (self.socket is None and other_instance.socket is None)
-                or self.socket == other_instance.socket
-            )
+            and ((self.socket is None and other_instance.socket is None) or self.socket == other_instance.socket)
         )
 
     @property
@@ -141,32 +167,26 @@ class WMFMariaDB:
         if self.debug:
             print("Changed database to '{}'".format(self.database))
 
-    def set_query_limit(self, query_limit):
+    def set_query_limit(self, query_limit: int | float | None):
         """
         Changes the default query limit to the given value, in seconds. Fractional
         time, e.g. 0.1, 1.5 are allowed. Set to 0 or None to disable the query
         limit.
         """
         if query_limit is None or not query_limit or query_limit == 0:
-            self.query_limit = 0
+            self.query_limit: int | float = 0
         elif self.vendor == "MariaDB":
             self.query_limit = float(query_limit)
         else:
             self.query_limit = int(query_limit * 1000.0)
 
         if self.vendor == "MariaDB":
-            result = self.execute(
-                "SET SESSION max_statement_time = {}".format(self.query_limit)
-            )
+            result = self.execute("SET SESSION max_statement_time = {}".format(self.query_limit))
         else:
-            result = self.execute(
-                "SET SESSION max_execution_time = {}".format(self.query_limit)
-            )
-        return result[
-            "success"
-        ]  # many versions will not accept query time restrictions
+            result = self.execute("SET SESSION max_execution_time = {}".format(self.query_limit))
+        return result["success"]  # many versions will not accept query time restrictions
 
-    def execute(self, command, timeout=None, dryrun=False):
+    def execute(self, command: str, timeout: float | None = None, dryrun: bool = False) -> Status:
         """
         Sends a single query to a previously connected server instance, returns
         if that query was successful, and the rows read if it was a SELECT
@@ -190,10 +210,9 @@ class WMFMariaDB:
         try:
             if dryrun:
                 print(
-                    (
-                        "We will *NOT* execute '{}' on {}:{}/{} because"
-                        "this is a dry run."
-                    ).format(command, self.host, self.port, self.database)
+                    ("We will *NOT* execute '{}' on {}:{}/{} because this is a dry run.").format(
+                        command, self.host, self.port, self.database
+                    )
                 )
                 cursor.execute("SELECT 'success' as dryrun")
             else:
@@ -213,7 +232,7 @@ class WMFMariaDB:
             self.__last_error = [e.args[0], e.args[1]]
             if self.debug:
                 print("ERROR {}: {}".format(e.args[0], e.args[1]))
-            result = {
+            result: Status = {
                 "query": query,
                 "host": host,
                 "port": port,
@@ -252,28 +271,26 @@ class WMFMariaDB:
             "fields": fields,
         }
 
-    def get_version(self):
+    def get_version(self) -> tuple[int, ...]:
         """
         Returns the version of the db server in the form of a (major, minor, patch) tuple.
         """
         result = self.execute("SELECT @@VERSION")
         if not result["success"]:
             return ()
+        assert result is not None
+        assert result["rows"] is not None
         ver_nums = result["rows"][0][0].split("-")[0]
         return tuple(map(int, ver_nums.split(".")))
 
-    def disconnect(self):
+    def disconnect(self) -> None:
         """
         Ends the connection to a database, freeing resources. No more queries
         will be able to be sent to this connection id after this is executed
         until a new connection is open.
         """
         if self.debug:
-            print(
-                "Disconnecting from {}:{}/{}".format(
-                    self.port, self.host, self.database
-                )
-            )
+            print("Disconnecting from {}:{}/{}".format(self.port, self.host, self.database))
         if self.connection is not None:
             self.connection.close()
             self.connection = None
