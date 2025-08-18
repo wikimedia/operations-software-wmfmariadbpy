@@ -3,19 +3,20 @@
 import argparse
 import sys
 import time
+from typing import Optional
 
 from wmfmariadbpy.RemoteExecution.CuminExecution import (
     CuminExecution as RemoteExecution,
 )
 from wmfmariadbpy.WMFMariaDB import WMFMariaDB
-from wmfmariadbpy.WMFReplication import WMFReplication
+from wmfmariadbpy.WMFReplication import WMFReplication, Status
 
 HEARTBEAT_SERVICE = "pt-heartbeat-wikimedia"
 
 ZARCILLO_INSTANCE = "db1215"  # instance_name:port format
 
 
-def handle_parameters():
+def handle_parameters() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "Performs a master to direct replica switchover "
@@ -104,8 +105,12 @@ def handle_parameters():
 
 
 def do_preflight_checks(
-    master_replication, slave_replication, timeout, replicating_master, read_only_master
-):
+    master_replication: WMFReplication,
+    slave_replication: WMFReplication,
+    timeout: int,
+    replicating_master: str,
+    read_only_master: str,
+) -> None:
     master = master_replication.connection
     slave = slave_replication.connection
     print("Starting preflight checks...")
@@ -157,6 +162,7 @@ def do_preflight_checks(
 
     # Check replication is running between hosts
     slave_status = slave_replication.slave_status()
+    assert slave_status
     if (
         slave_status["slave_sql_running"] != "Yes"
         or slave_status["slave_io_running"] != "Yes"
@@ -219,7 +225,7 @@ def do_preflight_checks(
         sys.exit(-1)
 
 
-def set_master_in_read_only(master_replication):
+def set_master_in_read_only(master_replication: WMFReplication) -> None:
     print("Setting up original master as read-only")
     result = master_replication.connection.execute("SET GLOBAL read_only = 1")
     if not result["success"]:
@@ -227,7 +233,9 @@ def set_master_in_read_only(master_replication):
         sys.exit(-1)
 
 
-def wait_for_slave_to_catch_up(master_replication, slave_replication, timeout):
+def wait_for_slave_to_catch_up(
+    master_replication: WMFReplication, slave_replication: WMFReplication, timeout: int
+) -> None:
     timeout_start = time.time()
     while not slave_replication.caught_up_to_master(master_replication.connection):
         time.sleep(0.1)
@@ -256,7 +264,7 @@ def wait_for_slave_to_catch_up(master_replication, slave_replication, timeout):
     )
 
 
-def stop_slave(slave_replication):
+def stop_slave(slave_replication: WMFReplication) -> None:
     print("Stopping original master->slave replication")
     result = slave_replication.stop_slave()
     if not result["success"]:
@@ -264,7 +272,9 @@ def stop_slave(slave_replication):
         sys.exit(-1)
 
 
-def set_replica_in_read_write(master_replication, slave_replication):
+def set_replica_in_read_write(
+    master_replication: WMFReplication, slave_replication: WMFReplication
+) -> None:
     slave = slave_replication.connection
     master = master_replication.connection
     print("Setting up replica as read-write")
@@ -309,15 +319,17 @@ def set_replica_in_read_write(master_replication, slave_replication):
 
 
 def invert_replication_direction(
-    master_replication, slave_replication, master_status_on_switch
-):
+    master_replication: WMFReplication,
+    slave_replication: WMFReplication,
+    master_status_on_switch: Optional[Status],
+) -> None:
     slave = slave_replication.connection
     print("Trying to invert replication direction")
     result = master_replication.setup(
         master_host=slave.host,
         master_port=slave.port,
-        master_log_file=master_status_on_switch["file"],
-        master_log_pos=master_status_on_switch["position"],
+        master_log_file=master_status_on_switch["file"],  # type: ignore
+        master_log_pos=master_status_on_switch["position"],  # type: ignore
     )
     if not result["success"]:
         print("[ERROR]: We could not repoint the original master to the new one")
@@ -332,13 +344,14 @@ def invert_replication_direction(
         sys.exit(-1)
 
 
-def stop_master_replication(master_replication):
+def stop_master_replication(master_replication: WMFReplication) -> Status:
     """
     Stops replication towards the master, and reset it, then return the status after the stop,
     while keeping the running status before the stop
     """
     # Save the original replication running status
     master_slave_status = master_replication.slave_status()
+    assert master_slave_status is not None
     original_io_status = master_slave_status["slave_io_running"]
     original_sql_status = master_slave_status["slave_sql_running"]
     print("Stopping replication to master")
@@ -349,6 +362,7 @@ def stop_master_replication(master_replication):
         )
         sys.exit(-1)
     master_slave_status = master_replication.slave_status()
+    assert master_slave_status is not None
     master_slave_status["slave_io_running"] = original_io_status
     master_slave_status["slave_sql_running"] = original_sql_status
     if not master_slave_status["success"]:
@@ -377,7 +391,9 @@ def stop_master_replication(master_replication):
     return master_slave_status
 
 
-def setup_new_master_replication(slave_replication, old_master_slave_status):
+def setup_new_master_replication(
+    slave_replication: WMFReplication, old_master_slave_status: Status
+) -> int:
     """
     Restore old replication setup from the old master into the new master
     """
@@ -434,8 +450,12 @@ def setup_new_master_replication(slave_replication, old_master_slave_status):
 
 
 def verify_status_after_switch(
-    master_replication, slave_replication, timeout, replicating_master, read_only_master
-):
+    master_replication: WMFReplication,
+    slave_replication: WMFReplication,
+    timeout: int,
+    replicating_master: str,
+    read_only_master: str,
+) -> None:
     master = master_replication.connection
     slave = slave_replication.connection
     print("Verifying everything went as expected...")
@@ -493,7 +513,12 @@ def verify_status_after_switch(
         sys.exit(-1)
 
 
-def move_replicas_to_new_master(master_replication, slave_replication, timeout, sleep):
+def move_replicas_to_new_master(
+    master_replication: WMFReplication,
+    slave_replication: WMFReplication,
+    timeout: int,
+    sleep: int,
+) -> int:
     """
     Migrates all old master direct slaves to the new master, maintaining the consistency.
     """
@@ -541,7 +566,7 @@ def move_replicas_to_new_master(master_replication, slave_replication, timeout, 
     return 0
 
 
-def stop_heartbeat(master):
+def stop_heartbeat(master: WMFMariaDB) -> None:
     """
     Stops pt-heartbeat on the host. On failure, the process exits with an error.
     """
@@ -553,7 +578,7 @@ def stop_heartbeat(master):
         sys.exit(-1)
 
 
-def start_heartbeat(master):
+def start_heartbeat(master: WMFMariaDB) -> None:
     """
     Starts heartbeat on the given master. On failure, the process exits with an error.
     """
@@ -565,15 +590,11 @@ def start_heartbeat(master):
         % (HEARTBEAT_SERVICE, HEARTBEAT_SERVICE),
     )
     if result.returncode != 0:
-        print(
-            "[ERROR]: Could not run pt-heartbeat-wikimedia, got output: {} {}".format(
-                runner.stdout, runner.stderr
-            )
-        )
+        print("[ERROR]: Could not run pt-heartbeat-wikimedia, got output: {} {}".format(runner.stdout, runner.stderr))  # type: ignore
         sys.exit(-1)
 
 
-def update_zarcillo(master, slave):
+def update_zarcillo(master: WMFMariaDB, slave: WMFMariaDB) -> int:
     """
     After switching over the master role from the 'master' host to the 'slave' one,
     update zarcillo so it reflects reality
@@ -615,12 +636,12 @@ def update_zarcillo(master, slave):
     return 0
 
 
-def reenable_gtid_on_old_master(master_replication):
+def reenable_gtid_on_old_master(master_replication: WMFReplication) -> None:
     print("Enabling GTID on old master...")
     master_replication.set_gtid_mode("slave_pos")
 
 
-def handle_new_master_semisync_replication(slave):
+def handle_new_master_semisync_replication(slave: WMFMariaDB) -> None:
     # Disable semi_sync_replica and enable semi_sync_master on the new master
     result = slave.execute("SET GLOBAL rpl_semi_sync_slave_enabled = 0")
     if not result["success"]:
@@ -633,7 +654,7 @@ def handle_new_master_semisync_replication(slave):
         print("[WARNING] Semisync could not be enabled on the new master")
 
 
-def handle_old_master_semisync_replication(master):
+def handle_old_master_semisync_replication(master: WMFMariaDB) -> None:
     # Enable semi_sync_replica and disable semi_sync_master on the old master
     result = master.execute("SET GLOBAL rpl_semi_sync_master_enabled = 0")
     if not result["success"]:
@@ -646,7 +667,7 @@ def handle_old_master_semisync_replication(master):
         print("[WARNING] Semisync slave could not be enabled on the old master")
 
 
-def update_events(master, slave):
+def update_events(master: str, slave: str) -> int:
     # TODO full automation- requires core db detection
     print(
         (
@@ -667,7 +688,7 @@ def update_events(master, slave):
     return 0
 
 
-def ask_for_confirmation(master, slave):
+def ask_for_confirmation(master: str, slave: str) -> None:
     """
     Prompt console for confirmation of action of stopping instances replication
     """
@@ -684,7 +705,7 @@ def ask_for_confirmation(master, slave):
         sys.exit(0)
 
 
-def main():
+def main() -> None:
     # Preparatory steps
     options = handle_parameters()
     master = WMFMariaDB(options.master)
@@ -733,6 +754,9 @@ def main():
 
     slave_status_on_switch = slave_replication.slave_status()
     master_status_on_switch = slave_replication.master_status()
+    assert slave_status_on_switch
+    assert master_status_on_switch
+    # TODO: refactor
     print(
         "Servers sync at master: {} slave: {}".format(
             slave_status_on_switch["relay_master_log_file"]
