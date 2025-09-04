@@ -36,6 +36,14 @@ build_ci_deb:
   tags:
     - trusted
 
+build_ci_deb_bullseye:
+ extends: .backport
+ image: docker-registry.wikimedia.org/wmf-debci-bullseye
+ variables:
+   SUITE: "bullseye"
+   DISTRO_NAME: "bullseye-wikimedia"
+   DEB_VERSION_NUMBER: "11"
+
 build_ci_deb_bookworm:
   extends: .backport
   image: docker-registry.wikimedia.org/wmf-debci-bookworm
@@ -43,3 +51,11 @@ build_ci_deb_bookworm:
     SUITE: "bookworm"
     DISTRO_NAME: "bookworm-wikimedia"
     DEB_VERSION_NUMBER: "12"
+
+# build_ci_deb_trixie:
+#  extends: .backport
+#  image: docker-registry.wikimedia.org/wmf-debci-trixie
+#  variables:
+#    SUITE: "trixie"
+#    DISTRO_NAME: "trixie-wikimedia"
+#    DEB_VERSION_NUMBER: "13"
