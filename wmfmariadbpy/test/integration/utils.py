@@ -17,7 +17,9 @@ def query_db(port: int, query: str) -> Union[Tuple[()], List[Dict[str, Any]]]:
     )
     mycnf = os.path.join(os.path.dirname(__file__), "..", "integration_env", "my.cnf")
     assert os.path.exists(mycnf), mycnf
-    conn = pymysql.connect(host="localhost", port=port, read_default_file=mycnf)
+    conn = pymysql.connect(
+        host="localhost", port=port, read_default_file=mycnf
+    )  # type:ignore
     cur = conn.cursor(cursor=pymysql.cursors.DictCursor)
     cur.execute(query)
     # Cursor.fetchall() has a very generic return type annotation as it doesn't know
