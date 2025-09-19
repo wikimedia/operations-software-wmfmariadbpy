@@ -1,0 +1,6 @@
+# the master datacenter for mediawiki
+primary_dc: codfw
+# read-only settings
+read_only:
+  codfw: false
+  eqiad: false
