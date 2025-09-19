@@ -1,0 +1,7 @@
+# See makefile
+
+FROM docker-registry.wikimedia.org/bookworm:latest
+
+RUN apt-get -q update && \
+  apt-get -qy install --no-install-recommends tox && \
+  rm -rf /var/lib/apt/lists/*
