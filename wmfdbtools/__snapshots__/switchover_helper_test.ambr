@@ -1,0 +1,403 @@
+# serializer version: 1
+# name: test_compare_mariadb_vars_ok_active_dc
+  '''
+  [check_vars] Comparing MariaDB variables
+  <<mocked SHOW VARIABLES on db2165>>
+  <<mocked SHOW VARIABLES on db2161>>
+  MariaDB variables check:
+    ✓ innodb_buffer_pool_size
+    ✓ innodb_log_write_ahead_size
+    ✓ innodb_flush_log_at_trx_commit
+    ✓ innodb_file_per_table
+    ✓ binlog_format
+    ✓ gtid_mode
+    ✓ sync_binlog
+    ✓ log_slave_updates
+    ✓ max_connections
+    ✓ max_allowed_packet
+    ✓ sql_mode
+    ✓ character_set_server
+    ✓ collation_server
+    ✓ db2165 is read-write (the DC is active)
+  
+  '''
+# ---
+# name: test_compare_mariadb_vars_standby_dc
+  '''
+  [check_vars] Comparing MariaDB variables
+  <<mocked SHOW VARIABLES on db2165>>
+  <<mocked SHOW VARIABLES on db2161>>
+  MariaDB variables check:
+    ✓ innodb_buffer_pool_size
+    ✓ innodb_log_write_ahead_size
+    ✓ innodb_flush_log_at_trx_commit
+    ✓ innodb_file_per_table
+    ✓ binlog_format
+    ✓ gtid_mode
+    ✓ sync_binlog
+    ✓ log_slave_updates
+    ✓ max_connections
+    ✓ max_allowed_packet
+    ✓ sql_mode
+    ✓ character_set_server
+    ✓ collation_server
+    ✖ db2165 is read-write but the DC is standby
+  
+  '''
+# ---
+# name: test_compare_mariadb_vars_wrong_direction_active
+  '''
+  [check_vars] Comparing MariaDB variables
+  <<mocked SHOW VARIABLES on db2161>>
+  <<mocked SHOW VARIABLES on db2165>>
+  MariaDB variables check:
+    ✓ innodb_buffer_pool_size
+    ✓ innodb_log_write_ahead_size
+    ✓ innodb_flush_log_at_trx_commit
+    ✓ innodb_file_per_table
+    ✓ binlog_format
+    ✓ gtid_mode
+    ✓ sync_binlog
+    ✓ log_slave_updates
+    ✓ max_connections
+    ✓ max_allowed_packet
+    ✓ sql_mode
+    ✓ character_set_server
+    ✓ collation_server
+    ✖ db2161 is read-only but the DC is active
+    ✖ db2165 is not read-only
+  
+  '''
+# ---
+# name: test_compare_mariadb_vars_wrong_direction_standby
+  '''
+  [check_vars] Comparing MariaDB variables
+  <<mocked SHOW VARIABLES on db2161>>
+  <<mocked SHOW VARIABLES on db2165>>
+  MariaDB variables check:
+    ✓ innodb_buffer_pool_size
+    ✓ innodb_log_write_ahead_size
+    ✓ innodb_flush_log_at_trx_commit
+    ✓ innodb_file_per_table
+    ✓ binlog_format
+    ✓ gtid_mode
+    ✓ sync_binlog
+    ✓ log_slave_updates
+    ✓ max_connections
+    ✓ max_allowed_packet
+    ✓ sql_mode
+    ✓ character_set_server
+    ✓ collation_server
+    ✓ db2161 is read-only (the DC is standby)
+    ✖ db2165 is not read-only
+  
+  '''
+# ---
+# name: test_run_switch_on_active_dc
+  '''
+  Test switchover in s8, active DC codfw, db2165 -> db2161
+  mock-fetching https://config-master.wikimedia.org/mediawiki.yaml
+  <Mocked Fetching Zarcillo API /api/v1/section_status/s8>
+  Unable to fetch section data from Zarcillo: mock-zarc-err, falling back to scraping github :(
+  fetching dbconfig JSON
+  mock-fetching https://noc.wikimedia.org/dbconfig/codfw.json
+  <Mocked out find_candidate_masters>
+  Candidates: ['db2161']
+  mock-fetching https://config-master.wikimedia.org/mediawiki.yaml
+  Old primary: db2165
+  New primary: db2161
+  DC: codfw. Note: This is a switchover in the ACTIVE DC
+  ▶ Check configuration differences between new and old primary:
+  [check_dbctl] Check dbctl conf
+  Old primary db2165 dbctl struct: {'s8': {'candidate_master': False, 'percentage': 100, 'pooled': True, 'weight': 500}}
+  new primary db2161 dbctl struct: {'s8': {'candidate_master': True, 'percentage': 100, 'pooled': True, 'weight': 500}}
+  [check_vars] Comparing MariaDB variables
+  <<mocked SHOW VARIABLES on db2165>>
+  <<mocked SHOW VARIABLES on db2161>>
+  MariaDB variables check:
+    ✓ innodb_buffer_pool_size
+    ✓ innodb_log_write_ahead_size
+    ✓ innodb_flush_log_at_trx_commit
+    ✓ innodb_file_per_table
+    ✓ binlog_format
+    ✓ gtid_mode
+    ✓ sync_binlog
+    ✓ log_slave_updates
+    ✓ max_connections
+    ✓ max_allowed_packet
+    ✓ sql_mode
+    ✓ character_set_server
+    ✓ collation_server
+    ✓ db2165 is read-write (the DC is active)
+  asking: Lock section on zarcillo
+  asking: Silence alerts on all hosts
+  [downtime] Setting downtime on A:db-section-s8
+  asking: Set new primary db2161 dbctl weight to 0
+  [dbctl] Waiting for dbctl diff to be empty
+  [set_weight] Setting weight for db2161 to 0
+  <dbctl.instance.weight announce_message>
+  asking: Topology changes, move all replicas under the new primary
+  mock-running <<sudo db-switchover --timeout=25 --only-slave-move db2165 db2161>>
+  asking: Disable puppet on old primary db2165
+  asking: Disable puppet on new primary db2161
+  ▶ Merge gerrit puppet change to promote the primary
+  ▶ DIY: run this after merging on Gerrit: ssh puppetserver1001.eqiad.wmnet -t sudo -i puppet-merge
+  asking: Continue?
+  ▶ Entering primary failover section
+  asking: Log the failover on irc
+  asking: Set section s8 in read-only in dbctl?
+  [section_readonly] Setting section s8 read-only
+  ▶ Check that s8 is indeed read-only
+  asking: Switch primaries
+  [switch_primary] Switching db2165 db2161 in s8
+  mock-running <<sudo db-switchover --skip-slave-move db2165 db2161>>
+  Checking replication status
+  <<mocked SHOW SLAVE STATUS on db2165>>
+  <<mocked SHOW SLAVE STATUS on db2161>>
+    ✖ db2165 has replication running as a follower (should be primary)
+    ✓ db2165 is not replicating (confirmed as current primary)
+    ✓ db2161 IO thread running
+    ✓ db2161 SQL thread running
+    ✓ db2161 no replication errors
+    ✓ db2161 lag is 0 seconds
+    ℹ db2161 is replicating from db2161.codfw.wmnet port 3306
+    ⚠ db2161 is replicating from db2161.codfw.wmnet, not db2165
+    ℹ db2161 Using_Gtid: Slave_Pos
+  asking: WARNING: Replication check failed!
+  asking: Promote new primary in dbctl and set both sections to read-write
+  ▶ Entering cleanup phase
+  asking: Clean up heartbeat table(s) on new primary db2161
+  Running query 'DELETE FROM heartbeat.heartbeat WHERE file LIKE %s' with 'db2165-bin%'
+  asking: Enable and run puppet on old primary db2165
+  [run_puppet] Run puppet on old primary
+  asking: Enable and run on new primary db2161
+  [run_puppet] Run puppet on new primary
+  asking: Run set-master query on db2161
+  ▶ Changing events for query killer
+  asking: Run set-replica query on db2165
+  ▶ Changing events for query killer
+  ▶ DIY: Merge the related CR for DNS configuration in Puppet then run ssh dns1004.wikimedia.org -t sudo authdns-update
+  asking: Confirm when done
+  asking: Update candidate primary dbctl setting db2165 as candidate and db2161 not candidate
+  asking: Update Orchestrator candidate tags
+  mock-running <<sudo cumin 'dborch*' 'orchestrator-client -c untag -i db2161 --tag name=candidate'>>
+  mock-running <<sudo cumin 'dborch*' 'orchestrator-client -c tag -i db2165 --tag name=candidate'>>
+  asking: Depool db2165
+  ▶ Completed
+  Releasing lock
+  
+  '''
+# ---
+# name: test_run_switch_on_active_dc_dryrun
+  '''
+  Test dryrun switchover in s8, active DC codfw, db2165 -> db2161
+  mock-fetching https://config-master.wikimedia.org/mediawiki.yaml
+  <Mocked Fetching Zarcillo API /api/v1/section_status/s8>
+  Unable to fetch section data from Zarcillo: mock-zarc-err, falling back to scraping github :(
+  fetching dbconfig JSON
+  mock-fetching https://noc.wikimedia.org/dbconfig/codfw.json
+  <Mocked out find_candidate_masters>
+  Candidates: ['db2161']
+  mock-fetching https://config-master.wikimedia.org/mediawiki.yaml
+  Old primary: db2165
+  New primary: db2161
+  DC: codfw. Note: This is a switchover in the ACTIVE DC
+  ▶ Check configuration differences between new and old primary:
+  [check_dbctl] Check dbctl conf
+  Old primary db2165 dbctl struct: {'s8': {'candidate_master': False, 'percentage': 100, 'pooled': True, 'weight': 500}}
+  new primary db2161 dbctl struct: {'s8': {'candidate_master': True, 'percentage': 100, 'pooled': True, 'weight': 500}}
+  asking: Lock section on zarcillo
+  asking: Silence alerts on all hosts
+  [downtime] Setting downtime on A:db-section-s8
+  Dry-running sre.hosts.downtime ['--hours', '1', '-r', 'Primary switchover s8 T409818', 'A:db-section-s8']
+  asking: Set new primary db2161 dbctl weight to 0
+  Dry-running dbctl cmdline: 'instance db2161 set-weight 0'
+  [dbctl] Waiting for dbctl diff to be empty
+  asking: Topology changes, move all replicas under the new primary
+  Dry-running local cmd sudo db-switchover --timeout=25 --only-slave-move db2165 db2161
+  asking: Disable puppet on old primary db2165
+  asking: Disable puppet on new primary db2161
+  ▶ Merge gerrit puppet change to promote the primary
+  ▶ DIY: run this after merging on Gerrit: ssh puppetserver1001.eqiad.wmnet -t sudo -i puppet-merge
+  asking: Continue?
+  ▶ Entering primary failover section
+  asking: Log the failover on irc
+  asking: Set section s8 in read-only in dbctl?
+  [section_readonly] Setting section s8 read-only
+  Dry-running dbctl cmdline: '--scope eqiad section s8 ro 'Maintenance until <mock ts> - T409818''
+  Dry-running dbctl cmdline: '--scope codfw section s8 ro 'Maintenance until <mock ts> - T409818''
+  Dry-running dbctl cmdline: 'config commit -m 'Set s8 codfw as read-only for maintenance - T409818''
+  ▶ Check that s8 is indeed read-only
+  asking: Switch primaries
+  [switch_primary] Switching db2165 db2161 in s8
+  Dry-running local cmd sudo db-switchover --skip-slave-move db2165 db2161
+  asking: Promote new primary in dbctl and set both sections to read-write
+  Dry-running dbctl cmdline: '--scope codfw section s8 set-master db2161'
+  Dry-running dbctl cmdline: '--scope eqiad section s8 rw'
+  Dry-running dbctl cmdline: '--scope codfw section s8 rw'
+  Dry-running dbctl cmdline: 'config commit -m 'Promote db2161 to s8 primary and set both sections read-write T409818''
+  ▶ Entering cleanup phase
+  asking: Clean up heartbeat table(s) on new primary db2161
+  Dry-running 'DELETE FROM heartbeat.heartbeat WHERE file LIKE %s' with 'db2165-bin%'
+  asking: Enable and run puppet on old primary db2165
+  [run_puppet] Run puppet on old primary
+  asking: Enable and run on new primary db2161
+  [run_puppet] Run puppet on new primary
+  asking: Run set-master query on db2161
+  ▶ Changing events for query killer
+  asking: Run set-replica query on db2165
+  ▶ Changing events for query killer
+  ▶ DIY: Merge the related CR for DNS configuration in Puppet then run ssh dns1004.wikimedia.org -t sudo authdns-update
+  asking: Confirm when done
+  asking: Update candidate primary dbctl setting db2165 as candidate and db2161 not candidate
+  Dry-running dbctl cmdline: 'instance db2165 set-candidate-master --section s8 true'
+  Dry-running dbctl cmdline: 'instance db2161 set-candidate-master --section s8 false'
+  asking: Update Orchestrator candidate tags
+  Dry-running local cmd sudo cumin 'dborch*' 'orchestrator-client -c untag -i db2161 --tag name=candidate'
+  Dry-running local cmd sudo cumin 'dborch*' 'orchestrator-client -c tag -i db2165 --tag name=candidate'
+  asking: Depool db2165
+  Dry-running sre.mysql.depool ['--reason', '<mocked admin reason>', '-t', 'T409818', 'db2165']
+  ▶ Completed
+  Releasing lock
+  
+  '''
+# ---
+# name: test_run_switch_on_standby_dc_eqiad_section_s3
+  '''
+  Test switchover in s3, standby DC eqiad, db1223 -> db1189
+  mock-fetching https://config-master.wikimedia.org/mediawiki.yaml
+  <Mocked Fetching Zarcillo API /api/v1/section_status/s3>
+  mock-fetching /api/v1/section_status/s3
+  Section summary:
+    hostname         lag       tags
+    db1154             0
+    db1157             0       🎱︎pooled
+    db1166             0       🎱︎pooled
+    db1175             0       🎱︎pooled
+    db1189             0       🎱︎pooled       🛟candidate     ⭐preferred
+    db1198             0       🎱︎pooled
+    db1212             0       🎱︎pooled
+    db1223             0       🎱︎pooled
+  Old primary: db1223
+  New primary: db1189
+  DC: eqiad (standby)
+  ▶ Check configuration differences between new and old primary:
+  [check_dbctl] Check dbctl conf
+  Old primary db1223 dbctl struct: {'s3': {'candidate_master': False, 'percentage': 100, 'pooled': True, 'weight': 500}}
+  new primary db1189 dbctl struct: {'s3': {'candidate_master': True, 'percentage': 100, 'pooled': True, 'weight': 500}}
+  [check_vars] Comparing MariaDB variables
+  <<mocked SHOW VARIABLES on db1223>>
+  <<mocked SHOW VARIABLES on db1189>>
+  MariaDB variables check:
+    ✓ innodb_buffer_pool_size  percentage difference: 0.26%
+    ✓ innodb_log_write_ahead_size
+    ✓ innodb_flush_log_at_trx_commit
+    ✓ innodb_file_per_table
+    ✓ binlog_format
+    ✓ gtid_mode
+    ✓ sync_binlog
+    ✓ log_slave_updates
+    ✓ max_connections
+    ✓ max_allowed_packet
+    ✓ sql_mode
+    ✓ character_set_server
+    ✓ collation_server
+    ✓ db1223 is read-only (the DC is standby)
+  asking: Lock section on zarcillo
+  asking: Silence alerts on all hosts
+  [downtime] Setting downtime on A:db-section-s3
+  asking: Set new primary db1189 dbctl weight to 0
+  [dbctl] Waiting for dbctl diff to be empty
+  [set_weight] Setting weight for db1189 to 0
+  <dbctl.instance.weight announce_message>
+  asking: Topology changes, move all replicas under the new primary
+  mock-running <<sudo db-switchover --timeout=25 --replicating-master --read-only-master --only-slave-move db1223 db1189>>
+  asking: Disable puppet on old primary db1223
+  asking: Disable puppet on new primary db1189
+  ▶ Merge gerrit puppet change to promote the primary
+  ▶ DIY: run this after merging on Gerrit: ssh puppetserver1001.eqiad.wmnet -t sudo -i puppet-merge
+  asking: Continue?
+  ▶ Entering primary failover section
+  asking: Log the failover on irc
+  asking: Switch primaries
+  [switch_primary] Switching db1223 db1189 in s3
+  mock-running <<sudo db-switchover --replicating-master --read-only-master --skip-slave-move db1223 db1189>>
+  Checking replication status
+  <<mocked SHOW SLAVE STATUS on db1223>>
+  <<mocked SHOW SLAVE STATUS on db1189>>
+    ✓ db1223 is in a standby DC and following replication
+    ✓ db1223 is not replicating (confirmed as current primary)
+    ✓ db1189 IO thread running
+    ✓ db1189 SQL thread running
+    ✓ db1189 no replication errors
+    ✓ db1189 lag is 0 seconds
+    ℹ db1189 is replicating from db1223.eqiad.wmnet port 3306
+    ℹ db1189 Using_Gtid: Slave_Pos
+  asking: Promote new primary in dbctl
+  ▶ Entering cleanup phase
+  asking: Clean up heartbeat table(s) on new primary db1189
+  Running query 'DELETE FROM heartbeat.heartbeat WHERE file LIKE %s' with 'db1223-bin%'
+  asking: Enable and run puppet on old primary db1223
+  [run_puppet] Run puppet on old primary
+  asking: Enable and run on new primary db1189
+  [run_puppet] Run puppet on new primary
+  asking: Run set-master query on db1189
+  ▶ Changing events for query killer
+  asking: Run set-replica query on db1223
+  ▶ Changing events for query killer
+  No DNS change needed.
+  asking: Update candidate primary dbctl setting db1223 as candidate and db1189 not candidate
+  asking: Update Orchestrator candidate tags
+  mock-running <<sudo cumin 'dborch*' 'orchestrator-client -c untag -i db1189 --tag name=candidate'>>
+  mock-running <<sudo cumin 'dborch*' 'orchestrator-client -c tag -i db1223 --tag name=candidate'>>
+  asking: Depool db1223
+  ▶ Completed
+  Releasing lock
+  
+  '''
+# ---
+# name: test_show_on_standby_dc_eqiad_section_s3
+  '''
+  Test show action in s3, standby DC eqiad, db1223 -> db1189
+  mock-fetching https://config-master.wikimedia.org/mediawiki.yaml
+  <Mocked Fetching Zarcillo API /api/v1/section_status/s3>
+  mock-fetching /api/v1/section_status/s3
+  Section summary:
+    hostname         lag       tags
+    db1154             0
+    db1157             0       🎱︎pooled
+    db1166             0       🎱︎pooled
+    db1175             0       🎱︎pooled
+    db1189             0       🎱︎pooled       🛟candidate     ⭐preferred
+    db1198             0       🎱︎pooled
+    db1212             0       🎱︎pooled
+    db1223             0       🎱︎pooled
+  Old primary: db1223
+  New primary: db1189
+  DC: eqiad (standby)
+  ▶ Check configuration differences between new and old primary:
+  [check_dbctl] Check dbctl conf
+  Old primary db1223 dbctl struct: {'s3': {'candidate_master': False, 'percentage': 100, 'pooled': True, 'weight': 500}}
+  new primary db1189 dbctl struct: {'s3': {'candidate_master': True, 'percentage': 100, 'pooled': True, 'weight': 500}}
+  [check_vars] Comparing MariaDB variables
+  <<mocked SHOW VARIABLES on db1223>>
+  <<mocked SHOW VARIABLES on db1189>>
+  MariaDB variables check:
+    ✓ innodb_buffer_pool_size  percentage difference: 0.26%
+    ✓ innodb_log_write_ahead_size
+    ✓ innodb_flush_log_at_trx_commit
+    ✓ innodb_file_per_table
+    ✓ binlog_format
+    ✓ gtid_mode
+    ✓ sync_binlog
+    ✓ log_slave_updates
+    ✓ max_connections
+    ✓ max_allowed_packet
+    ✓ sql_mode
+    ✓ character_set_server
+    ✓ collation_server
+    ✓ db1223 is read-only (the DC is standby)
+  ▶ Run in show mode completed.
+  
+  '''
+# ---

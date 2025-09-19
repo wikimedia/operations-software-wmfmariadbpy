@@ -1,2 +1,3 @@
 wmfmariadbpy/cli_common/*.py usr/lib/python3/dist-packages/wmfmariadbpy/cli_common
+wmfdbtools/* usr/lib/python3/dist-packages/wmfdbtools
 usr/bin/db-check-health
