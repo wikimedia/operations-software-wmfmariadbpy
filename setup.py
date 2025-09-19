@@ -12,11 +12,11 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://phabricator.wikimedia.org/diffusion/OSMD/",
-    packages=["wmfmariadbpy", "wmfmariadbpy.RemoteExecution"],
+    packages=["wmfdbtools", "wmfmariadbpy", "wmfmariadbpy.RemoteExecution"],
+    python_requires=">=3.9",
     install_requires=["pymysql>=0.9.3", "tabulate>=0.8.2"],
     extras_require={
         "cumin": [
-            "cumin <= 4.0.0; python_version < '3.6'",
             "cumin; python_version >= '3.6'",
         ]
     },
@@ -29,6 +29,8 @@ setup(
             "db-stop-in-sync = wmfmariadbpy.cli_admin.stop_in_sync:main",
             "db-switchover = wmfmariadbpy.cli_admin.switchover:main",
             "mysql.py = wmfmariadbpy.cli_admin.mysql:main",
+            # wmfdbtools
+            "db-switchover-helper = wmfdbtools.switchover_helper:main",
             # cli_common
             "db-check-health = wmfmariadbpy.cli_common.check_health:main",
             # integration testing

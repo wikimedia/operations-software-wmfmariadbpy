@@ -1,0 +1,7 @@
+
+
+test *ARGS:
+ ./.tox/py3/bin/pytest -vvv {{ARGS}}
+     
+coverage *ARGS:
+ ./.tox/py3/bin/pytest --cov=switchover_helper --cov-report=html --cov-report=term -vvv {{ARGS}}
