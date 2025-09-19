@@ -9,5 +9,6 @@ pytest-cov
 pytest-mock
 requests
 types-PyMySQL
+types-PyYAML
 types-requests
 types-setuptools
