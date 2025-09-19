@@ -1,0 +1,5 @@
+# db2165
+profile::mariadb::mysql_role: 'master'
+mariadb::shard: 's8'
+mariadb::binlog_format: 'STATEMENT'
+mariadb::package: 'wmf-mariadb1011'
