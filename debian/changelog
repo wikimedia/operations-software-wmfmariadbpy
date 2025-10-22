@@ -1,3 +1,9 @@
+wmfmariadbpy (0.12.1~wmf6) trixie-wikimedia; urgency=medium
+
+  * Rebuild again for Trixie
+
+ -- Federico Ceratto <federico@wikimedia.org>  Wed, 22 Oct 2025 17:04:02 +0200
+
 wmfmariadbpy (0.12.1~wmf5) trixie-wikimedia; urgency=medium
 
   * Rebuild for Trixie
