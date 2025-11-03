@@ -58,10 +58,10 @@ build_ci_deb_bookworm:
     DISTRO_NAME: "bookworm-wikimedia"
     DEB_VERSION_NUMBER: "12"
 
-build_ci_deb_trixie:
- extends: .backport
- image: docker-registry.wikimedia.org/wmf-debci-trixie
- variables:
-   SUITE: "trixie"
-   DISTRO_NAME: "trixie-wikimedia"
-   DEB_VERSION_NUMBER: "13"
+# build_ci_deb_trixie:
+#  extends: .backport
+#  image: docker-registry.wikimedia.org/wmf-debci-trixie
+#  variables:
+#    SUITE: "trixie"
+#    DISTRO_NAME: "trixie-wikimedia"
+#    DEB_VERSION_NUMBER: "13"
