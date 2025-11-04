@@ -34,9 +34,9 @@ include:
   tags:
     - trusted
   before_script:
-    - dch -v "$(dpkg-parsechangelog -S version)+deb${DEB_VERSION_NUMBER}u1"
-      -D "${DISTRO_NAME}"
-      "Backport to ${DISTRO_NAME}"
+    - dch -v "$(dpkg-parsechangelog -S version)~deb${DEB_VERSION_NUMBER}u1"
+      -D "${SUITE}-wikimedia"
+      "Backport to ${SUITE}-wikimedia"
 
 build_ci_deb:
   tags:
@@ -47,7 +47,6 @@ build_ci_deb_bullseye:
  image: docker-registry.wikimedia.org/wmf-debci-bullseye
  variables:
    SUITE: "bullseye"
-   DISTRO_NAME: "bullseye-wikimedia"
    DEB_VERSION_NUMBER: "11"
 
 build_ci_deb_bookworm:
@@ -55,13 +54,4 @@ build_ci_deb_bookworm:
   image: docker-registry.wikimedia.org/wmf-debci-bookworm
   variables:
     SUITE: "bookworm"
-    DISTRO_NAME: "bookworm-wikimedia"
     DEB_VERSION_NUMBER: "12"
-
-# build_ci_deb_trixie:
-#  extends: .backport
-#  image: docker-registry.wikimedia.org/wmf-debci-trixie
-#  variables:
-#    SUITE: "trixie"
-#    DISTRO_NAME: "trixie-wikimedia"
-#    DEB_VERSION_NUMBER: "13"
