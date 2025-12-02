@@ -1,0 +1,169 @@
+== Provisioning ES* hosts
+
+This runbook has been developed for https://phabricator.wikimedia.org/T402859
+Commands are to be run on the developer workstation unless stated otherwise.
+
+Run `puppethelper.py` in the Puppet repository git repo.
+
+=== Provisioning a new ES host to replace an existing host
+ 
+.Set env variables (example using fish syntax)
+[,fish]
+----
+set old es2030
+set host es2053
+set section es1
+set task T402859
+set dc codfw
+----
+
+.Remove the host from preseed as https://gerrit.wikimedia.org/r/c/operations/puppet/+/1182592
+[,bash]
+----
+./puppethelper.py  remove-preseed $host -t T402859
+----
+
+.Remove the host from insetup::data_persistence_ferm
+[,bash]
+----
+editor manifests/site.pp
+----
+
+.Add the role to site.pp
+[,bash]
+----
+# Generate the snippet
+echo -e "# $host\nnode /^$host\.$dc\./ {\n    role(mariadb::core)\n}\n"
+
+editor manifests/site.pp
+git commit manifests/site.pp -m "site.pp: Set role for $host" -m"Remove host from insetup" -m "Bug: $task"
+----
+
+.Populate puppet as https://gerrit.wikimedia.org/r/c/operations/puppet/+/1182593
+[,bash]
+----
+tail -n +2 hieradata/hosts/$old.yaml >> hieradata/hosts/$host.yaml
+git diff
+git commit hieradata/hosts/$host.yaml manifests/site.pp \
+ -m "$host.yaml: Prepare $host for $section" \
+ -m "It will replace $old in $section" \
+ -m "Bug: $task"
+----
+
+Review and squash together commits as needed
+
+.Code review and then puppet-merge
+[,bash]
+----
+ssh puppetserver1001.eqiad.wmnet -t sudo -i puppet-merge
+----
+
+.Manually silence the host
+[,bash]
+----
+ssh cumin1003.eqiad.wmnet -t "sudo cookbook sre.hosts.downtime '$host*' -t '$task' -r 'Setting up new ES host' -D 4"
+----
+
+.Update the OS packages
+[,bash]
+----
+ssh $host.$dc.wmnet -t sudo apt update -y
+ssh $host.$dc.wmnet -t sudo apt dist-upgrade -y
+----
+	
+Clone the host from another *replica* es host using https://gerrit.wikimedia.org/r/c/operations/cookbooks/+/1183646 - do not pool in the new host.
+
+It might take a good while for the new host to show up on cumin. The clone_es cookbook will wait:
+
+.Run cloning in tmux on cumin
+[,bash]
+----
+set src es0000  # replace me, pick a suitable source
+echo -e "Run on cumin:\n sudo cookbook sre.mysql.clone_es -t $task --source $src.$dc.wmnet --target $host.$dc.wmnet --nopool"
+----
+Monitor https://alerts.wikimedia.org/?q=%40cluster%3Dwikimedia.org&q=instance%3D~%5E(es)%5B12%5D.* for errors and bake in the host
+
+.Check the target host
+[,bash]
+----
+# Start short test
+ssh $host.$dc.wmnet -t sudo smartctl -t short -d megaraid,0 -H /dev/sda
+
+# Check partitions for free space
+ssh $host.$dc.wmnet -t    df -h
+
+# Review
+ssh $host.$dc.wmnet -t    sudo journalctl -p0..2
+
+# Review
+ssh $host.$dc.wmnet -t    sudo systemctl status --failed
+
+# Review
+ssh $host.$dc.wmnet -t    sudo smartctl -l selftest -d megaraid,0 -H /dev/sda
+
+----
+
+.Review the mysql dashboard
+[,bash]
+----
+echo review https://grafana.wikimedia.org/d/000000273/mysql?orgId=1&refresh=1m&var-job=%24__all&var-server=$host&var-port=9104&from=now-7d&to=now&timezone=utc
+----
+
+.Enable notifications
+[,bash]
+----
+./puppethelper.py enable-notif $host -t $task
+----
+
+.Add the new host to conftool-data/dbconfig-instance/instances.yaml
+[,bash]
+----
+./puppethelper.py add-to-dbctl $host -t $task
+----
+	
+Git-squash, code review and puppet-merge.
+ 
+.Set weights (example below)
+[,bash]
+----
+# Get old host params
+ssh cumin1003.eqiad.wmnet -t sudo dbctl instance $old get
+# Get ipaddr
+ssh $host.$dc.wmnet -t ip a s | grep 'inet 10'
+# set the host ipaddr and section mimicking other hosts but **without pooling**
+ssh cumin1003.eqiad.wmnet -t sudo dbctl instance $host edit
+ssh cumin1003.eqiad.wmnet -t sudo dbctl config diff
+ssh cumin1003.eqiad.wmnet -t sudo dbctl config commit -m"'Add $host $task'"
+----
+
+.Weights example
+[,yaml]
+----
+host_ip: 10.1.2.3
+note: ''
+port: 3306
+sections:
+  es1:
+    percentage: 0
+    pooled: false
+    weight: 100
+----
+
+
+.Remove downtime
+[,bash]
+----
+ssh cumin1003.eqiad.wmnet -t "sudo cookbook sre.hosts.remove-downtime '$host*'"
+----
+
+.Monitor
+[,bash]
+----
+echo review https://grafana.wikimedia.org/d/000000273/mysql?orgId=1&refresh=1m&var-job=%24__all&var-server=$host&var-port=9104&from=now-7d&to=now&timezone=utc
+----
+
+.Pool in the new host
+[,bash]
+----
+echo Run in a byobu/tmux session on cumin:  sudo cookbook sre.mysql.pool $host -r \'Pooling in new host\' --slow -t $task
+----
