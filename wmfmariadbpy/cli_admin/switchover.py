@@ -30,10 +30,7 @@ def handle_parameters():
     )
     parser.add_argument(
         "slave",
-        help=(
-            "Direct replica host, in hostname:port format, to be "
-            "switched to, and will become the new master"
-        ),
+        help=("Direct replica host, in hostname:port format, to be " "switched to, and will become the new master"),
     )
     parser.add_argument(
         "--timeout",
@@ -68,10 +65,7 @@ def handle_parameters():
     parser.add_argument(
         "--skip-heartbeat",
         action="store_true",
-        help=(
-            "When set, it does not try to stop heartbeat at the original "
-            "master, nor start it on the new one."
-        ),
+        help=("When set, it does not try to stop heartbeat at the original " "master, nor start it on the new one."),
     )
     parser.add_argument(
         "--replicating-master",
@@ -103,9 +97,7 @@ def handle_parameters():
     return options
 
 
-def do_preflight_checks(
-    master_replication, slave_replication, timeout, replicating_master, read_only_master
-):
+def do_preflight_checks(master_replication, slave_replication, timeout, replicating_master, read_only_master):
     master = master_replication.connection
     slave = slave_replication.connection
     print("Starting preflight checks...")
@@ -116,9 +108,7 @@ def do_preflight_checks(
     if not master_result["success"] or not slave_result["success"]:
         print("[ERROR]: Read only status could be not read from one or more servers")
         sys.exit(-1)
-    elif not read_only_master and (
-        not master_result["rows"][0][0] == 0 or not slave_result["rows"][0][0] == 1
-    ):
+    elif not read_only_master and (not master_result["rows"][0][0] == 0 or not slave_result["rows"][0][0] == 1):
         print(
             (
                 "[ERROR]: Initial read_only status "
@@ -126,9 +116,7 @@ def do_preflight_checks(
             ).format(master_result["rows"][0][0], slave_result["rows"][0][0])
         )
         sys.exit(-1)
-    elif read_only_master and (
-        not master_result["rows"][0][0] == 1 or not slave_result["rows"][0][0] == 1
-    ):
+    elif read_only_master and (not master_result["rows"][0][0] == 1 or not slave_result["rows"][0][0] == 1):
         print(
             (
                 "[ERROR]: Initial read_only status "
@@ -137,30 +125,20 @@ def do_preflight_checks(
         )
         sys.exit(-1)
     print(
-        (
-            "* Original read only values are as expected "
-            "(master: read_only={}, slave: read_only=True)"
-        ).format(
+        ("* Original read only values are as expected " "(master: read_only={}, slave: read_only=True)").format(
             (str(read_only_master)),
         )
     )
 
     # Check current replica is a direct slave of the current master
     if not slave_replication.is_direct_replica_of(master):
-        print(
-            "[ERROR]: {} is not a direct replica of {}".format(
-                slave.name(), master.name()
-            )
-        )
+        print("[ERROR]: {} is not a direct replica of {}".format(slave.name(), master.name()))
         sys.exit(-1)
     print("* The host to fail over is a direct replica of the master")
 
     # Check replication is running between hosts
     slave_status = slave_replication.slave_status()
-    if (
-        slave_status["slave_sql_running"] != "Yes"
-        or slave_status["slave_io_running"] != "Yes"
-    ):
+    if slave_status["slave_sql_running"] != "Yes" or slave_status["slave_io_running"] != "Yes":
         print("[ERROR]: The replica is not currently running")
         sys.exit(-1)
     print("* Replication is up and running between the 2 hosts")
@@ -183,39 +161,23 @@ def do_preflight_checks(
     # Check lag is not excessive
     lag = slave_replication.lag()
     if lag is None:
-        print(
-            "[ERROR]: It was impossible to measure the lag between the master and the slave"
-        )
+        print("[ERROR]: It was impossible to measure the lag between the master and the slave")
         sys.exit(-1)
     elif lag > timeout:
-        print(
-            "[ERROR]: The replica is too lagged: {} seconds, please allow it to catch up first".format(
-                str(lag)
-            )
-        )
+        print("[ERROR]: The replica is too lagged: {} seconds, please allow it to catch up first".format(str(lag)))
         sys.exit(-1)
-    print(
-        "* The replication lag is acceptable: {} (lower than the configured or default timeout)".format(
-            str(lag)
-        )
-    )
+    print("* The replication lag is acceptable: {} (lower than the configured or default timeout)".format(str(lag)))
 
     # Check for additional topology issues (replicating master or circular replication)
     master_slave_status = master_replication.slave_status()
     if replicating_master and master_slave_status is None:
-        print(
-            "[ERROR]: --replicating-master was set, but replication is not enabled on the master"
-        )
+        print("[ERROR]: --replicating-master was set, but replication is not enabled on the master")
         sys.exit(-1)
     elif not replicating_master and master_slave_status is not None:
-        print(
-            "[ERROR]: The master is replicating from somewhere and --replicating-master was not set, aborting"
-        )
+        print("[ERROR]: The master is replicating from somewhere and --replicating-master was not set, aborting")
         sys.exit(-1)
     if replicating_master and master_replication.is_direct_replica_of(slave):
-        print(
-            "[ERROR]: Master and replica are setup in a circular replication, aborting switchover"
-        )
+        print("[ERROR]: Master and replica are setup in a circular replication, aborting switchover")
         sys.exit(-1)
 
 
@@ -240,20 +202,13 @@ def wait_for_slave_to_catch_up(master_replication, slave_replication, timeout):
         )
         result = master_replication.connection.execute("SET GLOBAL read_only = 0")
         if not result["success"]:
-            print(
-                "[ERROR]: We could not revert the master back to read_only, "
-                "server may be down or other issues"
-            )
+            print("[ERROR]: We could not revert the master back to read_only, " "server may be down or other issues")
         else:
             print("Switchover failed, but we put back the master in read/write again")
         print("Try increasing the timeout parameter, or debuging the current status")
         sys.exit(-1)
 
-    print(
-        "Slave caught up to the master after waiting {} seconds".format(
-            str(time.time() - timeout_start)
-        )
-    )
+    print("Slave caught up to the master after waiting {} seconds".format(str(time.time() - timeout_start)))
 
 
 def stop_slave(slave_replication):
@@ -276,9 +231,7 @@ def set_replica_in_read_write(master_replication, slave_replication):
         )
         result = master.execute("SET GLOBAL read_only = 0")
         if not result["success"]:
-            print(
-                "We could not revert the master back to read_only, server may be down or other issues"
-            )
+            print("We could not revert the master back to read_only, server may be down or other issues")
         else:
             print("Switchover failed, but we put back the master in read/write again")
         sys.exit(-1)
@@ -308,9 +261,7 @@ def set_replica_in_read_write(master_replication, slave_replication):
     )
 
 
-def invert_replication_direction(
-    master_replication, slave_replication, master_status_on_switch
-):
+def invert_replication_direction(master_replication, slave_replication, master_status_on_switch):
     slave = slave_replication.connection
     print("Trying to invert replication direction")
     result = master_replication.setup(
@@ -344,29 +295,19 @@ def stop_master_replication(master_replication):
     print("Stopping replication to master")
     result = master_replication.stop_slave()
     if not result["success"]:
-        print(
-            "[ERROR]: Could not stop replication to master: {}".format(result["errmsg"])
-        )
+        print("[ERROR]: Could not stop replication to master: {}".format(result["errmsg"]))
         sys.exit(-1)
     master_slave_status = master_replication.slave_status()
     master_slave_status["slave_io_running"] = original_io_status
     master_slave_status["slave_sql_running"] = original_sql_status
     if not master_slave_status["success"]:
         print(
-            (
-                "[ERROR]: Could not get the slave status"
-                " of the master after stopping it: {}"
-            ).format(result["errmsg"])
+            ("[ERROR]: Could not get the slave status" " of the master after stopping it: {}").format(result["errmsg"])
         )
         sys.exit(-1)
     result = master_replication.reset_slave()
     if not result["success"]:
-        print(
-            (
-                "[ERROR]: Could not reset replication "
-                "of master after stopping it: {}"
-            ).format(result["errmsg"])
-        )
+        print(("[ERROR]: Could not reset replication " "of master after stopping it: {}").format(result["errmsg"]))
         sys.exit(-1)
     print(
         ("Original master replication " "was stopped and reset at {}:{}").format(
@@ -397,21 +338,14 @@ def setup_new_master_replication(slave_replication, old_master_slave_status):
         )
         return -1
     # start slave
-    if (
-        old_master_slave_status["slave_io_running"] != "No"
-        and old_master_slave_status["slave_sql_running"] != "No"
-    ):
+    if old_master_slave_status["slave_io_running"] != "No" and old_master_slave_status["slave_sql_running"] != "No":
         print("Restarting new master replication (both threads)")
         result = slave_replication.start_slave()
-    elif (
-        old_master_slave_status["slave_io_running"] != "No"
-        and old_master_slave_status["slave_sql_running"] == "No"
-    ):
+    elif old_master_slave_status["slave_io_running"] != "No" and old_master_slave_status["slave_sql_running"] == "No":
         print("Restarting new master replication io thread")
         result = slave_replication.start_slave(thread="io")
     elif (
-        old_master_slave_status["slave_io_running"] == "No"
-        and not old_master_slave_status["slave_sql_running"] != "No"
+        old_master_slave_status["slave_io_running"] == "No" and not old_master_slave_status["slave_sql_running"] != "No"
     ):
         print("Restarting new master replication sql thread")
     else:
@@ -433,9 +367,7 @@ def setup_new_master_replication(slave_replication, old_master_slave_status):
     return 0
 
 
-def verify_status_after_switch(
-    master_replication, slave_replication, timeout, replicating_master, read_only_master
-):
+def verify_status_after_switch(master_replication, slave_replication, timeout, replicating_master, read_only_master):
     master = master_replication.connection
     slave = slave_replication.connection
     print("Verifying everything went as expected...")
@@ -444,9 +376,7 @@ def verify_status_after_switch(
     if not master_result["success"] or not slave_result["success"]:
         print("[ERROR] read_only status of one or more servers could not be checked")
         sys.exit(-1)
-    elif not read_only_master and (
-        not master_result["rows"][0][0] == 1 or not slave_result["rows"][0][0] == 0
-    ):
+    elif not read_only_master and (not master_result["rows"][0][0] == 1 or not slave_result["rows"][0][0] == 0):
         print(
             "[ERROR]: Read_only status verification failed: "
             "original master read_only: {} / original slave read_only: {}".format(
@@ -454,9 +384,7 @@ def verify_status_after_switch(
             )
         )
         sys.exit(-1)
-    elif read_only_master and (
-        not master_result["rows"][0][0] == 1 or not slave_result["rows"][0][0] == 1
-    ):
+    elif read_only_master and (not master_result["rows"][0][0] == 1 or not slave_result["rows"][0][0] == 1):
         print(
             "[ERROR]: Read_only status verification failed: "
             "original master read_only: {} / original slave read_only: {}".format(
@@ -466,11 +394,7 @@ def verify_status_after_switch(
         sys.exit(-1)
 
     if not master_replication.is_direct_replica_of(slave):
-        print(
-            "[ERROR]: {} is not a direct replica of {}".format(
-                master.name(), slave.name()
-            )
-        )
+        print("[ERROR]: {} is not a direct replica of {}".format(master.name(), slave.name()))
         sys.exit(-1)
 
     master_status = master_replication.slave_status()
@@ -480,16 +404,12 @@ def verify_status_after_switch(
         or master_status["slave_sql_running"] != "Yes"
         or master_status["slave_io_running"] != "Yes"
     ):
-        print(
-            "[ERROR]: The original master is not replicating correctly from the switched instance"
-        )
+        print("[ERROR]: The original master is not replicating correctly from the switched instance")
         sys.exit(-1)
 
     slave_status = slave_replication.slave_status()
     if replicating_master and slave_status is None:
-        print(
-            "[ERROR]: --replicating-master was set, but the new master is not replicating from anywhere"
-        )
+        print("[ERROR]: --replicating-master was set, but the new master is not replicating from anywhere")
         sys.exit(-1)
 
 
@@ -501,11 +421,7 @@ def move_replicas_to_new_master(master_replication, slave_replication, timeout, 
     slave_replication.set_gtid_mode("no")
     clients = 0
     for replica in master_replication.slaves():
-        print(
-            "Checking if {} needs to be moved under the new master...".format(
-                replica.name()
-            )
-        )
+        print("Checking if {} needs to be moved under the new master...".format(replica.name()))
         if replica.is_same_instance_as(slave_replication.connection):
             print("Nope")
             continue  # do not move the target replica to itself
@@ -514,15 +430,9 @@ def move_replicas_to_new_master(master_replication, slave_replication, timeout, 
         replication.set_gtid_mode("no")
         print("Waiting some seconds for db to catch up...")
         time.sleep(sleep)
-        result = replication.move(
-            new_master=slave_replication.connection, start_if_stopped=True
-        )
+        result = replication.move(new_master=slave_replication.connection, start_if_stopped=True)
         if result is None or not result["success"]:
-            print(
-                "[ERROR]: {} failed to be moved under the new master".format(
-                    replica.name()
-                )
-            )
+            print("[ERROR]: {} failed to be moved under the new master".format(replica.name()))
             sys.exit(-1)
         print("Reenabling GTID on {}...".format(replica.name()))
         replication.set_gtid_mode("slave_pos")
@@ -531,11 +441,7 @@ def move_replicas_to_new_master(master_replication, slave_replication, timeout, 
 
     query = "SHOW GLOBAL STATUS like 'Rpl_semi_sync_master_clients'"
     result = slave_replication.connection.execute(query)
-    if (
-        not result["success"]
-        or result["numrows"] != 1
-        or int(result["rows"][0][1]) < clients
-    ):
+    if not result["success"] or result["numrows"] != 1 or int(result["rows"][0][1]) < clients:
         print("[WARNING]: Semisync was not enabled on all hosts")
         return -1
     return 0
@@ -561,15 +467,10 @@ def start_heartbeat(master):
     runner = RemoteExecution()
     result = runner.run(
         master.host,
-        "systemctl start %s; systemctl is-active %s"
-        % (HEARTBEAT_SERVICE, HEARTBEAT_SERVICE),
+        "systemctl start %s; systemctl is-active %s" % (HEARTBEAT_SERVICE, HEARTBEAT_SERVICE),
     )
     if result.returncode != 0:
-        print(
-            "[ERROR]: Could not run pt-heartbeat-wikimedia, got output: {} {}".format(
-                runner.stdout, runner.stderr
-            )
-        )
+        print("[ERROR]: Could not run pt-heartbeat-wikimedia, got output: {} {}".format(runner.stdout, runner.stderr))
         sys.exit(-1)
 
 
@@ -607,11 +508,7 @@ def update_zarcillo(master, slave):
     if not result["success"]:
         print("[WARNING] New master could not be updated on zarcillo")
         return -1
-    print(
-        ("Zarcillo updated successfully: " "{} is the new master of {} at {}").format(
-            slave.name(), section, dc
-        )
-    )
+    print(("Zarcillo updated successfully: " "{} is the new master of {} at {}").format(slave.name(), section, dc))
     return 0
 
 
@@ -706,14 +603,10 @@ def main():
 
     if not options.skip_slave_move:
         handle_new_master_semisync_replication(slave)
-        move_replicas_to_new_master(
-            master_replication, slave_replication, timeout, sleep
-        )
+        move_replicas_to_new_master(master_replication, slave_replication, timeout, sleep)
 
     if options.only_slave_move:
-        print(
-            "SUCCESS: All slaves moved correctly, but not continuing further because --only-slave-move"
-        )
+        print("SUCCESS: All slaves moved correctly, but not continuing further because --only-slave-move")
         sys.exit(0)
 
     if not options.force:
@@ -735,12 +628,8 @@ def main():
     master_status_on_switch = slave_replication.master_status()
     print(
         "Servers sync at master: {} slave: {}".format(
-            slave_status_on_switch["relay_master_log_file"]
-            + ":"
-            + str(slave_status_on_switch["exec_master_log_pos"]),
-            master_status_on_switch["file"]
-            + ":"
-            + str(master_status_on_switch["position"]),
+            slave_status_on_switch["relay_master_log_file"] + ":" + str(slave_status_on_switch["exec_master_log_pos"]),
+            master_status_on_switch["file"] + ":" + str(master_status_on_switch["position"]),
         )
     )
     stop_slave(slave_replication)
@@ -748,9 +637,7 @@ def main():
     if not read_only_master:
         set_replica_in_read_write(master_replication, slave_replication)
 
-    invert_replication_direction(
-        master_replication, slave_replication, master_status_on_switch
-    )
+    invert_replication_direction(master_replication, slave_replication, master_status_on_switch)
 
     handle_old_master_semisync_replication(master)
 
