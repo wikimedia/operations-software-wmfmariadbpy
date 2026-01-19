@@ -32,8 +32,11 @@ test:unit:
   artifacts:
     reports:
       junit: reports/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: reports/coverage.xml
     when: always
-    expire_in: 4 week
+    expire_in: 4 weeks
 
 
 # # Deb pkg build # #
