@@ -22,3 +22,10 @@ warn_unused_ignores = true
 
 [tool.ruff]
 line-length = 120
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning:pyparsing.*",
+    "ignore::DeprecationWarning:cumin.*",
+    "ignore::UserWarning:pkg_resources",
+]
