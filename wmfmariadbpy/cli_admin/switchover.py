@@ -413,7 +413,7 @@ def verify_status_after_switch(master_replication, slave_replication, timeout, r
         sys.exit(-1)
 
 
-def move_replicas_to_new_master(master_replication, slave_replication, timeout, sleep):
+def move_replicas_to_new_master(master_replication, slave_replication, timeout, sleep) -> int:
     """
     Migrates all old master direct slaves to the new master, maintaining the consistency.
     """
@@ -421,22 +421,10 @@ def move_replicas_to_new_master(master_replication, slave_replication, timeout, 
     slave_replication.set_gtid_mode("no")
     clients = 0
     for replica in master_replication.slaves():
-        print("Checking if {} needs to be moved under the new master...".format(replica.name()))
-        if replica.is_same_instance_as(slave_replication.connection):
-            print("Nope")
-            continue  # do not move the target replica to itself
-        replication = WMFReplication(replica, timeout)
-        print("Disabling GTID on {}...".format(replica.name()))
-        replication.set_gtid_mode("no")
-        print("Waiting some seconds for db to catch up...")
-        time.sleep(sleep)
-        result = replication.move(new_master=slave_replication.connection, start_if_stopped=True)
-        if result is None or not result["success"]:
-            print("[ERROR]: {} failed to be moved under the new master".format(replica.name()))
+        try:
+            change_replication(replica, slave_replication, sleep, timeout)
+        except RuntimeError:
             sys.exit(-1)
-        print("Reenabling GTID on {}...".format(replica.name()))
-        replication.set_gtid_mode("slave_pos")
-        print("{} was moved successfully under the new master".format(replica.name()))
         clients += 1
 
     query = "SHOW GLOBAL STATUS like 'Rpl_semi_sync_master_clients'"
@@ -445,6 +433,27 @@ def move_replicas_to_new_master(master_replication, slave_replication, timeout, 
         print("[WARNING]: Semisync was not enabled on all hosts")
         return -1
     return 0
+
+
+def change_replication(replica: WMFMariaDB, slave_replication: WMFReplication, sleep: float, timeout: float) -> None:
+    """Change the master (replication source) on a host."""
+    print("Checking if {} needs to be moved under the new master...".format(replica.name()))
+    if replica.is_same_instance_as(slave_replication.connection):
+        print("Nope")
+        return
+    replication = WMFReplication(replica, timeout)
+    print("Disabling GTID on {}...".format(replica.name()))
+    replication.set_gtid_mode("no")
+    print("Waiting some seconds for db to catch up...")
+    time.sleep(sleep)
+    result = replication.move(new_master=slave_replication.connection, start_if_stopped=True)
+    if result is None or not result["success"]:
+        print("[ERROR]: {} failed to be moved under the new master".format(replica.name()))
+        raise RuntimeError("Failed to update")
+
+    print("Reenabling GTID on {}...".format(replica.name()))
+    replication.set_gtid_mode("slave_pos")
+    print("{} was moved successfully under the new master".format(replica.name()))
 
 
 def stop_heartbeat(master):
