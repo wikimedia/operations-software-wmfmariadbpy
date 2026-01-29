@@ -50,6 +50,11 @@ def mock_timestamp():
 
 
 @pytest.fixture(autouse=True, scope="module")
+def mock_run_cmd():
+    sh.subprocess.check_output = Mock(return_value="<mock subprocess>")
+
+
+@pytest.fixture(autouse=True, scope="module")
 def mock_ask():
     def ask(msg: str) -> bool:
         log.info(f"asking: {msg}")
@@ -398,19 +403,11 @@ def test_run_switch_on_active_dc_ok(m_find_cand, mzarc_get, mzarc_post, mruncmd,
         call.dbctl(),
         call.dbctl(),
         call.admin_reason("primary switchover in s8 T409818"),
-        call.run_cookbook(
-            "sre.hosts.downtime",
-            ["--hours", "1", "-r", "Primary switchover s8 T409818", "A:db-section-s8"],
-            confirm=True,
-        ),
         call.puppet("db2165"),
         call.puppet("db2161"),
         call.sal_logger.info("Starting s8 codfw failover from db2165 to db2161 - T409818"),
         call.puppet("db2165"),
         call.puppet("db2161"),
-        call.run_cookbook(
-            "sre.mysql.depool", ["--reason", "<mocked admin reason>", "-t", "T409818", "db2165"], confirm=True
-        ),
     ]
 
     assert mock_sr.method_calls == exp

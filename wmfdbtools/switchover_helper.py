@@ -675,11 +675,13 @@ def preflight_check_dbctl(
         raise RuntimeError("Dbctl check failed")
 
 
-def _run_cookbook(dryrun: bool, spicerack: Spicerack, name: str, args) -> None:
+def _run_cookbook(dryrun: bool, name: str, args) -> None:
+    cmd = ["sudo", "cookbook", name] + args
     if dryrun:
-        log.info(f"Dry-running {name} {args}")
-    else:
-        spicerack.run_cookbook(name, args, confirm=True)
+        log.info(f"Dry-running cookbook: {cmd}")
+        return
+    log.info(f"Running cookbook: {cmd}")
+    subprocess.check_output(cmd)
 
 
 def _maintenance_completion_timestamp() -> str:
@@ -711,7 +713,7 @@ def _run_switchover(
     if ask("Silence alerts on all hosts"):
         step("downtime", f"Setting downtime on A:db-section-{section}")
         args = ["--hours", "1", "-r", f"Primary switchover {section} {taskid}", f"A:db-section-{section}"]
-        _run_cookbook(dryrun, spicerack, "sre.hosts.downtime", args)
+        _run_cookbook(dryrun, "sre.hosts.downtime", args)
 
     if section != "test-s4":
         if ask(f"Set new primary {newpri} dbctl weight to 0"):
@@ -866,7 +868,7 @@ def _cleanup(
             args = ["--reason", admin_reason, oldpri]
 
         depool_dryrun = dryrun or section == "test-s4"
-        _run_cookbook(depool_dryrun, spicerack, "sre.mysql.depool", args)
+        _run_cookbook(depool_dryrun, "sre.mysql.depool", args)
 
     say("Completed")
 

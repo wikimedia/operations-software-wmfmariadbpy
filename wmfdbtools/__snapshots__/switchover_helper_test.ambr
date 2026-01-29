@@ -114,7 +114,7 @@
   asking: Lock section on zarcillo
   asking: Silence alerts on all hosts
   [downtime] Setting downtime on A:db-section-s8
-  Dry-running sre.hosts.downtime ['--hours', '1', '-r', 'Primary switchover s8 T409818', 'A:db-section-s8']
+  Dry-running cookbook: ['sudo', 'cookbook', 'sre.hosts.downtime', '--hours', '1', '-r', 'Primary switchover s8 T409818', 'A:db-section-s8']
   asking: Set new primary db2161 dbctl weight to 0
   Dry-running dbctl cmdline: 'instance db2161 set-weight 0'
   [dbctl] Waiting for dbctl diff to be empty
@@ -161,7 +161,7 @@
   Dry-running local cmd sudo cumin 'dborch*' 'orchestrator-client -c untag -i db2161 --tag name=candidate'
   Dry-running local cmd sudo cumin 'dborch*' 'orchestrator-client -c tag -i db2165 --tag name=candidate'
   asking: Depool db2165
-  Dry-running sre.mysql.depool ['--reason', '<mocked admin reason>', '-t', 'T409818', 'db2165']
+  Dry-running cookbook: ['sudo', 'cookbook', 'sre.mysql.depool', '--reason', '<mocked admin reason>', '-t', 'T409818', 'db2165']
   ▶ Completed
   Releasing lock
   
@@ -206,6 +206,7 @@
   asking: Lock section on zarcillo
   asking: Silence alerts on all hosts
   [downtime] Setting downtime on A:db-section-s8
+  Running cookbook: ['sudo', 'cookbook', 'sre.hosts.downtime', '--hours', '1', '-r', 'Primary switchover s8 T409818', 'A:db-section-s8']
   asking: Set new primary db2161 dbctl weight to 0
   [dbctl] Waiting for dbctl diff to be empty
   [set_weight] Setting weight for db2161 to 0
@@ -255,6 +256,7 @@
   mock-running <<sudo cumin 'dborch*' 'orchestrator-client -c untag -i db2161 --tag name=candidate'>>
   mock-running <<sudo cumin 'dborch*' 'orchestrator-client -c tag -i db2165 --tag name=candidate'>>
   asking: Depool db2165
+  Running cookbook: ['sudo', 'cookbook', 'sre.mysql.depool', '--reason', '<mocked admin reason>', '-t', 'T409818', 'db2165']
   ▶ Completed
   Releasing lock
   
@@ -304,6 +306,7 @@
   asking: Lock section on zarcillo
   asking: Silence alerts on all hosts
   [downtime] Setting downtime on A:db-section-s3
+  Running cookbook: ['sudo', 'cookbook', 'sre.hosts.downtime', '--hours', '1', '-r', 'Primary switchover s3 None', 'A:db-section-s3']
   asking: Set new primary db1189 dbctl weight to 0
   [dbctl] Waiting for dbctl diff to be empty
   [set_weight] Setting weight for db1189 to 0
@@ -349,6 +352,7 @@
   mock-running <<sudo cumin 'dborch*' 'orchestrator-client -c untag -i db1189 --tag name=candidate'>>
   mock-running <<sudo cumin 'dborch*' 'orchestrator-client -c tag -i db1223 --tag name=candidate'>>
   asking: Depool db1223
+  Running cookbook: ['sudo', 'cookbook', 'sre.mysql.depool', '--reason', '<mocked admin reason>', 'db1223']
   ▶ Completed
   Releasing lock
   
