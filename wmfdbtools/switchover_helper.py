@@ -89,14 +89,13 @@ def run_dbctl_cmd(dryrun: bool, cmdline: str) -> None:
         raise RuntimeError(f"dbctl command [{cmdline}] failed")
 
 
-def _runcmd(dryrun: bool, cmdline: str) -> str:
+def _runcmd(dryrun: bool, cmdline: str) -> None:
     if dryrun:
         log.info(f"Dry-running local cmd {cmdline}")
         return ""
 
     log.info(f"Running local cmd {cmdline}")
-    res = subprocess.check_output(cmdline, shell=True, text=True)
-    return res
+    subprocess.check_call(cmdline, shell=True, text=True)
 
 
 # # HTTP helpers # #
@@ -731,11 +730,13 @@ def _run_switchover(
 
     if ask(f"Disable puppet on old primary {oldpri}"):
         if not dryrun:
-            spicerack.puppet(oldpri).disable(admin_reason)
+            rh = spicerack.remote().query("{oldpri}.*")
+            spicerack.puppet(rh).disable(admin_reason)
 
     if ask(f"Disable puppet on new primary {newpri}"):
         if not dryrun:
-            spicerack.puppet(newpri).disable(admin_reason)
+            rh = spicerack.remote().query("{newpri}.*")
+            spicerack.puppet(rh).disable(admin_reason)
 
     say("Merge gerrit puppet change to promote the primary")
     say("DIY: run this after merging on Gerrit: ssh puppetserver1001.eqiad.wmnet -t sudo -i puppet-merge")
@@ -819,13 +820,15 @@ def _cleanup(
     if ask(f"Enable and run puppet on old primary {oldpri}"):
         step("run_puppet", "Run puppet on old primary")
         if not dryrun:
-            p = spicerack.puppet(oldpri)
+            rh = spicerack.remote().query("{oldpri}.*")
+            p = spicerack.puppet(rh)
             confirm_on_failure(p.run, batch_size=50, enable_reason=admin_reason)
 
     if ask(f"Enable and run on new primary {newpri}"):
         step("run_puppet", "Run puppet on new primary")
         if not dryrun:
-            p = spicerack.puppet(newpri)
+            rh = spicerack.remote().query("{oldpri}.*")
+            p = spicerack.puppet(rh)
             confirm_on_failure(p.run, batch_size=50, enable_reason=admin_reason)
 
     if ask(f"Run set-master query on {newpri}"):

@@ -390,6 +390,8 @@ def test_run_switch_on_active_dc_ok(m_find_cand, mzarc_get, mzarc_post, mruncmd,
 
     sh._extract_db_instance = mock_extract_db_instance("db2165", "db2161")
 
+    mock_sr.remote.return_value.query.return_value = "remote.query mock"
+
     # Run the switchover
     taskid = "T409818"
     sh._run(mock_sr, "s8", "codfw", taskid, "switch")
@@ -403,11 +405,15 @@ def test_run_switch_on_active_dc_ok(m_find_cand, mzarc_get, mzarc_post, mruncmd,
         call.dbctl(),
         call.dbctl(),
         call.admin_reason("primary switchover in s8 T409818"),
-        call.puppet("db2165"),
-        call.puppet("db2161"),
+        call.remote(),
+        call.puppet("remote.query mock"),
+        call.remote(),
+        call.puppet("remote.query mock"),
         call.sal_logger.info("Starting s8 codfw failover from db2165 to db2161 - T409818"),
-        call.puppet("db2165"),
-        call.puppet("db2161"),
+        call.remote(),
+        call.puppet("remote.query mock"),
+        call.remote(),
+        call.puppet("remote.query mock"),
     ]
 
     assert mock_sr.method_calls == exp
