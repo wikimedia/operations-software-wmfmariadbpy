@@ -98,6 +98,11 @@ def _runcmd(dryrun: bool, cmdline: str) -> None:
     subprocess.check_call(cmdline, shell=True, text=True)
 
 
+def puppet(sr: Spicerack, hn: str):
+    rh = sr.remote().query(f"{hn}.*")
+    return sr.puppet(rh)
+
+
 # # HTTP helpers # #
 
 _http_client = httpx.Client(timeout=15.0, transport=httpx.HTTPTransport(retries=3))
@@ -730,13 +735,13 @@ def _run_switchover(
 
     if ask(f"Disable puppet on old primary {oldpri}"):
         if not dryrun:
-            rh = spicerack.remote().query("{oldpri}.*")
-            spicerack.puppet(rh).disable(admin_reason)
+            p = puppet(spicerack, oldpri)
+            p.disable(admin_reason)
 
     if ask(f"Disable puppet on new primary {newpri}"):
         if not dryrun:
-            rh = spicerack.remote().query("{newpri}.*")
-            spicerack.puppet(rh).disable(admin_reason)
+            p = puppet(spicerack, newpri)
+            p.disable(admin_reason)
 
     say("Merge gerrit puppet change to promote the primary")
     say("DIY: run this after merging on Gerrit: ssh puppetserver1001.eqiad.wmnet -t sudo -i puppet-merge")
@@ -820,15 +825,13 @@ def _cleanup(
     if ask(f"Enable and run puppet on old primary {oldpri}"):
         step("run_puppet", "Run puppet on old primary")
         if not dryrun:
-            rh = spicerack.remote().query("{oldpri}.*")
-            p = spicerack.puppet(rh)
+            p = puppet(spicerack, oldpri)
             confirm_on_failure(p.run, batch_size=50, enable_reason=admin_reason)
 
     if ask(f"Enable and run on new primary {newpri}"):
         step("run_puppet", "Run puppet on new primary")
         if not dryrun:
-            rh = spicerack.remote().query("{oldpri}.*")
-            p = spicerack.puppet(rh)
+            p = puppet(spicerack, newpri)
             confirm_on_failure(p.run, batch_size=50, enable_reason=admin_reason)
 
     if ask(f"Run set-master query on {newpri}"):
