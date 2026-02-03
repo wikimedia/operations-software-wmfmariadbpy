@@ -892,7 +892,11 @@ def parse_args():
 
 def main() -> None:
     args = parse_args()
-    spicerack = Spicerack()
+    if args.action == "switch":
+        spicerack = Spicerack(dry_run=False)
+    else:
+        spicerack = Spicerack(dry_run=True)
+
     _run(spicerack, args.section, args.dc, args.task_id, args.action)
 
 
