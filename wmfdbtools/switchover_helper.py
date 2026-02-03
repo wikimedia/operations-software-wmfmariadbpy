@@ -481,12 +481,6 @@ def set_weight_in_dbctl(dryrun: bool, dbctl: Dbctl, reason: Reason, hn: str, wei
     return True
 
 
-def _run_vertical_query(mi: MInst, sql: str) -> dict[str, str]:
-    vars = mi.run_vertical_query(sql)
-    # e.g. [{"Variable_name": "wsrep_sync_wait", "Value": "0"}, ... ]
-    return {v["Variable_name"]: v["Value"] for v in vars}
-
-
 def _compare_mariadb_variables(
     oldpri: str, old_pri_mi: MInst, newpri: str, new_pri_mi: MInst, is_active_dc: bool
 ) -> bool:
@@ -514,8 +508,9 @@ def _compare_mariadb_variables(
         "collation_server",
     ]
 
-    old_vars = _run_vertical_query(old_pri_mi, "SHOW VARIABLES")
-    new_vars = _run_vertical_query(new_pri_mi, "SHOW VARIABLES")
+    # e.g. [{ "Slave_IO_State": "Waiting for master to send event", "Master_Host": "db2230.codfw.wmnet", ... }]
+    old_vars = old_pri_mi.run_vertical_query("SHOW VARIABLES")[0]
+    new_vars = new_pri_mi.run_vertical_query("SHOW VARIABLES")[0]
     log.info("MariaDB variables check:")
     ok = True
     for vn in varnames:
@@ -574,8 +569,8 @@ def _check_replication_health(oldpri: str, oldpri_mi: MInst, newpri: str, newpri
         log.error(f"  ✖ {msg}")
         ok = False  # TODO
 
-    old_repl = _run_vertical_query(oldpri_mi, "SHOW SLAVE STATUS")
-    new_repl = _run_vertical_query(newpri_mi, "SHOW SLAVE STATUS")
+    old_repl = oldpri_mi.run_vertical_query("SHOW SLAVE STATUS")[0]
+    new_repl = newpri_mi.run_vertical_query("SHOW SLAVE STATUS")[0]
 
     old_is_following = old_repl.get("Slave_IO_Running") == "Yes"
 
