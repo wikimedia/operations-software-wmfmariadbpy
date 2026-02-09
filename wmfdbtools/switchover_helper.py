@@ -554,7 +554,7 @@ def _compare_mariadb_variables(
 
 
 def _check_replication_health(oldpri: str, oldpri_mi: MInst, newpri: str, newpri_mi: MInst, is_active_dc: bool) -> bool:
-    log.info("Checking replication status")
+    log.info("Checking replication status after switchover")
 
     ok = True
 
@@ -569,71 +569,83 @@ def _check_replication_health(oldpri: str, oldpri_mi: MInst, newpri: str, newpri
         log.error(f"  ✖ {msg}")
         ok = False  # TODO
 
-    old_repl = oldpri_mi.run_vertical_query("SHOW SLAVE STATUS")[0]
-    new_repl = newpri_mi.run_vertical_query("SHOW SLAVE STATUS")[0]
+    # On active DC the newpri should return None
+    li = newpri_mi.run_vertical_query("SHOW SLAVE STATUS")
+    new_repl = li[0] if li else None
 
-    old_is_following = old_repl.get("Slave_IO_Running") == "Yes"
+    new_is_following = new_repl and new_repl.get("Slave_IO_Running") == "Yes"
 
     if is_active_dc:
-        if old_is_following:
-            error(f"{oldpri} has replication running as a follower (should be primary)")
+        if new_is_following:
+            error(f"{newpri} has replication running as a follower (should be primary)")
         else:
-            good(f"{oldpri} is the primary and not following replication")
+            good(f"{newpri} is the primary and not following replication")
 
     else:
-        if old_is_following:
-            good(f"{oldpri} is in a standby DC and following replication")
+        if new_is_following:
+            good(f"{newpri} is in a standby DC and following replication")
         else:
-            error(f"{oldpri} is in a standby DC and not following replication")
+            error(f"{newpri} is in a standby DC and not following replication")
 
-    good(f"{oldpri} is not replicating (confirmed as current primary)")
+    if new_repl:
+        if new_repl.get("Slave_IO_Running") != "Yes":
+            error(f"{newpri} Slave_IO_Running: {new_repl.get('Slave_IO_Running')}")
+        else:
+            good(f"{newpri} IO thread running")
 
-    if new_repl.get("Slave_IO_Running") != "Yes":
-        error(f"{newpri} Slave_IO_Running: {new_repl.get('Slave_IO_Running')}")
-    else:
-        good(f"{newpri} IO thread running")
+        if new_repl.get("Slave_SQL_Running") != "Yes":
+            error(f"{newpri} Slave_SQL_Running: {new_repl.get('Slave_SQL_Running')}")
+        else:
+            good(f"{newpri} SQL thread running")
 
-    if new_repl.get("Slave_SQL_Running") != "Yes":
-        error(f"{newpri} Slave_SQL_Running: {new_repl.get('Slave_SQL_Running')}")
-    else:
-        good(f"{newpri} SQL thread running")
+        last_io_error = new_repl.get("Last_IO_Error", "")
+        last_sql_error = new_repl.get("Last_SQL_Error", "")
+        if last_io_error:
+            warn(f"{newpri} Last_IO_Error: {last_io_error}")
 
-    last_io_error = new_repl.get("Last_IO_Error", "")
-    last_sql_error = new_repl.get("Last_SQL_Error", "")
-    if last_io_error:
-        warn(f"{newpri} Last_IO_Error: {last_io_error}")
+        if last_sql_error:
+            warn(f"{newpri} Last_SQL_Error: {last_sql_error}")
 
-    if last_sql_error:
-        warn(f"{newpri} Last_SQL_Error: {last_sql_error}")
+        if not last_io_error and not last_sql_error:
+            good(f"{newpri} no replication errors")
 
-    if not last_io_error and not last_sql_error:
-        good(f"{newpri} no replication errors")
+        seconds_behind = new_repl.get("Seconds_Behind_Master") or 9999
+        try:
+            lag = int(seconds_behind)
+            if lag > 60:
+                error(f"{newpri} has {lag} seconds lag")
+            elif lag > 10:
+                warn(f"{newpri} has {lag} seconds")
+            else:
+                good(f"{newpri} lag is {lag} seconds")
+        except (ValueError, TypeError):
+            error(f"{newpri} invalid Seconds_Behind_Master: {seconds_behind}")
 
-    seconds_behind = new_repl.get("Seconds_Behind_Master") or 9999
+        master_host = new_repl.get("Master_Host", "")
+        src_hostname = master_host.split(":", 1)[0].split(".", 1)[0]
+        src_port = new_repl.get("Master_Port")
+        log.info(f"  ℹ {newpri} is replicating from {master_host} port {src_port}")
+
+        if oldpri != src_hostname:
+            warn(f"{newpri} is replicating from {master_host}, not {oldpri}")
+
+        using_gtid = new_repl.get("Using_Gtid", "No")
+        if using_gtid != "No":
+            log.info(f"  ℹ {newpri} Using_Gtid: {using_gtid}")
+            if using_gtid != "Slave_Pos":
+                warn(f"{newpri} Using_Gtid: {using_gtid}")
+
+    # Also check old primary, optionally
     try:
-        lag = int(seconds_behind)
-        if lag > 60:
-            error(f"{newpri} has {lag} seconds lag")
-        elif lag > 10:
-            warn(f"{newpri} has {lag} seconds")
+        li = oldpri_mi.run_vertical_query("SHOW SLAVE STATUS")
+        old_repl = li[0] if li else None
+        old_is_following = old_repl and old_repl.get("Slave_IO_Running") == "Yes"
+        if old_is_following:
+            good(f"{oldpri} is following replication")
         else:
-            good(f"{newpri} lag is {lag} seconds")
-    except (ValueError, TypeError):
-        error(f"{newpri} invalid Seconds_Behind_Master: {seconds_behind}")
-
-    master_host = new_repl.get("Master_Host", "")
-    src_hostname = master_host.split(":", 1)[0].split(".", 1)[0]
-    src_port = new_repl.get("Master_Port")
-    log.info(f"  ℹ {newpri} is replicating from {master_host} port {src_port}")
-
-    if oldpri != src_hostname:
-        warn(f"{newpri} is replicating from {master_host}, not {oldpri}")
-
-    using_gtid = new_repl.get("Using_Gtid", "No")
-    if using_gtid != "No":
-        log.info(f"  ℹ {newpri} Using_Gtid: {using_gtid}")
-        if using_gtid != "Slave_Pos":
-            warn(f"{newpri} Using_Gtid: {using_gtid}")
+            error(f"{oldpri} is not following replication")
+    except Exception:
+        error(f"{oldpri} - unable to fetch replication status")
 
     return ok
 
