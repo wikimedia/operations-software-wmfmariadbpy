@@ -119,7 +119,7 @@
   Dry-running dbctl cmdline: 'instance db2161 set-weight 0'
   [dbctl] Waiting for dbctl diff to be empty
   asking: Topology changes, move all replicas under the new primary
-  Dry-running local cmd sudo db-switchover --timeout=25 --only-slave-move db2165 db2161
+  Dry-running local cmd sudo db-switchover --timeout=25 --only-slave-move db2165.codfw.wmnet db2161.codfw.wmnet
   asking: Disable puppet on old primary db2165
   asking: Disable puppet on new primary db2161
   ▶ Merge gerrit puppet change to promote the primary
@@ -135,7 +135,7 @@
   ▶ Check that s8 is indeed read-only
   asking: Switch primaries
   [switch_primary] Switching db2165 db2161 in s8
-  Dry-running local cmd sudo db-switchover --skip-slave-move db2165 db2161
+  Dry-running local cmd sudo db-switchover --skip-slave-move db2165.codfw.wmnet db2161.codfw.wmnet
   asking: Promote new primary in dbctl and set both sections to read-write
   Dry-running dbctl cmdline: '--scope codfw section s8 set-master db2161'
   Dry-running dbctl cmdline: '--scope eqiad section s8 rw'
@@ -212,7 +212,7 @@
   [set_weight] Setting weight for db2161 to 0
   <dbctl.instance.weight announce_message>
   asking: Topology changes, move all replicas under the new primary
-  mock-running <<sudo db-switchover --timeout=25 --only-slave-move db2165 db2161>>
+  mock-running <<sudo db-switchover --timeout=25 --only-slave-move db2165.codfw.wmnet db2161.codfw.wmnet>>
   asking: Disable puppet on old primary db2165
   asking: Disable puppet on new primary db2161
   ▶ Merge gerrit puppet change to promote the primary
@@ -225,7 +225,7 @@
   ▶ Check that s8 is indeed read-only
   asking: Switch primaries
   [switch_primary] Switching db2165 db2161 in s8
-  mock-running <<sudo db-switchover --skip-slave-move db2165 db2161>>
+  mock-running <<sudo db-switchover --skip-slave-move db2165.codfw.wmnet db2161.codfw.wmnet>>
   Checking replication status
   <<mocked SHOW SLAVE STATUS on db2165>>
   <<mocked SHOW SLAVE STATUS on db2161>>
@@ -312,7 +312,7 @@
   [set_weight] Setting weight for db1189 to 0
   <dbctl.instance.weight announce_message>
   asking: Topology changes, move all replicas under the new primary
-  mock-running <<sudo db-switchover --timeout=25 --replicating-master --read-only-master --only-slave-move db1223 db1189>>
+  mock-running <<sudo db-switchover --timeout=25 --replicating-master --read-only-master --only-slave-move db1223.eqiad.wmnet db1189.eqiad.wmnet>>
   asking: Disable puppet on old primary db1223
   asking: Disable puppet on new primary db1189
   ▶ Merge gerrit puppet change to promote the primary
@@ -322,7 +322,7 @@
   asking: Log the failover on irc
   asking: Switch primaries
   [switch_primary] Switching db1223 db1189 in s3
-  mock-running <<sudo db-switchover --replicating-master --read-only-master --skip-slave-move db1223 db1189>>
+  mock-running <<sudo db-switchover --replicating-master --read-only-master --skip-slave-move db1223.eqiad.wmnet db1189.eqiad.wmnet>>
   Checking replication status
   <<mocked SHOW SLAVE STATUS on db1223>>
   <<mocked SHOW SLAVE STATUS on db1189>>

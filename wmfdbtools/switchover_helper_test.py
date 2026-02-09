@@ -129,11 +129,11 @@ def mock_runcmd_s8(dryrun: bool, cmd: str) -> str:
     log.info(f"mock-running <<{cmd}>>")
     expected_cmds = [
         # section: s8 db2165 -> db2161
-        "sudo db-switchover --skip-slave-move db2165 db2161",
+        "sudo db-switchover --skip-slave-move db2165.codfw.wmnet db2161.codfw.wmnet",
         '''sudo db-mysql db2161 heartbeat -e "DELETE FROM heartbeat WHERE file LIKE 'db2165%';"''',
         "sudo cumin 'dborch*' 'orchestrator-client -c untag -i db2161 --tag name=candidate'",
         "sudo cumin 'dborch*' 'orchestrator-client -c tag -i db2165 --tag name=candidate'",
-        "sudo db-switchover --timeout=25 --only-slave-move db2165 db2161",
+        "sudo db-switchover --timeout=25 --only-slave-move db2165.codfw.wmnet db2161.codfw.wmnet",
     ]
     if cmd in expected_cmds:
         return f"<mock cmd output for {cmd}>"
@@ -145,11 +145,11 @@ def mock_runcmd_s8_fail_repl(dryrun: bool, cmd: str) -> str:
     log.info(f"mock-running <<{cmd}>>")
     expected_cmds = [
         # section: s8 db2165 -> db2161
-        "sudo db-switchover --skip-slave-move db2165 db2161",
+        "sudo db-switchover --skip-slave-move db2165.eqiad.wmnet db2161.eqiad.wmnet",
         '''sudo db-mysql db2161 heartbeat -e "DELETE FROM heartbeat WHERE file LIKE 'db2165%';"''',
         "sudo cumin 'dborch*' 'orchestrator-client -c untag -i db2161 --tag name=candidate'",
         "sudo cumin 'dborch*' 'orchestrator-client -c tag -i db2165 --tag name=candidate'",
-        "sudo db-switchover --timeout=25 --only-slave-move db2165 db2161",
+        "sudo db-switchover --timeout=25 --only-slave-move db2165.eqiad.wmnet db2161.eqiad.wmnet",
     ]
     if cmd in expected_cmds:
         return f"<mock cmd output for {cmd}>"
@@ -182,13 +182,13 @@ def mock_runcmd_s3(dryrun: bool, cmd: str) -> str:
         # section: s3
         # test: test_run_switch_on_standby_dc
         #
-        "sudo db-switchover --timeout=25 --replicating-master --read-only-master --only-slave-move db1223 db1189",
-        "sudo db-switchover --replicating-master --read-only-master --skip-slave-move db1223 db1189",
+        "sudo db-switchover --timeout=25 --replicating-master --read-only-master --only-slave-move db1223.eqiad.wmnet db1189.eqiad.wmnet",
+        "sudo db-switchover --replicating-master --read-only-master --skip-slave-move db1223.eqiad.wmnet db1189.eqiad.wmnet",
         '''sudo db-mysql db1189 heartbeat -e "DELETE FROM heartbeat WHERE file LIKE 'db1223%';"''',
         "sudo cumin 'dborch*' 'orchestrator-client -c untag -i db1189 --tag name=candidate'",
         "sudo cumin 'dborch*' 'orchestrator-client -c tag -i db1223 --tag name=candidate'",
-        "sudo db-switchover --timeout=25 --only-slave-move db1223 db1189",
-        "sudo db-switchover --skip-slave-move db1223 db1189",
+        "sudo db-switchover --timeout=25 --only-slave-move db1223.eqiad.wmnet db1189.eqiad.wmnet",
+        "sudo db-switchover --skip-slave-move db1223.eqiad.wmnet db1189.eqiad.wmnet",
     ]
     # s3 test
     if cmd in expected_cmds:
