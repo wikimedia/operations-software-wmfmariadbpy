@@ -703,6 +703,8 @@ def _run_switchover(
     dbctl_dryrun = dryrun or section == "test-s4"
     oldpri_mi = _extract_db_instance(spicerack, oldpri, dc)
     newpri_mi = _extract_db_instance(spicerack, newpri, dc)
+    oldprifq = f"{oldpri}.{dc}.wmnet"
+    newprifq = f"{newpri}.{dc}.wmnet"
 
     if taskid:
         admin_reason = spicerack.admin_reason(f"primary switchover in {section} {taskid}")
@@ -721,11 +723,11 @@ def _run_switchover(
 
     if ask("Topology changes, move all replicas under the new primary"):
         if is_active_dc:
-            cmd = f"sudo db-switchover --timeout=25 --only-slave-move {oldpri} {newpri}"
+            cmd = f"sudo db-switchover --timeout=25 --only-slave-move {oldprifq} {newprifq}"
             _runcmd(dryrun, cmd)
         else:
             cmd = "sudo db-switchover --timeout=25 --replicating-master --read-only-master "
-            cmd += f"--only-slave-move {oldpri} {newpri}"
+            cmd += f"--only-slave-move {oldprifq} {newprifq}"
             _runcmd(dryrun, cmd)
 
     if ask(f"Disable puppet on old primary {oldpri}"):
@@ -761,9 +763,9 @@ def _run_switchover(
     if ask("Switch primaries"):
         step("switch_primary", f"Switching {oldpri} {newpri} in {section}")
         if is_active_dc:
-            _runcmd(dryrun, f"sudo db-switchover --skip-slave-move {oldpri} {newpri}")
+            _runcmd(dryrun, f"sudo db-switchover --skip-slave-move {oldprifq} {newprifq}")
         else:
-            cmd = f"sudo db-switchover --replicating-master --read-only-master --skip-slave-move {oldpri} {newpri}"
+            cmd = f"sudo db-switchover --replicating-master --read-only-master --skip-slave-move {oldprifq} {newprifq}"
             _runcmd(dryrun, cmd)
 
     repl_is_ok = _check_replication_health(oldpri, oldpri_mi, newpri, newpri_mi, is_active_dc)
