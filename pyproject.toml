@@ -19,3 +19,13 @@ strict_equality = true
 warn_return_any = true
 warn_unused_configs = true
 warn_unused_ignores = true
+
+[tool.ruff]
+line-length = 120
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning:pyparsing.*",
+    "ignore::DeprecationWarning:cumin.*",
+    "ignore::UserWarning:pkg_resources",
+]

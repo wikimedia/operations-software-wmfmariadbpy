@@ -7,7 +7,6 @@ import argparse
 import subprocess
 import sys
 import re
-import json
 from pathlib import Path
 import yaml
 
@@ -20,7 +19,7 @@ def git_commit(file: Path, msg: str) -> None:
     subprocess.run(["git", "add", fn], check=True)
     try:
         subprocess.run(["git", "commit", fn, "-m", msg], check=True)
-        print(f"Committed")
+        print("Committed")
     except subprocess.CalledProcessError as e:
         print(f"Git failed: {e} - remember cleanup the git repo")
         sys.exit(1)
@@ -37,7 +36,7 @@ def extract_dc(hostname: str) -> str:
 
 def ask_confirmation(q: str) -> bool:
     while True:
-        response = input(f"y/n? ").strip().lower()
+        response = input("y/n? ").strip().lower()
         if response in ("y", "yes"):
             return True
         if response in ("n", "no"):
@@ -78,7 +77,7 @@ def handle_file(file: Path, file_data: dict[str, str], interactive: bool) -> boo
     if interactive:
         prompt = f"{action} {file} ({status})?"
         if not ask_confirmation(prompt):
-            print(f"Skipped")
+            print("Skipped")
             return False
 
     try:
