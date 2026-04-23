@@ -3,6 +3,7 @@ enabled = true
 live_mode = true
 
 [tool.mypy]
+python_version = "3.11"
 check_untyped_defs = true
 disallow_any_generics = true
 disallow_incomplete_defs = true
@@ -19,6 +20,9 @@ strict_equality = true
 warn_return_any = true
 warn_unused_configs = true
 warn_unused_ignores = true
+
+plugins = ["pydantic.mypy"]
+exclude = ["venv", ".venv", "tests"]
 
 [tool.ruff]
 line-length = 120

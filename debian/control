@@ -9,7 +9,11 @@ X-Python3-Version: >= 3.9
 
 Package: python3-wmfmariadbpy
 Architecture: any
-Depends: ${python3:Depends}, ${misc:Depends}
+Depends:
+ ${python3:Depends},
+ ${misc:Depends},
+ python3-pydantic,
+ python3-httpx,
 Description: Libraries for interacting with WMF's mariadb deployments
  wmfmariadbpy is a set of Python 3 libraries for interacting with and
  maintaining mariadb deployments.
