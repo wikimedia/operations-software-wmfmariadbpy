@@ -1,3 +1,9 @@
+wmfmariadbpy (0.13.0-1) trixie-wikimedia; urgency=medium
+
+  * Add zarclient
+
+ -- Federico Ceratto <fceratto@wikimedia.org>  Thu, 23 Apr 2026 11:40:21 +0200
+
 wmfmariadbpy (0.12.2-1) trixie-wikimedia; urgency=medium
 
   * Standardise release and backport versioning
