@@ -146,12 +146,7 @@ class Instance:
         output = ", ".join(fields)
         if level < 10:  # prevent infinite loops
             for replica in sorted(self.replicas, key=attrgetter("name")):
-                output += (
-                    "\n"
-                    + " " * (level * 2)
-                    + replica.print_replication()
-                    + replica.console(level=level + 1)
-                )
+                output += "\n" + " " * (level * 2) + replica.print_replication() + replica.console(level=level + 1)
         return output
 
     def __str__(self):
@@ -159,20 +154,14 @@ class Instance:
 
 
 def handle_parameters():
-    parser = argparse.ArgumentParser(
-        description=("Shows in console a summary of a replication graph")
-    )
-    parser.add_argument(
-        "instance", help=("Host part of the replica set which information is shown")
-    )
-    parser.add_argument(
-        "--no-color", action="store_true", help="Disable colored output"
-    )
+    parser = argparse.ArgumentParser(description=("Shows in console a summary of a replication graph"))
+    parser.add_argument("instance", help=("Host part of the replica set which information is shown"))
+    parser.add_argument("--no-color", action="store_true", help="Disable colored output")
     options = parser.parse_args()
     return options
 
 
-seen_instances = set()
+seen_instances: set[str] = set()
 
 
 def get_instance_data(instance, no_color):
