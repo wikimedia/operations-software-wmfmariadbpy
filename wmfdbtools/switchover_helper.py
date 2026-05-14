@@ -109,7 +109,7 @@ def puppet(sr: Spicerack, hn: str):
 _http_client = httpx.Client(timeout=15.0, transport=httpx.HTTPTransport(retries=3))
 _unix_username = os.getlogin()
 _zarcillo_client = httpx.Client(
-    base_url="https://zarcillo.wikimedia.org",
+    base_url="https://zarcillo.wikimedia.org/",
     timeout=15.0,
     transport=httpx.HTTPTransport(retries=3),
     headers={"X-WMF-Username": _unix_username},
@@ -521,6 +521,8 @@ def _compare_mariadb_variables(
             log.info(f"  ✓ {vn}")
         else:
             if vn == "innodb_buffer_pool_size":
+                assert a != "<missing>"
+                assert b != "<missing>"
                 delta = abs(int(a) - int(b)) / float(a) * 100
                 if delta < 1:
                     log.info(f"  ✓ {vn}  percentage difference: {delta:.2}%")
@@ -610,7 +612,8 @@ def _check_replication_health(oldpri: str, oldpri_mi: MInst, newpri: str, newpri
         if not last_io_error and not last_sql_error:
             good(f"{newpri} no replication errors")
 
-        seconds_behind = new_repl.get("Seconds_Behind_Master") or 9999
+        sbm = new_repl.get("Seconds_Behind_Master")
+        seconds_behind = 9999 if sbm is None else sbm
         try:
             lag = int(seconds_behind)
             if lag > 60:
@@ -726,12 +729,12 @@ def _run_switchover(
 
     if ask("Silence alerts on all hosts"):
         step("downtime", f"Setting downtime on A:db-section-{section}")
-        args = ["--hours", "1", "-r", f"Primary switchover {section} {taskid}", f"A:db-section-{section}"]
+        opt_task = f" {taskid}" if taskid else ""
+        args = ["--hours", "1", "-r", f"Primary switchover {section}{opt_task}", f"A:db-section-{section}"]
         _run_cookbook(dryrun, "sre.hosts.downtime", args)
 
     if section != "test-s4":
         if ask(f"Set new primary {newpri} dbctl weight to 0"):
-            run_dbctl_cmd(dbctl_dryrun, f"instance {newpri} set-weight 0")
             set_weight_in_dbctl(dryrun, dbctl, admin_reason, newpri, 0)
 
     if ask("Topology changes, move all replicas under the new primary"):
