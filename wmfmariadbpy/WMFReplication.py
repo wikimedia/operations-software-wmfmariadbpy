@@ -1079,4 +1079,3 @@ class WMFReplication:
         Useful when a blocking query like show slave status wants to be avoided (e.g. it has to be
         fast and/or run many times) or a better lag detection is needed.
         """
-        pass

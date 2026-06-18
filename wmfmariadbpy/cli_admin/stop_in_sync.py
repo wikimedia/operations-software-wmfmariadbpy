@@ -15,12 +15,8 @@ def handle_parameters():
             "directly from the same master) on the same coordinate"
         )
     )
-    parser.add_argument(
-        "instance1", help=("Instance #1 to be stopped, in hostname:port format")
-    )
-    parser.add_argument(
-        "instance2", help=("Instance #2 to be stopped, in hostname:port format")
-    )
+    parser.add_argument("instance1", help=("Instance #1 to be stopped, in hostname:port format"))
+    parser.add_argument("instance2", help=("Instance #2 to be stopped, in hostname:port format"))
     parser.add_argument(
         "--timeout",
         type=float,
@@ -47,8 +43,9 @@ def ask_for_confirmation(instance1, instance2):
     answer = ""
     while answer not in ["yes", "no"]:
         answer = input(
-            "Are you sure you want to stop replication "
-            "of {} and {} in sync [yes/no]? ".format(instance1, instance2).lower()
+            "Are you sure you want to stop replication of {} and {} in sync [yes/no]? ".format(
+                instance1, instance2
+            ).lower()
         )
         if answer not in ["yes", "no"]:
             print('Please type "yes" or "no"')
@@ -71,9 +68,7 @@ def main():
     result = instance1_replication.stop_in_sync_with_sibling(instance2)
     if result is None:
         print(
-            "[ERROR]: {} is not a sibling of {}, or they have too much lag".format(
-                instance1.name(), instance2.name()
-            )
+            "[ERROR]: {} is not a sibling of {}, or they have too much lag".format(instance1.name(), instance2.name())
         )
         sys.exit(-1)
     if not result["success"]:

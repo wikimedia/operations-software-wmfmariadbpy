@@ -11,7 +11,6 @@ class hide_stderr:
 
         def write(self, s):
             """Just do nothing."""
-            pass
 
     def __enter__(self):
         """Store the real stderr and place the fake one."""

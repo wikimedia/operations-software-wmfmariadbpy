@@ -28,9 +28,7 @@ class TestMoveReplicaBasic:
     def _enable_gtid(self):
         enable_gtid(10111, [10112, 10113])
 
-    @pytest.mark.parametrize(
-        "with_gtid", [(False), (True)], ids=lambda x: ("GTID" if x else "Non-GTID")
-    )
+    @pytest.mark.parametrize("with_gtid", [(False), (True)], ids=lambda x: "GTID" if x else "Non-GTID")
     def test_sibling_to_child(self, deploy_replicate_all_versions, with_gtid):
         if with_gtid:
             self._enable_gtid()
@@ -47,9 +45,7 @@ class TestMoveReplicaBasic:
         refresh_slave_hosts(10111, deploy_replicate_all_versions, 1)
         self._assert_vertical()
 
-    @pytest.mark.parametrize(
-        "with_gtid", [(False), (True)], ids=lambda x: ("GTID" if x else "Non-GTID")
-    )
+    @pytest.mark.parametrize("with_gtid", [(False), (True)], ids=lambda x: "GTID" if x else "Non-GTID")
     def test_child_to_sibling(self, deploy_replicate_all_versions, with_gtid):
         if with_gtid:
             self._enable_gtid()

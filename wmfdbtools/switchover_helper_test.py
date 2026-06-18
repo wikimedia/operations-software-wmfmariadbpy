@@ -59,7 +59,7 @@ def mock_ask():
     def ask(msg: str) -> bool:
         log.info(f"asking: {msg}")
         if "WARNING" in msg:
-            log.warn("** warning detected, stopping **")
+            log.warning("** warning detected, stopping **")
             return False
         return True
 

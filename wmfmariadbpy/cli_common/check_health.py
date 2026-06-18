@@ -24,9 +24,7 @@ def parse_args():
                         to.""",
         default="localhost",
     )
-    parser.add_argument(
-        "--port", "-P", type=int, help="the port to connect", default=3306
-    )
+    parser.add_argument("--port", "-P", type=int, help="the port to connect", default=3306)
     parser.add_argument(
         "--verbose",
         "-v",
@@ -124,9 +122,7 @@ def parse_args():
         default=4995,
         help="Lag from which a Critical is returned. By default, 300 seconds.",
     )
-    parser.add_argument(
-        "--help", "-?", "-I", action="help", help="show this help message and exit"
-    )
+    parser.add_argument("--help", "-?", "-I", action="help", help="show this help message and exit")
     return parser
 
 
@@ -163,9 +159,7 @@ def get_replication_status(conn, connection_name=None):
         return None
 
 
-def get_heartbeat_status(
-    conn, shard=None, primary_dc="eqiad", db="heartbeat", table="heartbeat"
-):
+def get_heartbeat_status(conn, shard=None, primary_dc="eqiad", db="heartbeat", table="heartbeat"):
     if primary_dc not in ["eqiad", "codfw"]:
         return None
     if shard is None:
@@ -175,9 +169,7 @@ def get_heartbeat_status(
         FROM {}.{}
         WHERE datacenter = '{}'
         GROUP BY shard
-        """.format(
-            db, table, primary_dc
-        )
+        """.format(db, table, primary_dc)
     else:
         query = """
         SELECT shard,
@@ -185,9 +177,7 @@ def get_heartbeat_status(
         FROM {}.{}
         WHERE datacenter = '{}'
         AND shard = '{}'
-        """.format(
-            db, table, primary_dc, shard
-        )
+        """.format(db, table, primary_dc, shard)
     result = conn.execute(query)
     if result["success"] and result["numrows"] > 0:
         status = dict()
@@ -204,9 +194,7 @@ def get_heartbeat_status(
 
 def get_processes(process_name):
     try:
-        return list(
-            map(int, subprocess.check_output(["/bin/pidof", process_name]).split())
-        )
+        return list(map(int, subprocess.check_output(["/bin/pidof", process_name]).split()))
     except subprocess.CalledProcessError:
         return list()
 
@@ -234,9 +222,7 @@ def get_status(options):
     result = mysql.execute(
         """SET SESSION innodb_lock_wait_timeout = {0},
                                   SESSION lock_wait_timeout = {0},
-                                  SESSION wait_timeout = {0}""".format(
-            wait_timeout
-        )
+                                  SESSION wait_timeout = {0}""".format(wait_timeout)
     )
 
     if mysql.connection is None or result is None:
@@ -256,9 +242,7 @@ def get_status(options):
             replication = get_replication_status(mysql)
 
         time_before_heartbeat = time.time()
-        heartbeat = get_heartbeat_status(
-            mysql, primary_dc=options.primary_dc, shard=options.shard
-        )
+        heartbeat = get_heartbeat_status(mysql, primary_dc=options.primary_dc, shard=options.shard)
         time_after_heartbeat = time.time()
         mysql.disconnect()
 
@@ -279,9 +263,7 @@ def get_status(options):
                 try:
                     # We assume we will be always using GMT
                     status["ssl_expiration"] = time.mktime(
-                        datetime.strptime(
-                            ssl_expiration, "%b %d %H:%M:%S %Y %Z"
-                        ).timetuple()
+                        datetime.strptime(ssl_expiration, "%b %d %H:%M:%S %Y %Z").timetuple()
                     )
                 except ValueError:
                     status["ssl_expiration"] = None
@@ -303,18 +285,12 @@ def get_status(options):
                 replication_status = dict()
                 replication_status["Slave_IO_Running"] = channel["Slave_IO_Running"]
                 replication_status["Slave_SQL_Running"] = channel["Slave_SQL_Running"]
-                replication_status["Seconds_Behind_Master"] = channel[
-                    "Seconds_Behind_Master"
-                ]
+                replication_status["Seconds_Behind_Master"] = channel["Seconds_Behind_Master"]
                 io_error = channel["Last_IO_Error"]
-                replication_status["Last_IO_Error"] = (
-                    io_error if io_error != "" else None
-                )
+                replication_status["Last_IO_Error"] = io_error if io_error != "" else None
                 # FIXME may contain private data, needs filtering:
                 sql_error = channel["Last_SQL_Error"]
-                replication_status["Last_SQL_Error"] = (
-                    sql_error if sql_error != "" else None
-                )
+                replication_status["Last_SQL_Error"] = sql_error if sql_error != "" else None
                 status["replication"][channel["Connection_name"]] = replication_status
 
         status["connection_latency"] = time_after_connect - time_before_connect
@@ -371,11 +347,7 @@ def icinga_check(options):
             "y",
         ]
         if status["read_only"] != expected_read_only:
-            crit_msg.append(
-                'read_only: "{}", expected "{}"'.format(
-                    status["read_only"], expected_read_only
-                )
-            )
+            crit_msg.append('read_only: "{}", expected "{}"'.format(status["read_only"], expected_read_only))
         else:
             ok_msg.append("read_only: {}".format(status["read_only"]))
     else:
@@ -390,9 +362,7 @@ def icinga_check(options):
         ]
         if status["event_scheduler"] != expected_event_scheduler:
             crit_msg.append(
-                'event_scheduler: "{}", expected "{}"'.format(
-                    status["event_scheduler"], expected_event_scheduler
-                )
+                'event_scheduler: "{}", expected "{}"'.format(status["event_scheduler"], expected_event_scheduler)
             )
         else:
             ok_msg.append("event_scheduler: {}".format(status["event_scheduler"]))
@@ -421,9 +391,7 @@ def icinga_check(options):
 
     # QPS and latencies (cannot yet generate alarms)
     # Note the monitoring will create ~10 QPS more than if monitoring wasn't active
-    qps = (second_status["total_queries"] - status["total_queries"]) / (
-        second_status["datetime"] - status["datetime"]
-    )
+    qps = (second_status["total_queries"] - status["total_queries"]) / (second_status["datetime"] - status["datetime"])
     ok_msg.append("{:.2f} QPS".format(qps))
 
     ok_msg.append("connection latency: {:.6f}s".format(status["connection_latency"]))

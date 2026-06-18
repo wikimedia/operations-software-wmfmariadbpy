@@ -16,7 +16,7 @@ class SaltExecution(RemoteExecution):
         return [
             "/usr/bin/salt",
             host,
-            "cmd.run" " ".join([shlex.quote(x) for x in command]),
+            "cmd.run ".join([shlex.quote(x) for x in command]),
         ]
 
     def run(self, host, command):
@@ -25,17 +25,13 @@ class SaltExecution(RemoteExecution):
         # result = local.cmd(host, 'cmd.run', command)
         # return result['host']
         print(self.get_salt_command(host, command))
-        return self.localExecution.run(
-            "localhost", self.get_salt_command(host, command)
-        )
+        return self.localExecution.run("localhost", self.get_salt_command(host, command))
 
     def start_job(self, host, command):
         # Salt is not yet Python3-compatible
         # job = local.cmd_async(host, 'cmd.run', command)
         # return job
-        return self.localExecution.start_job(
-            "localhost", self.get_salt_command(host, command)
-        )
+        return self.localExecution.start_job("localhost", self.get_salt_command(host, command))
 
     def monitor_job(self, host, job):
         return self.localExecution.monitor_job("localhost", job)

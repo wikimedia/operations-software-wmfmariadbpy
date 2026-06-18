@@ -20,9 +20,7 @@ def handle_parameters():
         "instance",
         help=("Instance which replication is to be moved, format: hostname:port"),
     )
-    parser.add_argument(
-        "new_master", help=("New master of the instance, format: hostname:port")
-    )
+    parser.add_argument("new_master", help=("New master of the instance, format: hostname:port"))
     parser.add_argument(
         "--timeout",
         type=float,
@@ -50,8 +48,7 @@ def ask_for_confirmation(master, slave):
     answer = ""
     while answer not in ["yes", "no"]:
         answer = input(
-            "Are you sure you want to move instance "
-            "{} to replicate directly from {} [yes/no]? ".format(master, slave)
+            "Are you sure you want to move instance {} to replicate directly from {} [yes/no]? ".format(master, slave)
         ).lower()
         if answer not in ["yes", "no"]:
             print('Please type "yes" or "no"')
@@ -100,9 +97,7 @@ def main():
     if new_master_gtid is not None and new_master_gtid.lower() != "no":
         result = new_master_replication.set_gtid_mode(new_master_gtid)
         if not result:
-            print(
-                "[WARNING] GTID could not be reenabled on {}".format(new_master.name())
-            )
+            print("[WARNING] GTID could not be reenabled on {}".format(new_master.name()))
     sys.exit(0)
 
 
