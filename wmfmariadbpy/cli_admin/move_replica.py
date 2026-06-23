@@ -18,9 +18,9 @@ def handle_parameters():
     )
     parser.add_argument(
         "instance",
-        help=("Instance which replication is to be moved, format: hostname:port"),
+        help="Instance which replication is to be moved, format: hostname:port",
     )
-    parser.add_argument("new_master", help=("New master of the instance, format: hostname:port"))
+    parser.add_argument("new_master", help="New master of the instance, format: hostname:port")
     parser.add_argument(
         "--timeout",
         type=float,

@@ -155,7 +155,7 @@ class Instance:
 
 def handle_parameters():
     parser = argparse.ArgumentParser(description=("Shows in console a summary of a replication graph"))
-    parser.add_argument("instance", help=("Host part of the replica set which information is shown"))
+    parser.add_argument("instance", help="Host part of the replica set which information is shown")
     parser.add_argument("--no-color", action="store_true", help="Disable colored output")
     options = parser.parse_args()
     return options

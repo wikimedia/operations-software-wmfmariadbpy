@@ -15,8 +15,8 @@ def handle_parameters():
             "directly from the same master) on the same coordinate"
         )
     )
-    parser.add_argument("instance1", help=("Instance #1 to be stopped, in hostname:port format"))
-    parser.add_argument("instance2", help=("Instance #2 to be stopped, in hostname:port format"))
+    parser.add_argument("instance1", help="Instance #1 to be stopped, in hostname:port format")
+    parser.add_argument("instance2", help="Instance #2 to be stopped, in hostname:port format")
     parser.add_argument(
         "--timeout",
         type=float,

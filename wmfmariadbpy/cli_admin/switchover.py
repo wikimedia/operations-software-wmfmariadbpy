@@ -24,13 +24,10 @@ def handle_parameters():
             "switchover.py db1052 db1067"
         )
     )
-    parser.add_argument(
-        "master",
-        help=("Original master host, in hostname:port format, to be switched from"),
-    )
+    parser.add_argument("master", help="Original master host, in hostname:port format, to be switched from")
     parser.add_argument(
         "slave",
-        help=("Direct replica host, in hostname:port format, to be switched to, and will become the new master"),
+        help="Direct replica host, in hostname:port format, to be switched to, and will become the new master",
     )
     parser.add_argument(
         "--timeout",
@@ -46,7 +43,7 @@ def handle_parameters():
         "--sleep",
         type=float,
         default=5.0,
-        help=("To sleep after many operations to make sure replication is consumed."),
+        help="To sleep after many operations to make sure replication is consumed.",
     )
     parser.add_argument(
         "--skip-slave-move",
@@ -65,7 +62,7 @@ def handle_parameters():
     parser.add_argument(
         "--skip-heartbeat",
         action="store_true",
-        help=("When set, it does not try to stop heartbeat at the original master, nor start it on the new one."),
+        help="When set, it does not try to stop heartbeat at the original master, nor start it on the new one.",
     )
     parser.add_argument(
         "--replicating-master",
