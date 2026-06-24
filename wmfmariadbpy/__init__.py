@@ -1,9 +1,19 @@
-from pkg_resources import DistributionNotFound, get_distribution
+try:
+    from pkg_resources import (
+        DistributionNotFound as MissingError,
+        get_distribution as version,
+    )
+except ImportError:
+    from importlib.metadata import (
+        PackageNotFoundError as MissingError,
+        version,
+    )
 
 try:
-    __version__ = get_distribution(
-        "wmfmariadbpy"
-    ).version  # Must be the same used as 'name' in setup.py
+    if version.__name__ == "get_distribution":
+        __version__ = version(__name__).version  # Must be the same used as 'name' in setup.py
+    else:
+        __version__ = version(__name__)
     """:py:class:`str`: the version of the current wmfmariadbpy module."""
-except DistributionNotFound:  # pragma: no cover - this should never happen during tests
+except MissingError:  # pragma: no cover - this should never happen during tests
     pass  # package is not installed
