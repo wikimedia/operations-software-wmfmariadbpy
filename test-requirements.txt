@@ -3,7 +3,6 @@ conftool
 coverage
 docker
 dockerpty
-flake8
 httpx
 pip>21
 pytest

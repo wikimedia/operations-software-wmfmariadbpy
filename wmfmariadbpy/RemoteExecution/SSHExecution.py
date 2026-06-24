@@ -26,9 +26,7 @@ class SSHExecution(RemoteExecution):
         return self.localExecution.run("localhost", self.get_ssh_command(host, command))
 
     def start_job(self, host, command):
-        return self.localExecution.start_job(
-            "localhost", self.get_ssh_command(host, command)
-        )
+        return self.localExecution.start_job("localhost", self.get_ssh_command(host, command))
 
     def monitor_job(self, host, job):
         return self.localExecution.monitor_job("localhost", job)

@@ -11,15 +11,10 @@ from wmfmariadbpy.test.integration_env import common, dbver
 
 def query_db(port: int, query: str) -> Union[Tuple[()], List[Dict[str, Any]]]:
     """Run a query against an instance running in the integration-env"""
-    print(
-        "%s Querying localhost:%d: %s"
-        % (datetime.datetime.now().isoformat(), port, query)
-    )
+    print("%s Querying localhost:%d: %s" % (datetime.datetime.now().isoformat(), port, query))
     mycnf = os.path.join(os.path.dirname(__file__), "..", "integration_env", "my.cnf")
     assert os.path.exists(mycnf), mycnf
-    conn = pymysql.connect(
-        host="localhost", port=port, read_default_file=mycnf
-    )  # type:ignore
+    conn = pymysql.connect(host="localhost", port=port, read_default_file=mycnf)  # type:ignore
     cur = conn.cursor(cursor=pymysql.cursors.DictCursor)
     cur.execute(query)
     # Cursor.fetchall() has a very generic return type annotation as it doesn't know
