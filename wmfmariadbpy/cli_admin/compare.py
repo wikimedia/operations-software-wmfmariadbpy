@@ -13,14 +13,10 @@ def parse_args():
     Performs the parsing of execution parameters, and returns the object
     containing them
     """
-    parser = argparse.ArgumentParser(
-        description="Compares the table contents between 2 WMF MySQL/MariaDB servers."
-    )
+    parser = argparse.ArgumentParser(description="Compares the table contents between 2 WMF MySQL/MariaDB servers.")
     parser.add_argument("database", help="Database to connect on both instances")
     parser.add_argument("table", help="Table to compare on both instances")
-    parser.add_argument(
-        "column", help="Numeric id to loop on, normally an autoincrement field"
-    )
+    parser.add_argument("column", help="Numeric id to loop on, normally an autoincrement field")
     parser.add_argument(
         "--step",
         type=int,
@@ -84,9 +80,7 @@ def connect_in_parallel(hosts, database, threads):
     conn = list()
     for host_string in hosts:
         (host, port) = addr_split(host_string)
-        async_result[host + "_" + str(port)] = pool.apply_async(
-            WMFMariaDB, (host, port, database)
-        )
+        async_result[host + "_" + str(port)] = pool.apply_async(WMFMariaDB, (host, port, database))
 
     for host_string in hosts:
         (host, port) = addr_split(host_string)
@@ -107,9 +101,7 @@ def execute_in_parallel(connections, query, verbose):
     if verbose:
         print(query)
     for conn in connections:
-        async_result[conn.host + "_" + str(conn.port)] = pool.apply_async(
-            conn.execute, (query, False)
-        )
+        async_result[conn.host + "_" + str(conn.port)] = pool.apply_async(conn.execute, (query, False))
 
     for conn in connections:
         result.append(async_result[conn.host + "_" + str(conn.port)].get())
@@ -152,11 +144,7 @@ def main():
             print("All tables are empty")
         sys.exit(0)
     elif len(empty_tables) > 0 and len(empty_tables) < len(results):
-        print(
-            "Some tables have rows, but the following are empty: {}".format(
-                ",".join(empty_tables)
-            )
-        )
+        print("Some tables have rows, but the following are empty: {}".format(",".join(empty_tables)))
         sys.exit(1)
 
     # override obtained min_id and max_id if they have been set as parameters
@@ -181,18 +169,14 @@ def main():
             print("ERROR: Could not describe the table, exiting.")
             sys.exit(-1)
 
-    all_columns = ",".join(
-        {"IFNULL(" + x[0] + ", '\\0'),'|'" for x in describe_results[0]["rows"]}
-    )
+    all_columns = ",".join({"IFNULL(" + x[0] + ", '\\0'),'|'" for x in describe_results[0]["rows"]})
     if options.order_by is None or options.order_by == "":
         order_by = options.column
     else:
         order_by = options.order_by
 
     # increase group_concat_max_len
-    command = "SET SESSION group_concat_max_len = {}".format(
-        options.group_concat_max_len
-    )
+    command = "SET SESSION group_concat_max_len = {}".format(options.group_concat_max_len)
     execute_in_parallel(connections, command, options.verbose)
 
     # main comparison loop
@@ -208,9 +192,7 @@ def main():
             if options.print_every != 0:
                 iterations += 1
                 if iterations % options.print_every == 0:
-                    speed = (lower_limit - min_id) / (
-                        datetime.now() - start_time
-                    ).total_seconds()
+                    speed = (lower_limit - min_id) / (datetime.now() - start_time).total_seconds()
                     eta = int((max_id - lower_limit) / speed)
                     print(
                         "{}: row id {}/{}, ETA: {:02}m{:02}s, {} chunk(s) found different".format(
@@ -265,11 +247,7 @@ def main():
         sys.exit(0)
     else:
         if options.print_every != 0:
-            print(
-                "Execution ended, a total of {} chunk(s) are different.".format(
-                    differences
-                )
-            )
+            print("Execution ended, a total of {} chunk(s) are different.".format(differences))
         sys.exit(1)
 
 

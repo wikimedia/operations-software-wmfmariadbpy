@@ -26,7 +26,6 @@ class RemoteExecution(metaclass=abc.ABCMeta):
 
         :param options: dictionary of options
         """
-        pass
 
     @abc.abstractmethod
     def run(self, host, command):
@@ -34,7 +33,6 @@ class RemoteExecution(metaclass=abc.ABCMeta):
         Executes a command on a host and gets blocked until it finishes.
         returns the exit code, the stdout and the stderr.
         """
-        pass
 
     @abc.abstractmethod
     def start_job(self, host, command):
@@ -42,7 +40,6 @@ class RemoteExecution(metaclass=abc.ABCMeta):
         Starts the given command in the background and returns immediately.
         Returns a job id for monitoring purposes.
         """
-        pass
 
     @abc.abstractmethod
     def monitor_job(self, host, job):
@@ -51,18 +48,15 @@ class RemoteExecution(metaclass=abc.ABCMeta):
         the command is still in progress, an integer with the actual code
         returned if it finished.
         """
-        pass
 
     @abc.abstractmethod
     def kill_job(self, host, job):
         """
         Forces the stop of a running job.
         """
-        pass
 
     @abc.abstractmethod
     def wait_job(self, host, job):
         """
         Waits until job finishes, then returns a CommandReturn object.
         """
-        pass

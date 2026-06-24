@@ -107,9 +107,7 @@ def get_credentials(
     elif host == "localhost":
         user = pw.pw_name
         # connnect to localhost using plugin_auth:
-        config = configparser.ConfigParser(
-            interpolation=None, allow_no_value=True, strict=False
-        )
+        config = configparser.ConfigParser(interpolation=None, allow_no_value=True, strict=False)
         config.read("/etc/my.cnf")
         mysql_sock = get_socket_from_port(port)
         ssl = None

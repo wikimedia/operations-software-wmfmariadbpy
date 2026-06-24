@@ -19,9 +19,7 @@ def manage_env():
             returncode=ret.returncode,
         )
     yield
-    ret = subprocess.run(
-        ["integration-env", "stop"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-    )
+    ret = subprocess.run(["integration-env", "stop"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     if ret.returncode != 0:
         pytest.exit(
             "integration env teardown failed: \n\n%s\n." % ret.stdout.decode("utf8"),

@@ -32,9 +32,7 @@ class ParamikoExecution(RemoteExecution):
         client.set_missing_host_key_policy(paramiko.WarningPolicy())
         client.connect(host, username=self.user, port=self.port)
         try:
-            stdinfile, stdoutfile, stderrfile = client.exec_command(
-                " ".join([shlex.quote(x) for x in command])
-            )
+            stdinfile, stdoutfile, stderrfile = client.exec_command(" ".join([shlex.quote(x) for x in command]))
             with stdoutfile as f:
                 stdout = f.read()
             with stderrfile as f:
