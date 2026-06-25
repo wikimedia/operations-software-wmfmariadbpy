@@ -96,10 +96,7 @@ class WMFMariaDB:
             and other_instance.host is not None
             and self.host == other_instance.host
             and self.port == other_instance.port
-            and (
-                (self.socket is None and other_instance.socket is None)
-                or self.socket == other_instance.socket
-            )
+            and ((self.socket is None and other_instance.socket is None) or self.socket == other_instance.socket)
         )
 
     @property
@@ -155,16 +152,10 @@ class WMFMariaDB:
             self.query_limit = int(query_limit * 1000.0)
 
         if self.vendor == "MariaDB":
-            result = self.execute(
-                "SET SESSION max_statement_time = {}".format(self.query_limit)
-            )
+            result = self.execute("SET SESSION max_statement_time = {}".format(self.query_limit))
         else:
-            result = self.execute(
-                "SET SESSION max_execution_time = {}".format(self.query_limit)
-            )
-        return result[
-            "success"
-        ]  # many versions will not accept query time restrictions
+            result = self.execute("SET SESSION max_execution_time = {}".format(self.query_limit))
+        return result["success"]  # many versions will not accept query time restrictions
 
     def execute(self, command, timeout=None, dryrun=False):
         """
@@ -190,10 +181,9 @@ class WMFMariaDB:
         try:
             if dryrun:
                 print(
-                    (
-                        "We will *NOT* execute '{}' on {}:{}/{} because"
-                        "this is a dry run."
-                    ).format(command, self.host, self.port, self.database)
+                    ("We will *NOT* execute '{}' on {}:{}/{} becausethis is a dry run.").format(
+                        command, self.host, self.port, self.database
+                    )
                 )
                 cursor.execute("SELECT 'success' as dryrun")
             else:
@@ -269,11 +259,7 @@ class WMFMariaDB:
         until a new connection is open.
         """
         if self.debug:
-            print(
-                "Disconnecting from {}:{}/{}".format(
-                    self.port, self.host, self.database
-                )
-            )
+            print("Disconnecting from {}:{}/{}".format(self.port, self.host, self.database))
         if self.connection is not None:
             self.connection.close()
             self.connection = None

@@ -99,9 +99,13 @@ def do_preflight_checks(master_replication, slave_replication, timeout, replicat
     slave = slave_replication.connection
     print("Starting preflight checks...")
 
-    while check_instances_table_on_zarcillo(master, slave) is False:
-        print("Fix the `instances` table as needed then press enter")
-        input()
+    for i in range(5):
+        if check_instances_table_on_zarcillo(master, slave):
+            break
+        if i == 4:
+            print("[ERROR]: exiting")
+            sys.exit(-1)
+        input("Fix the `instances` table as needed then press enter to continue or Ctrl-C to exit")
 
     # Read only values are expected 0/1 for a normal switch, 1/1 for a read only switch
     master_result = master.execute("SELECT @@GLOBAL.read_only")
@@ -478,15 +482,28 @@ def check_instances_table_on_zarcillo(master: WMFMariaDB, replica: WMFMariaDB) -
     zarcillo = WMFMariaDB(ZARCILLO_INSTANCE, database="zarcillo")
     query = "SELECT name FROM instances WHERE name = '{}' AND port = {}"
     res = zarcillo.execute(query.format(master.host, master.port))
-    if not res["success"] or res["numrows"] != 1:
+    if not res["success"]:
+        print(f"[ERROR] Error listing replica {res['errno']} {res['errmsg']}")
+        zarcillo.disconnect()
+        sys.exit(-1)
+
+    if res["numrows"] == 0:
         print(f"[WARNING] Old master {master.host} not found in zarcillo instances table")
+        zarcillo.disconnect()
         return False
 
     res = zarcillo.execute(query.format(replica.host, replica.port))
-    if not res["success"] or res["numrows"] != 1:
+    if not res["success"]:
+        print(f"[ERROR] Error listing master {res['errno']} {res['errmsg']}")
+        zarcillo.disconnect()
+        sys.exit(-1)
+
+    if res["numrows"] == 0:
         print(f"[WARNING] New master {replica.host} not found in zarcillo instances table")
+        zarcillo.disconnect()
         return False
 
+    zarcillo.disconnect()
     return True
 
 
@@ -508,7 +525,9 @@ def update_zarcillo(master, slave):
     result = zarcillo.execute(query.format(master.host, master.port))
     if not result["success"] or result["numrows"] != 1:
         print("[WARNING] Old master not found on zarcillo master list")
+        zarcillo.disconnect()
         return -1
+
     section = result["rows"][0][0]
     dc = result["rows"][0][1]
     # update section with section name from the former slave
@@ -523,8 +542,11 @@ def update_zarcillo(master, slave):
     result = zarcillo.execute(query.format(slave.host, slave.port, section, dc))
     if not result["success"]:
         print("[WARNING] New master could not be updated on zarcillo")
+        zarcillo.disconnect()
         return -1
+
     print(("Zarcillo updated successfully: {} is the new master of {} at {}").format(slave.name(), section, dc))
+    zarcillo.disconnect()
     return 0
 
 
@@ -676,6 +698,8 @@ def main():
     update_zarcillo(master, slave)
     update_events(options.master, options.slave)
 
+    master.disconnect()
+    slave.disconnect()
     sys.exit(0)
 
 
