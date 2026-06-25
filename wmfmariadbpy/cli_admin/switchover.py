@@ -99,6 +99,10 @@ def do_preflight_checks(master_replication, slave_replication, timeout, replicat
     slave = slave_replication.connection
     print("Starting preflight checks...")
 
+    while check_instances_table_on_zarcillo(master, slave) is False:
+        print("Fix the `instances` table as needed then press enter")
+        input()
+
     # Read only values are expected 0/1 for a normal switch, 1/1 for a read only switch
     master_result = master.execute("SELECT @@GLOBAL.read_only")
     slave_result = slave.execute("SELECT @@GLOBAL.read_only")
@@ -467,6 +471,23 @@ def start_heartbeat(master):
     if result.returncode != 0:
         print("[ERROR]: Could not run pt-heartbeat-wikimedia, got output: {} {}".format(runner.stdout, runner.stderr))
         sys.exit(-1)
+
+
+def check_instances_table_on_zarcillo(master: WMFMariaDB, replica: WMFMariaDB) -> bool:
+    """Ensure there are rows for both hosts in `instances`"""
+    zarcillo = WMFMariaDB(ZARCILLO_INSTANCE, database="zarcillo")
+    query = "SELECT name FROM instances WHERE name = '{}' AND port = {}"
+    res = zarcillo.execute(query.format(master.host, master.port))
+    if not res["success"] or res["numrows"] != 1:
+        print(f"[WARNING] Old master {master.host} not found in zarcillo instances table")
+        return False
+
+    res = zarcillo.execute(query.format(replica.host, replica.port))
+    if not res["success"] or res["numrows"] != 1:
+        print(f"[WARNING] New master {replica.host} not found in zarcillo instances table")
+        return False
+
+    return True
 
 
 def update_zarcillo(master, slave):
