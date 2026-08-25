@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 import argparse
+import os
+import requests
 import sys
 import time
 
@@ -469,42 +471,21 @@ def start_heartbeat(master):
         sys.exit(-1)
 
 
-def update_zarcillo(master, slave):
-    """
-    After switching over the master role from the 'master' host to the 'slave' one,
-    update zarcillo so it reflects reality
-    """
-    print("Updating zarcillo...")
-    # get section and dc of the original master
-    zarcillo = WMFMariaDB(ZARCILLO_INSTANCE, database="zarcillo")
-    query = (
-        "SELECT section, dc "
-        "FROM masters "
-        "WHERE instance = (SELECT name "
-        "                  FROM instances "
-        "                  WHERE server = '{}' AND port = {})"
-    )
-    result = zarcillo.execute(query.format(master.host, master.port))
-    if not result["success"] or result["numrows"] != 1:
-        print("[WARNING] Old master not found on zarcillo master list")
-        return -1
-    section = result["rows"][0][0]
-    dc = result["rows"][0][1]
-    # update section with section name from the former slave
-    query = (
-        "SET STATEMENT binlog_format='ROW' FOR "  # Workaround for T272954
-        "UPDATE masters "
-        "SET instance = (SELECT name "
-        "                FROM instances "
-        "                WHERE server = '{}' AND port = {})"
-        "WHERE section = '{}' AND dc = '{}' LIMIT 1"
-    )
-    result = zarcillo.execute(query.format(slave.host, slave.port, section, dc))
-    if not result["success"]:
-        print("[WARNING] New master could not be updated on zarcillo")
-        return -1
-    print(("Zarcillo updated successfully: {} is the new master of {} at {}").format(slave.name(), section, dc))
-    return 0
+def update_zarcillo(old_master: str, new_master: str) -> None:
+    """Update Zarcillo. Retry few times but do not raise on failure"""
+    BASEURL = "https://zarcillo.wikimedia.org"
+    url = f"{BASEURL}/api/v1/switchover"
+    username = os.getlogin()
+    headers = {"X-WMF-Username": username}
+    for retry in range(10):
+        try:
+            resp = requests.post(url, headers=headers, timeout=10)
+            resp.raise_for_status()
+            print("Zarcillo updated successfully")
+            return
+        except requests.exceptions.RequestException as e:
+            print(f"Failed to update zarcillo: {e}")
+            time.sleep(10)
 
 
 def reenable_gtid_on_old_master(master_replication):
@@ -654,8 +635,6 @@ def main():
     reenable_gtid_on_old_master(master_replication)
     update_zarcillo(master, slave)
     update_events(options.master, options.slave)
-
-    sys.exit(0)
 
 
 if __name__ == "__main__":
