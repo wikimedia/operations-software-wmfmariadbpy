@@ -45,12 +45,13 @@ def handle_parameters():
         default=5.0,
         help="To sleep after many operations to make sure replication is consumed.",
     )
-    parser.add_argument(
+    slave_move_group = parser.add_mutually_exclusive_group()
+    slave_move_group.add_argument(
         "--skip-slave-move",
         action="store_true",
         help="When set, it does not migrate current master replicas to the new host",
     )
-    parser.add_argument(
+    slave_move_group.add_argument(
         "--only-slave-move",
         action="store_true",
         help=(
@@ -556,21 +557,17 @@ def update_events(master, slave):
     return 0
 
 
-def ask_for_confirmation(master, slave):
+def ask_for_confirmation(question, abort_message):
     """
-    Prompt console for confirmation of action of stopping instances replication
+    Prompt console for a yes/no confirmation, exit if the answer is no
     """
     answer = ""
     while answer not in ["yes", "no"]:
-        answer = input(
-            "Are you sure you want to switchover current master {} and promote {} instead [yes/no]? ".format(
-                master, slave
-            )
-        ).lower()
+        answer = input("{} [yes/no]? ".format(question)).lower()
         if answer not in ["yes", "no"]:
             print('Please type "yes" or "no"')
     if answer == "no":
-        print("Aborting switchover without touching anything!")
+        print(abort_message)
         sys.exit(0)
 
 
@@ -594,6 +591,12 @@ def main():
         read_only_master,
     )
 
+    if options.only_slave_move:
+        ask_for_confirmation(
+            "Are you sure you want to move all replicas of {} under {}".format(options.master, options.slave),
+            "Aborting slave move without touching anything!",
+        )
+
     if not options.skip_slave_move:
         handle_new_master_semisync_replication(slave)
         move_replicas_to_new_master(master_replication, slave_replication, timeout, sleep)
@@ -603,7 +606,12 @@ def main():
         sys.exit(0)
 
     if not options.force:
-        ask_for_confirmation(options.master, options.slave)
+        ask_for_confirmation(
+            "Are you sure you want to switchover current master {} and promote {} instead".format(
+                options.master, options.slave
+            ),
+            "Aborting switchover without touching anything!",
+        )
 
     # core steps
     if not options.skip_heartbeat:
